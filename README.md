@@ -45,6 +45,3 @@ $app->register(App\Providers\EventServiceProvider::class);
 端口信息配置在.env文件中
  vendor/bin/lumoon start | stop | reload | restart | quit
 
-
-# gouuse_core
-# gouuse_core

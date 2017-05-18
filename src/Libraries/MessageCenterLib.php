@@ -3,7 +3,7 @@
  * 消息处理
  * 用于向消息阅服务器和消息中心提交数据
  * @author  李洪林
- * @version 2017-5-18
+ * @version 2017-5-17
  */
 namespace GouuseCore\Libraries;
 

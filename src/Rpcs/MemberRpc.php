@@ -38,18 +38,4 @@ class MemberRpc extends BaseRpc
 		$result = $this->postOutside($url, $header, [ '_token' => $token]);
 		return $result;
 	}
-
-	function login(string $account, string $password) {
-		$url = $this->host . '/account/v3/login';
-		$result = $this->post($url, [], [ 'account' => $account, 'password' => $password ]);
-		return $result;
-	}
-
-	function register(array $data) {
-		$url = $this->host . '/account/v3/register';
-		$result = $this->post($url, [], $data);
-		return $result;
-	}
-
-
 }

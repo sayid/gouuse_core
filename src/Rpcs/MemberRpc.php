@@ -13,7 +13,7 @@ class MemberRpc extends BaseRpc
 	protected $host;
 
 	function __construct() {
-		$this->host = env('API_ACCOUNThosT');
+		$this->host = env('API_ACCOUNT_HOST');
 
 	}
 

@@ -45,8 +45,8 @@ class BaseRpc
             $header[] = 'CURRENT-MEMBER-ID:' . self::$current_member_id;
             $header[] = 'CURRENT-MEMBER-NAME:' . self::$user['member_name'];
             $header[] = 'CURRENT-COMPANY-ID:' . self::$user['company_id'];
-            $header[] = 'CURRENT-MEMBER-INFO:' . self::$user;
-            $header[] = 'CURRENT-COMPANY-INFO:' . self::$company_info;
+            $header[] = 'CURRENT-MEMBER-INFO:' . msgpack_pack(self::$user);
+            $header[] = 'CURRENT-COMPANY-INFO:' . msgpack_pack(self::$company_info);
         }
 
         $result = Curl::to($url)

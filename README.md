@@ -18,7 +18,8 @@ use GouuseCore\Models\BaseModel;
 4、将lib继承为
 
 use GouuseCore\Libraries\Lib;
-如果将自己library放入到公共包并且希望使用$this->方式调用，需要将公共包的BaseGouuse.php中的33行加上自己的library。公共类可以自定加入到lib文件夹下
+如果将自己library放入到公共包并且希望使用$this->方式调用，需要将公共包的BaseGouuse.php中的33行加上自己的library。公共类可以自定加入到lib文件夹下。
+注意：自己模块的私有类库请放在自己项目的library下
 
 5、使用helper时 使用
 
@@ -44,4 +45,6 @@ $app->register(App\Providers\EventServiceProvider::class);
 7、swoole服务管理
 端口信息配置在.env文件中
  vendor/bin/lumoon start | stop | reload | restart | quit
+ 
+ 8、自己开发的服务如果要对其他应用提供内部调用，请在Rpcs文件夹下编写自己的rpc客户端，参照memberrpc.php
 

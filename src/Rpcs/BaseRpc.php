@@ -29,24 +29,26 @@ class BaseRpc
      
     public function postOutside($url, $header = [], $data = [])
     {
+    	Log::info('API URL: '.date('Y-m-d H:i:s') .' '. $url);
            $result = Curl::to($url)
            ->withHeaders($header)
            ->withData($data)
            ->post();
-           //Log::info('API data: '.print_r($data, true));
+           Log::info('API data: '.print_r($data, true));
            return $this->buildResult($result);
     }
      
     public function post($url, $header = [], $data = [])
     {
+    	Log::info('API URL: '.date('Y-m-d H:i:s') .' '. $url);
         $this->preData();
         $header[] = 'GOUUSE-INSIDE: '.time();
         if (self::$current_member_id) {
             $header[] = 'CURRENT-MEMBER-ID:' . self::$current_member_id;
             $header[] = 'CURRENT-MEMBER-NAME:' . self::$user['member_name'];
             $header[] = 'CURRENT-COMPANY-ID:' . self::$user['company_id'];
-            $header[] = 'CURRENT-MEMBER-INFO:' . msgpack_pack(self::$user);
-            $header[] = 'CURRENT-COMPANY-INFO:' . msgpack_pack(self::$company_info);
+            $header[] = 'CURRENT-MEMBER-INFO:' . json_encode(self::$user);
+            $header[] = 'CURRENT-COMPANY-INFO:' . json_encode(self::$company_info);
         }
 
         $result = Curl::to($url)
@@ -64,7 +66,6 @@ class BaseRpc
      */
     public function buildResult($result)
     {
-        Log::info('API URL: '.date('Y-m-d H:i:s') .' '. $this->host);
         Log::info('API Result: '.$result);
         $result = json_decode($result, true);
          

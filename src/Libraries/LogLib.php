@@ -8,12 +8,8 @@
 namespace GouuseCore\Libraries;
 
 use GouuseCore\Helpers\FormHelper;
-//以下为阿里消息队列推送
-use Aliyun\MNS\Queue;
-use Aliyun\MNS\Client;
-use Aliyun\MNS\Requests\PublishMessageRequest;
 
-class MessageCenterLib extends Lib
+class LogLib extends Lib
 {
     public $client;
     public function __construct()

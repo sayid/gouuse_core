@@ -23,7 +23,7 @@ class BaseRpc
         if (empty(self::$_urrent_member_id)) {
             self::$user = Auth::user();
             self::$current_member_id = self::$user['member_id'];
-            self::$company_info = app()['gouuse_company_info'];
+            self::$company_info = isset(app()['gouuse_company_info']) ? app()['gouuse_company_info'] : [];
         }
     }
      

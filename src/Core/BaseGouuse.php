@@ -30,7 +30,7 @@ class BaseGouuse
         } else {
             $this->member_info = Auth::user();
             app()['gouuse_member_info'] = Auth::user();
-            app()['gouuse_company_info'] = array();
+            app()['gouuse_company_info'] = [];
         }
     }
     

@@ -1,13 +1,14 @@
 <?php
 /**
- * 消息处理
- * 用于向消息阅服务器和消息中心提交数据
+ * 统一日志处理
  * @author  李洪林
- * @version 2017-5-17
+ * @version 2017-5-18
  */
-namespace GouuseCore\Libraries;
+namespace App\Libraries;
 
 use GouuseCore\Helpers\FormHelper;
+use GouuseCore\Libraries\Lib;
+use Illuminate\Support\Facades\Log;
 
 class LogLib extends Lib
 {
@@ -16,96 +17,87 @@ class LogLib extends Lib
     {
         parent::__construct();
     }
-
+    
     /**
-     * 通过消息订阅方式推送消息
-     * @param array $msg_data 消息内容，以下为数组需要的属性
-     * @param string topic_name 消息主题
-     * @param string message_body 消息内容
-     * @return array 返回数据;
+     * 写入日志
+     * @param array $log_data 日志数据
+     * @param string $file_name 日志文件名
+     * @return array
      */
-    public function sendMessageTopic($msg_data)
+    public function log_info($log_data, $file_name = 'log')
     {
-        $topic_name = trim(FormHelper::__getData($msg_data, 'topic_name'));
-        $message_body = trim(FormHelper::__getData($msg_data, 'message_body'));    
-        $queue = $this->client->getTopicRef(env('QUEUE_PREFIX').$topic_name);
-        $push_message_obj = new PublishMessageRequest($message_body);
-        $re_push_data = $queue->publishMessage($push_message_obj);
-        return $re_push_data;
+        $param = FormHelper::__getData($log_data, 'param');
+        $result = FormHelper::__getData($log_data, 'result');
+        $startTime = FormHelper::__getData($log_data, 'startTime');
+        $log_data = array();
+        $log_data['time'] = date('Y-m-d H:i:s');
+        $log_data['remoteAddress'] = $this->getIp();//请求客户端地址
+        $log_data['localAddress'] = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ?
+            $_SERVER['HTTP_X_FORWARDED_HOST'] : (isset($_SERVER['HTTP_HOST']) ?
+            $_SERVER['HTTP_HOST'] : '');//服务器地址
+        $log_data['uri'] = @$_SERVER["REQUEST_URI"];//调用方法或接口
+        $log_data['param'] = $param;//提交参数
+        $log_data['result'] = $result;//返回数据
+        $log_data['success'] = true;//处理结果
+        $log_data['serviceID'] = env('SERVICE_ID','1000');//服务id
+        $log_data['startTime'] = $startTime;//开始时间
+        $log_data['endTime'] = time();//开始时间
+        $log_data['sqlNumber'] = 1;//sql查询次数
+        file_put_contents(storage_path().'/logs/'.$file_name.'-'.date('Y-m-d').'.txt',
+            json_encode($log_data)."\r\n",
+            FILE_APPEND);
+        return $log_data;
     }
     
     /**
-     * 给消息中心发消息
-     * @param array $msg_data 消息内容，以下为数组需要的属性
-     * @param string company_id 公司id
-     * @param string member_id 用户id，多个用户id用逗号隔开
-     * @param string messasge 消息内容，为json
-     * @param string service_id 服务id
-     * @param string type_id 服务操作类型id
-     * @param string data_id 服务数据id
-     * @param string status 消息状态：0未读，1已读
-     * @param string subject 消息提示语
-     * @return array 返回数据;
+     * 写入错误日志
+     * @param array $log_data 日志数据
+     * @param string $file_name 日志文件名
+     * @return array
      */
-    public function sendMessageCenter($msg_data)
+    public function log_error($log_data, $file_name = 'err')
     {
-        //消息来源
-        $message_source = intval(FormHelper::__getData($msg_data, 'message_source', 0));
-        
-        //获取公司id
-        $company_id = intval(FormHelper::__getData($msg_data, 'company_id', 0));
-        
-        //获取用户id
-        $member_id = FormHelper::__getData($msg_data, 'member_id');
-        
-        //获取服务id
-        $service_id = intval(FormHelper::__getData($msg_data, 'service_id'));
-        
-        //获取消息状态
-        $status = intval(FormHelper::__getData($msg_data, 'status', 1));
-        
-        //获取操作动作id
-        $type_id = intval(FormHelper::__getData($msg_data, 'type_id'));
-        
-        //获取数据id
-        $data_id = intval(FormHelper::__getData($msg_data, 'data_id'));
-        
-        //获取消息内容
-        $message = trim(FormHelper::__getData($msg_data, 'message'));
-        
-        //消息提示语
-        $subject = trim(FormHelper::__getData($msg_data, 'subject', '你有新的消息请注意查收'));
-        
-        //验证数据是否完整
-        if ($company_id==0 || $service_id==0 || $status>1) {
-            return array('code' => '1001000001', 'data' => array());
+        $param = FormHelper::__getData($log_data, 'param');
+        $result = FormHelper::__getData($log_data, 'result');
+        $startTime = FormHelper::__getData($log_data, 'startTime');
+        $log_data = array();
+        $log_data['time'] = date('Y-m-d H:i:s');
+        $log_data['remoteAddress'] = $this->getIp();//请求客户端地址
+        $log_data['localAddress'] = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ?
+            $_SERVER['HTTP_X_FORWARDED_HOST'] : (isset($_SERVER['HTTP_HOST']) ?
+            $_SERVER['HTTP_HOST'] : '');//服务器地址
+        $log_data['uri'] = @$_SERVER["REQUEST_URI"];//调用方法或接口
+        $log_data['param'] = $param;//提交参数
+        $log_data['result'] = $result;//返回数据
+        $log_data['success'] = false;//处理结果
+        $log_data['serviceID'] = env('SERVICE_ID', '1000');//服务id
+        $log_data['startTime'] = $startTime;//开始时间
+        $log_data['endTime'] = time();//开始时间
+        $log_data['sqlNumber'] = 1;//sql查询次数
+        file_put_contents(storage_path().'/logs/'.$file_name.'-'.date('Y-m-d').'.txt',
+            json_encode($log_data)."\r\n",
+            FILE_APPEND);
+        return $log_data;
+    }
+    
+    /**
+     * 获取ip地址
+     * @return string
+     */
+    function getIp()
+    {
+        $onlineip = '';
+        if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
+            $onlineip = getenv('HTTP_CLIENT_IP');
+        } elseif (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
+            $onlineip = getenv('HTTP_X_FORWARDED_FOR');
+        } elseif (getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'),'unknown')) {
+            $onlineip = getenv('REMOTE_ADDR');
+        } elseif (isset($_SERVER['REMOTE_ADDR']) &&
+            $_SERVER['REMOTE_ADDR'] &&
+            strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+            $onlineip = $_SERVER['REMOTE_ADDR'];
         }
-        
-        //组合消息内容
-        $push_message = new \stdClass();
-        $push_message->message_source = $message_source;
-        $push_message->company_id = $company_id;
-        $push_message->member_id = $member_id;
-        $push_message->service_id = $service_id;
-        $push_message->type_id = $type_id;
-        $push_message->subject = $subject;
-        $push_message->message = $message;
-        $push_message->status = $status;
-        $push_message->send_time = time();
-        $msg_data = ['topic_name' => 'user-message-center', 'message_body' => json_encode($push_message)];
-        $re_push_data = $this->sendMessageTopic($msg_data);
-        return $re_push_data;
-    }
-    
-    /**
-     * 获取消息订阅服务器提交过来的数据
-     * @return array 返回数据;
-     */
-    public function getMessageData(){
-        $data = file_get_contents('php://input');
-        $msg_base64_json = json_decode($data, true);
-        $msg_data_base64_json = $msg_base64_json["Message"];
-        $msg_data_json = base64_decode($msg_data_base64_json);
-        return json_decode($msg_data_json, true);
+        return $onlineip;
     }
 }

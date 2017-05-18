@@ -11,10 +11,10 @@ use GouuseCore\Helpers\FormHelper;
 
 class LogLib extends Lib
 {
-    public $client;
+
     public function __construct()
     {
-        $this->client = new Client(env('QUEUE_MNS_ENDPOINT'), env('QUEUE_MNS_ACCESS_KEY'), env('QUEUE_MNS_SECRET_KEY'));
+        parent::__construct();
     }
 
     /**

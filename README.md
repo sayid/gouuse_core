@@ -48,3 +48,9 @@ $app->register(App\Providers\EventServiceProvider::class);
  
  8、自己开发的服务如果要对其他应用提供内部调用，请在Rpcs文件夹下编写自己的rpc客户端，参照memberrpc.php
 
+9、阿里消息订阅服务
+在.env中配置：
+QUEUE_PREFIX=dev-
+QUEUE_MNS_ACCESS_KEY=dZXh0G2laatxxxx
+QUEUE_MNS_SECRET_KEY=hdEcO9HAIXtOxpMKjKppVBeixxxx
+QUEUE_MNS_ENDPOINT=http://xxxxxxxxxxxxxxxxx.mns.cn-beijing.aliyuncs.com/

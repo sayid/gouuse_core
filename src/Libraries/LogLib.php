@@ -4,7 +4,7 @@
  * @author  李洪林
  * @version 2017-5-18
  */
-namespace App\Libraries;
+namespace GouuseCore\Libraries;
 
 use GouuseCore\Helpers\FormHelper;
 use GouuseCore\Libraries\Lib;

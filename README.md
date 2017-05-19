@@ -46,7 +46,7 @@ $app->register(App\Providers\EventServiceProvider::class);
 端口信息配置在.env文件中
  vendor/bin/lumoon start | stop | reload | restart | quit
  
- 8、自己开发的服务如果要对其他应用提供内部调用，请在Rpcs文件夹下编写自己的rpc客户端，参照memberrpc.php
+8、自己开发的服务如果要对其他应用提供内部调用，请在Rpcs文件夹下编写自己的rpc客户端，参照memberrpc.php
 
 9、阿里消息订阅服务
 在.env中配置：
@@ -54,3 +54,7 @@ QUEUE_PREFIX=dev-
 QUEUE_MNS_ACCESS_KEY=dZXh0G2laatxxxx
 QUEUE_MNS_SECRET_KEY=hdEcO9HAIXtOxpMKjKppVBeixxxx
 QUEUE_MNS_ENDPOINT=http://xxxxxxxxxxxxxxxxx.mns.cn-beijing.aliyuncs.com/
+
+10、通用日志方法
+成功日志：$this->LogLib->log_info(['param' => '提交数据', 'result' => '返回数据', 'startTime' => '开始时间戳']);
+错语日志：$this->LogLib->log_err(['param' => '提交数据', 'result' => '返回数据', 'startTime' => '开始时间戳']);

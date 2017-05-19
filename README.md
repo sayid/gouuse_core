@@ -27,20 +27,8 @@ GouuseCore\Helpers\ArrayHelper
 
 6、使用数据库日志
 
-首先在app\prividers\EventServiceProvider.php中配置监听
-
- 	protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
-        ],  
-        'Illuminate\Database\Events\QueryExecuted' => [  
-            'GouuseCore\Listeners\QueryListener'  
-        ]
-    ];
-    
-然后在app.php中注册EventServiceProvider
-
-$app->register(App\Providers\EventServiceProvider::class);
+在app.php中注册EventServiceProvider
+$app->register(GouuseCore\Providers\EventServiceProvider::class);
 
 7、swoole服务管理
 端口信息配置在.env文件中

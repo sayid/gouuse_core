@@ -42,6 +42,17 @@ QUEUE_PREFIX=dev-
 QUEUE_MNS_ACCESS_KEY=dZXh0G2laatxxxx
 QUEUE_MNS_SECRET_KEY=hdEcO9HAIXtOxpMKjKppVBeixxxx
 QUEUE_MNS_ENDPOINT=http://xxxxxxxxxxxxxxxxx.mns.cn-beijing.aliyuncs.com/
+发送消息到消息中心：
+$messge_data = [消息体组合数组];
+$this->sendMessageCenter->sendMessageCenter($messge_data);
+
+发送通用订阅消息：
+$messge_data = ['topic_name' => 'user-message-center', 'message_body' => json_encode($messge_data)];
+$this->sendMessageCenter->sendMessageTopic($messge_data);
+
+
+获取订阅消息：
+$this->MessageCenterLib->getMessageData($request);
 
 10、通用日志方法
 成功日志：$this->LogLib->log_info(['param' => '提交数据', 'result' => '返回数据', 'startTime' => '开始时间戳']);

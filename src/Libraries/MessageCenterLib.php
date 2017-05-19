@@ -155,9 +155,10 @@ class MessageCenterLib extends Lib
     
     /**
      * 获取消息订阅服务器提交过来的数据
+	 * @param Request $request Request变量
      * @return array 返回数据;
      */
-    public function getMessageData(){
+    public function getMessageData($request){
         $data = file_get_contents('php://input');
         $msg_base64_json = json_decode($data, true);
         $msg_data_base64_json = $msg_base64_json["Message"];

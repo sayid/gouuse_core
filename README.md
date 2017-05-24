@@ -32,7 +32,7 @@ $app->register(GouuseCore\Providers\EventServiceProvider::class);
 
 7、swoole服务管理
 端口信息配置在.env文件中
- vendor/bin/lumoon start | stop | reload | restart | quit
+vendor/silentred/lumoon/lumoon start | stop | reload | restart | quit
  
 8、自己开发的服务如果要对其他应用提供内部调用，请在Rpcs文件夹下编写自己的rpc客户端，参照memberrpc.php
 

@@ -98,6 +98,9 @@ abstract class BaseModel extends BaseGouuse
             $rows=DB::select($sql, array($table, env('DB_DATABASE')));
             $num = count($rows);
             if ($rows) {
+            	if (is_object($rows)) {
+            		$rows = json_decode(json_encode($rows), true);
+            	}
                 $field_list = array();
                 $field_pri = "";
                 for ($i = 0; $i < $num; $i++) {
@@ -268,6 +271,9 @@ abstract class BaseModel extends BaseGouuse
         }
         $sql = "select ".$need_field." from ".$table." where ".$id_field." = ? limit 1 ".$lock_str;
         $rows = DB::select($sql, array($id));
+        if (is_object($rows)) {
+        	$rows = json_decode(json_encode($rows), true);
+        }
         return $rows[0] ?? null;
     }
     
@@ -288,6 +294,9 @@ abstract class BaseModel extends BaseGouuse
             $sql = "select count(1) as total from ".$table." limit 1";
             $num = DB::select($sql);
         }
+        if (is_object($rows)) {
+        	$rows = json_decode(json_encode($rows), true);
+        }
         return $num[0]['total'] ?? 0;
     }
     
@@ -303,6 +312,9 @@ abstract class BaseModel extends BaseGouuse
         } else {
             $sql = "select sum(".$sum_field.") as total from ".$table." limit 1";
             $num = DB::select($sql);
+        }
+        if (is_object($rows)) {
+        	$rows = json_decode(json_encode($rows), true);
         }
         return $num;
     }
@@ -375,6 +387,9 @@ abstract class BaseModel extends BaseGouuse
         }
         $sql = "select " . $sql_distinct ." ".$need_field . " from " . $table . $sql_where . $sql_order . $sql_limit;
         $rows = DB::select($sql, $val);
+        if (is_object($rows)) {
+        	$rows = json_decode(json_encode($rows), true);
+        }
         return $rows;
     }
     
@@ -399,7 +414,9 @@ abstract class BaseModel extends BaseGouuse
     
         $sql="select ".$need_field." from ".$table.$sql_where.$sql_limit;
         $rows=DB::select($sql, $val);
-    
+        if (is_object($rows)) {
+        	$rows = json_decode(json_encode($rows), true);
+        }
         return isset($rows[0])?$rows[0]:array();
     }
     

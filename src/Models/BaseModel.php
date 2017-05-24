@@ -294,8 +294,8 @@ abstract class BaseModel extends BaseGouuse
             $sql = "select count(1) as total from ".$table." limit 1";
             $num = DB::select($sql);
         }
-        if (is_object($rows)) {
-        	$rows = json_decode(json_encode($rows), true);
+        if (is_object($num)) {
+        	$num = json_decode(json_encode($num), true);
         }
         return $num[0]['total'] ?? 0;
     }
@@ -313,8 +313,8 @@ abstract class BaseModel extends BaseGouuse
             $sql = "select sum(".$sum_field.") as total from ".$table." limit 1";
             $num = DB::select($sql);
         }
-        if (is_object($rows)) {
-        	$rows = json_decode(json_encode($rows), true);
+        if (is_object($num)) {
+        	$num = json_decode(json_encode($num), true);
         }
         return $num;
     }

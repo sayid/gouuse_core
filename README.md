@@ -25,7 +25,7 @@ use GouuseCore\Libraries\Lib;
 
 GouuseCore\Helpers\ArrayHelper
 
-6、使用数据库日志
+6、使用数据库日志、返回数据使用数组
 
 在app.php中注册EventServiceProvider
 $app->register(GouuseCore\Providers\EventServiceProvider::class);
@@ -57,3 +57,4 @@ $this->MessageCenterLib->getMessageData($request);
 10、通用日志方法
 成功日志：$this->LogLib->log_info(['param' => '提交数据', 'result' => '返回数据', 'startTime' => '开始时间戳']);
 错语日志：$this->LogLib->log_err(['param' => '提交数据', 'result' => '返回数据', 'startTime' => '开始时间戳']);
+

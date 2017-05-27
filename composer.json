@@ -2,8 +2,8 @@
     "name": "gouuse/core",
     "description": "gouuse core files",
     "type": "library",
-    "version": "1.1.22",
-    "bin": ["CodeTool"],
+    "version": "1.1.23",
+    "bin": ["src/CodeTool"],
     "require": {
         "ixudra/curl": "6.*",
         "zircote/swagger-php": "^2.0",

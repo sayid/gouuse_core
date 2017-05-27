@@ -58,3 +58,6 @@ $this->MessageCenterLib->getMessageData($request);
 成功日志：$this->LogLib->log_info(['param' => '提交数据', 'result' => '返回数据', 'startTime' => '开始时间戳']);
 错语日志：$this->LogLib->log_err(['param' => '提交数据', 'result' => '返回数据', 'startTime' => '开始时间戳']);
 
+11、CodeTool工具是自动将CodeLib.php文件的注释自动转换成数组配置文件
+执行方式vendor/bin/CodeTool.php res_code.php
+res_code.php为转换后的文件名称，生成的文件在resources/options/zh_cn/目录下

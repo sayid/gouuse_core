@@ -1,0 +1,54 @@
+#!/usr/bin/env php
+<?php
+
+main($argc, $argv);
+
+function main($argc, $argv)
+{
+	 if ($argc <= 1) {
+            echo '请输入code目标文件名' . PHP_EOL;
+            echo  PHP_EOL;
+    } else {
+
+        $root = substr(__DIR__, 0, -10);
+        
+        $app = require $root. '/bootstrap/app.php';
+    
+		$codelib = $root . 'app/Libraries/CodeLib.php';
+		if (!is_writable($root . 'resources/options/zh_cn/')) {
+		    echo '请将'.$root . 'resources/options/zh_cn/目录设为可写权限';
+		    echo  PHP_EOL;
+		    echo  PHP_EOL;
+		    return;
+		}
+		if (!is_file($codelib)) {
+		    echo '请确保app/Libraries/CodeLib.php是否在项目目录下';
+		    echo  PHP_EOL;
+		} else {
+		    $handle = fopen($codelib, 'r');
+		    $respon_file = $root . 'resources/options/zh_cn/'.$argv[1];
+		    $str = "<?php\n".'$config = ['."\n";
+		    file_put_contents($respon_file, $str);
+		    while(!feof($handle)){
+		        $line = fgets($handle);
+		        if ($index = strpos($line, 'const')) {
+		            $line = substr($line, $index+5);
+		            $index_equal = strpos($line, '=') + 1;
+		            $index_comm = strpos($line, '//')+2;
+		           
+		            $key = substr($line, $index_equal, stripos($line, ';') - $index_equal);
+		            
+		            $commds = str_replace("\n", '', substr($line,$index_comm));
+		           
+		            $str = "    ". trim($key) . " => '" . addslashes($commds)."',\n";
+		            file_put_contents($respon_file, $str, FILE_APPEND);
+		        }
+		       
+		    }
+		    $str = '];'."\n";
+		    file_put_contents($respon_file, $str, FILE_APPEND);
+		}
+        
+    }
+}
+

@@ -39,16 +39,11 @@ class AuthServiceProvider extends ServiceProvider
              */
             if (isset($_SERVER['GOUUSE_INSIDE'])) {
                 //内部调用
-                if ($_SERVER['REMOTE_ADDR']) {
+                if (pgrep_match('/内网IP规则/', $_SERVER['REMOTE_ADDR'])) {
                     return true;
                 }
                 if (isset($_SERVER['current_member_info'])) {
                     //当前用户id 不用再查询数据库
-                    /*$member_info = [
-                        'member_id' => $_SERVER['current_member_id'],
-                        'company_id' =>  $_SERVER['current_company_id'],
-                        'member_name' => $_SERVER['current_member_member_name']
-                    ];*/
                     $member_info = json_decode($_SERVER['HTTP_CURRENT_MEMBER_INFO'], true);
                     //返回数据给auth控件
                     return $member_info;

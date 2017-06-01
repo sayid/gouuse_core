@@ -2,6 +2,7 @@
 namespace GouuseCore\Controllers;
 
 use GouuseCore\Core\BaseGouuse;
+use GouuseCore\Helpers\OptionHelper;//配置文件
 
 /**
  * 基类 复写了lumen基类
@@ -25,7 +26,23 @@ class Controller extends BaseGouuse
      * @return unknown
      */
     public function display(array $data)
-    {
+    {   
+        $msg = 'ok';
+        $code = isset($data['code']) ? $data['code'] : 0;
+        if (!empty($code)) {
+            $lang = isset($_REQUEST['lang']) ? $_REQUEST['lang'] : 'zh_cn';
+            $lang = $lang ? $lang : 'zh_cn';
+            $error_code = OptionHelper::getOption('error_code','options',$lang);
+            $msg = isset($error_code[$code]) ? $error_code[$code] : '未知错误';
+            
+            if(isset($data['data'])){
+                foreach ($data['data'] as $key => $value) {
+                    $msg=str_replace("{".$key."}", $value, $msg);
+                }
+            }
+        }        
+        $data['msg'] = $msg;
+
         return $data;
     }
     

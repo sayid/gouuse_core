@@ -2,7 +2,7 @@
     "name": "gouuse/core",
     "description": "gouuse core files",
     "type": "library",
-    "version": "1.1.23",
+    "version": "1.1.24",
     "bin": ["src/CodeTool"],
     "require": {
         "ixudra/curl": "6.*",

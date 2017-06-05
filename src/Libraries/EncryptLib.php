@@ -27,7 +27,7 @@ class EncryptLib
 				$message,
 				self::METHOD,
 				$key,
-				OPENSSL_ZERO_PADDING,
+				OPENSSL_RAW_DATA,
 				$iv
 				);
 		return base64_encode($ciphertext);
@@ -50,7 +50,7 @@ class EncryptLib
 				$message,
 				self::METHOD,
 				$key,
-				OPENSSL_ZERO_PADDING,
+				OPENSSL_RAW_DATA,
 				$iv
 				);
 	}

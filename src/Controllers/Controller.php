@@ -23,14 +23,15 @@ class Controller extends BaseGouuse
     /**
      * 后续扩展返回数据 加密等等
      * @param array $data
+     * @param int 是否加密
      * @return unknown
      */
-    public function display(array $data)
+    public function display(array $data, int $encrypt = 1)
     {   
         $msg = 'ok';
         $code = isset($data['code']) ? $data['code'] : 0;
         if (!empty($code)) {
-            $lang = isset($_REQUEST['lang']) ? $_REQUEST['lang'] : 'zh_cn';
+            $lang = isset($_REQUEST['app_lang']) ? $_REQUEST['app_lang'] : 'zh_cn';
             $lang = $lang ? $lang : 'zh_cn';
             $error_code = OptionHelper::getOption('error_code','options',$lang);
             $msg = isset($error_code[$code]) ? $error_code[$code] : '未知错误';
@@ -42,8 +43,14 @@ class Controller extends BaseGouuse
             }
         }        
         $data['msg'] = $msg;
-
-        return $data;
+        $data = json_encode($data);
+        
+        if ($encrypt) {
+        	//执行加密
+        	$data = $this->EncryptLib->encrypt($data);
+        }
+       
+        response($data, 200)->send();
     }
     
     /**

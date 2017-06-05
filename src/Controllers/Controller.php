@@ -24,9 +24,10 @@ class Controller extends BaseGouuse
      * 后续扩展返回数据 加密等等
      * @param array $data
      * @param int 是否加密
+     * @param boolean 是否写入日志
      * @return unknown
      */
-    public function display(array $data, int $encrypt = 1)
+    public function display(array $data, int $encrypt = 1, boolean $is_log = false)
     {   
         $msg = 'ok';
         $code = isset($data['code']) ? $data['code'] : 0;
@@ -47,7 +48,8 @@ class Controller extends BaseGouuse
         
         if ($encrypt) {
         	//执行加密
-        	$data = $this->EncryptLib->encrypt($data);
+        	$key=substr(md5(env('AES_KEY')."gou"),0,8);
+        	$data = $this->EncryptLib->encrypt($data, $key);
         }
        
         response($data, 200)->send();

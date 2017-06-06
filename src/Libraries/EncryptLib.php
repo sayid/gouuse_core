@@ -23,6 +23,11 @@ class EncryptLib
 		}
 		$iv = $this->hexToStr($this->iv);
 
+		//增加补位
+		$block = 16;
+		$pad = $block - (strlen($message) % $block);
+		$message .= str_repeat(chr($pad), $pad);
+		
 		$ciphertext = openssl_encrypt(
 				$message,
 				self::METHOD,

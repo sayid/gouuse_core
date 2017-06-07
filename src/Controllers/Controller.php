@@ -57,6 +57,10 @@ class Controller extends BaseGouuse
      */
     public function display(array $data, $encrypt = 1, $is_log = true)
     {   
+    	if (isset($_SERVER['HTTP_GOUUSE_INSIDE'])) {
+    		//内部访问时数据不加密
+    		$encrypt = 0;
+    	}
         $msg = 'ok';
         $code = isset($data['code']) ? $data['code'] : 0;
         if (!empty($code)) {

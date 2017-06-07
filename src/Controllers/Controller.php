@@ -55,7 +55,7 @@ class Controller extends BaseGouuse
      * @param boolean 是否写入日志
      * @return unknown
      */
-    public function display(array $data, int $encrypt = 1, boolean $is_log = true)
+    public function display(array $data, $encrypt = 1, $is_log = true)
     {   
         $msg = 'ok';
         $code = isset($data['code']) ? $data['code'] : 0;

@@ -3,6 +3,7 @@ namespace GouuseCore\Controllers;
 
 use GouuseCore\Core\BaseGouuse;
 use GouuseCore\Helpers\OptionHelper;//配置文件
+use GouuseCore\Libraries\LogLib;
 
 /**
  * 基类 复写了lumen基类
@@ -18,6 +19,33 @@ class Controller extends BaseGouuse
     public function __construct()
     {
         parent::__construct();
+        
+        /*
+         * lihonglin
+         * 2017-06-07
+         * 增加：重写Request中提交的数据，如果是app端加密数据，进行解密后将数据重新组合到Request中
+         */
+        if(isset(app()['Illuminate\Http\Request'])){
+            $request_obj =app()['Illuminate\Http\Request'];
+            $info = $request_obj->input("info");
+            if($info){
+                //执行解密
+                $key=substr(md5(env('AES_KEY')."gou"),0,8);
+                $info = $this->EncryptLib->decrypt($info, $key);                
+                $request_array = json_decode($info, true);
+        
+                /*
+                 * 以下三个方法：attributes、query、request
+                 * @see Symfony\Component\HttpFoundation\Request 底层方法封装
+                 * @see Symfony\Component\HttpFoundation\ParameterBag 接口实现
+                 */
+                foreach ($request_array as $key => $value) {
+                    app()['Illuminate\Http\Request']->attributes->set($key, $value);
+                    app()['Illuminate\Http\Request']->query->set($key, $value);
+                    app()['Illuminate\Http\Request']->request->set($key, $value);
+                }
+            }
+        }
     }
     
     /**
@@ -27,7 +55,7 @@ class Controller extends BaseGouuse
      * @param boolean 是否写入日志
      * @return unknown
      */
-    public function display(array $data, int $encrypt = 1, boolean $is_log = false)
+    public function display(array $data, int $encrypt = 1, boolean $is_log = true)
     {   
         $msg = 'ok';
         $code = isset($data['code']) ? $data['code'] : 0;
@@ -44,6 +72,24 @@ class Controller extends BaseGouuse
             }
         }        
         $data['msg'] = $msg;
+        
+        /*
+         * lihonglin
+         * 2017-06-07
+         * 增加:系统底层统一日志
+         */
+        //判断有提交和返回数据，写入到日志中
+        if($is_log){
+            if(isset(app()['Illuminate\Http\Request'])){
+            
+                //从底层获取request对像，并获得提交的全部参数，除header信息除外
+                $request = app()['Illuminate\Http\Request']->request->all();
+            
+                //统一将提交的参数和返回的数据写入日程
+                $this->LogLib->log_info(['param' => json_encode($request),
+                    'result' => json_encode($data)]);
+            }
+            }
         $data = json_encode($data);
         
         if ($encrypt) {

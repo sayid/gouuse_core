@@ -26,9 +26,10 @@ class LogLib extends Lib
      */
     public function log_info($log_data, $file_name = 'log')
     {
+        if (!defined('TIME_START'))
+            define('TIME_START', $this->logMicrotimeFloat());        
         $param = FormHelper::__getData($log_data, 'param');
         $result = FormHelper::__getData($log_data, 'result');
-        $startTime = FormHelper::__getData($log_data, 'startTime');
         $log_data = array();
         $log_data['time'] = date('Y-m-d H:i:s');
         $log_data['remoteAddress'] = $this->getIp();//请求客户端地址
@@ -40,8 +41,8 @@ class LogLib extends Lib
         $log_data['result'] = $result;//返回数据
         $log_data['success'] = true;//处理结果
         $log_data['serviceID'] = env('SERVICE_ID','1000');//服务id
-        $log_data['startTime'] = $startTime;//开始时间
-        $log_data['endTime'] = time();//开始时间
+        $log_data['startTime'] = TIME_START;//开始时间
+        $log_data['endTime'] = $this->logMicrotimeFloat();//结束时间
         $log_data['sqlNumber'] = 1;//sql查询次数
         file_put_contents(storage_path().'/logs/'.$file_name.'-'.date('Y-m-d').'.txt',
             json_encode($log_data)."\r\n",
@@ -57,9 +58,10 @@ class LogLib extends Lib
      */
     public function log_error($log_data, $file_name = 'err')
     {
+        if (!defined('TIME_START'))
+            define('TIME_START', $this->logMicrotimeFloat());
         $param = FormHelper::__getData($log_data, 'param');
         $result = FormHelper::__getData($log_data, 'result');
-        $startTime = FormHelper::__getData($log_data, 'startTime');
         $log_data = array();
         $log_data['time'] = date('Y-m-d H:i:s');
         $log_data['remoteAddress'] = $this->getIp();//请求客户端地址
@@ -71,8 +73,8 @@ class LogLib extends Lib
         $log_data['result'] = $result;//返回数据
         $log_data['success'] = false;//处理结果
         $log_data['serviceID'] = env('SERVICE_ID', '1000');//服务id
-        $log_data['startTime'] = $startTime;//开始时间
-        $log_data['endTime'] = time();//开始时间
+        $log_data['startTime'] = TIME_START;//开始时间
+        $log_data['endTime'] = $this->logMicrotimeFloat();//结束时间
         $log_data['sqlNumber'] = 1;//sql查询次数
         file_put_contents(storage_path().'/logs/'.$file_name.'-'.date('Y-m-d').'.txt',
             json_encode($log_data)."\r\n",
@@ -84,7 +86,7 @@ class LogLib extends Lib
      * 获取ip地址
      * @return string
      */
-    function getIp()
+    public function getIp()
     {
         $onlineip = '';
         if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
@@ -99,5 +101,11 @@ class LogLib extends Lib
             $onlineip = $_SERVER['REMOTE_ADDR'];
         }
         return $onlineip;
+    }
+    
+    public function logMicrotimeFloat()
+    {
+        list($usec, $sec) = explode(" ", microtime());
+        return ((float)$usec + (float)$sec);
     }
 }

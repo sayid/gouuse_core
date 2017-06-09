@@ -102,8 +102,7 @@ class Controller extends BaseGouuse
 				$request = app()['Illuminate\Http\Request']->request->all();
 
 				//统一将提交的参数和返回的数据写入日程
-				$this->LogLib->log_info(['param' => json_encode($request),
-						'result' => json_encode($data)]);
+				$this->LogLib->log_info(['param' => json_encode($request), 'result' => json_encode($data)]);
 			}
 		}
 		$data = json_encode($data);

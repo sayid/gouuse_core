@@ -113,7 +113,7 @@ class Controller extends BaseGouuse
 			$data = $this->EncryptLib->encrypt($data, $key);
 		}
 		 
-		response($data, 200)->send();
+		return response($data, 200)->send();
 	}
 
 	/**

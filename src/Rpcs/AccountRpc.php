@@ -19,13 +19,13 @@ class AccountRpc extends BaseRpc
 
 	function login(string $account, string $password) {
 		$url = $this->host . '/account/v3/login';
-		$result = $this->post($url, [], [ 'account' => $account, 'password' => $password ]);
+		$result = $this->postOutside($url, [], [ 'account' => $account, 'password' => $password ]);
 		return $result;
 	}
 
 	function register(array $data) {
 		$url = $this->host . '/account/v3/register';
-		$result = $this->post($url, [], $data);
+		$result = $this->postOutside($url, [], $data);
 		return $result;
 	}
 }

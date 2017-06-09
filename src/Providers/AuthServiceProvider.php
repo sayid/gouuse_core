@@ -27,10 +27,9 @@ class AuthServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-
 		if (isset($_SERVER['GOUUSE_INSIDE'])) {
 			//内部调用
-			if (pgrep_match('/内网IP规则/', $_SERVER['REMOTE_ADDR'])) {
+			if (\preg_match('/192\.168\.(.*)/', $_SERVER['REMOTE_ADDR'])) {
 				define('REQUEST_IS_LOCAL', true);
 			}
 		}

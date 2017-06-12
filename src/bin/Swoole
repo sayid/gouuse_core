@@ -3,7 +3,7 @@
 
 $composer_installed = false;
 
-foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
+foreach (array(__DIR__ . '/../../../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
     if (file_exists($file)) {
         $composer_installed = $file;
 
@@ -36,7 +36,7 @@ function main($argc, $argv)
             echo  PHP_EOL;
         } else {
             $input = file_get_contents('php://stdin');
-            require __DIR__ . '/swoole.php';
+            require __DIR__ . '/../Swoole/Server.php';
             $construct_config = unserialize($input);
 
             $serv = new GouuseCore\Swoole\Server($construct_config['config'], $construct_config['swoole_settings']);

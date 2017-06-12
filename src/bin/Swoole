@@ -194,6 +194,7 @@ function start()
         'config' => [
             'host' => env('LUMOON_HOST', '127.0.0.1'),
             'port' => env('LUMOON_PORT', 9050),
+            'mode' => env('LUMOON_MODE', 'SWOOLE_BASE'),
             'pid_file' => getPidFile(),
             'root_dir' => base_path(),
             'deal_with_public' => env('LUMOON_DEAL_WITH_PUBLIC', false),

@@ -23,7 +23,8 @@ class Server
 
     public function __construct($config, $swoole_settings = [])
     {
-        $this->swoole_http_server = new swoole_http_server($config['host'], $config['port']);
+    	
+        $this->swoole_http_server = new swoole_http_server($config['host'], $config['port'], $config['mode']);
         $this->pid_file = $config['pid_file'];
         $this->root_dir = $config['root_dir'];
         $this->deal_with_public = $config['deal_with_public'];

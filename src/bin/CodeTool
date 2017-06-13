@@ -10,7 +10,7 @@ function main($argc, $argv)
             echo  PHP_EOL;
     } else {
 
-        $root = substr(__DIR__, 0, -10);
+        $root = __DIR__.'/../../../../../';
         
         $app = require $root. '/bootstrap/app.php';
     

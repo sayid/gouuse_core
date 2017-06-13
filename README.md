@@ -60,7 +60,9 @@ $this->MessageCenterLib->getMessageData($request);
 
 11、CodeTool工具是自动将CodeLib.php文件的注释自动转换成数组配置文件
 执行方式vendor/bin/CodeTool.php error_code.inc.php
-error_code.php为转换后的文件名称，生成的文件在resources/options/zh_cn/目录下
+error_code.inc.php为转换后的文件名称，生成的文件在resources/options/zh_cn/目录下
+注意：Windows开发环境下需要使用php -f vendor/gouuse/core/src/bin/CodeTool error_c
+ode.inc.php执行
 
 12、加密解密
 使用$this->EncryptLib->encrypt() / $this->EncryptLib->decrypt()

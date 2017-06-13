@@ -41,7 +41,8 @@ class CacheLib extends Lib
      */
     public function get($id = '')
     {
-        return Cache::get($id);
+    	$result = Cache::get($id);
+    	return is_null($result)?false:$result;
     }
 
 

@@ -35,7 +35,7 @@ $app->register(GouuseCore\Providers\EventServiceProvider::class);
 vendor/bin/Swoole start | stop | reload | restart | quit
 注意：Windows环境需要使用php -f vendor/gouuse/core/src/bin/Swoole start | stop | reload | restart | quit
  
-8、自己开发的服务如果要对其他应用提供内部调用，请在Rpcs文件夹下编写自己的rpc客户端，参照memberrpc.php
+8、自己开发的服务如果要对其他应用提供内部调用，请在Rpcs文件夹下编写自己的rpc客户端，参照memberrpc.php。使用rpc服务需要在网关层面定义要负载、API规则协议，rpc会自动拉取网关路由规则
 
 9、阿里消息订阅服务
 在.env中配置：

@@ -5,12 +5,12 @@ class ArrayHelper
 {
     public static function filterArray($keys, $data, $signname = 'keep')
     {
-        if (isarray($keys) == false) {
+        if (is_array($keys) == false) {
             $keys = explode(",", $keys);
         }
         $sign = $signname == "keep" ? false : true;
         foreach ($data as $index => $indexdata) {
-            if (inarray($index, $keys) == $sign) {
+            if (in_array($index, $keys) == $sign) {
                 unset($data[$index]);
             }
         }
@@ -48,7 +48,7 @@ class ArrayHelper
     public static function reduceArray($array, $key, $filed, $prefix = "")
     {
         $newarray = array();
-        if (isarray($array) == true) {
+        if (is_array($array) == true) {
             foreach ($array as $singlevalue) {
                 if (isset($singlevalue[$key]) && isset($singlevalue[$filed])) {
                     $newarray[$prefix . $singlevalue[$key]] = $singlevalue[$filed];
@@ -78,7 +78,7 @@ class ArrayHelper
     public static function arrayKey2Value($source, $keys, $sign = ",", $keepkey = false)
     {
         $val = array();
-        $arraykeys = isarray($keys) == false ? explode($sign, $keys) : $keys;
+        $arraykeys = is_array($keys) == false ? explode($sign, $keys) : $keys;
         foreach ($arraykeys as $singlekey) {
             if (isset($source[$singlekey])) {
                 if ($keepkey == true) {

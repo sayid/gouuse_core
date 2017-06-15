@@ -1,4 +1,6 @@
 <?php
+namespace GouuseCore\Libraries;
+
 
 /**
  * 字符串格式判断类

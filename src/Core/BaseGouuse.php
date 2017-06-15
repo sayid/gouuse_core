@@ -15,6 +15,7 @@ class BaseGouuse
     protected $app_id;
     
   //  public $member_info = array();
+  public $company_info = [];
     
     public function __construct()
     {

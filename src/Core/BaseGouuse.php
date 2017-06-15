@@ -14,12 +14,12 @@ class BaseGouuse
     
     protected $app_id;
     
-    public $member_info = array();
+  //  public $member_info = array();
     
     public function __construct()
     {
         $this->app_id =  env('GOUUSE_APP_ID');
-        $this->memberInit();
+        //$this->memberInit();
     }
     
     public function memberInit()
@@ -37,6 +37,14 @@ class BaseGouuse
     
     public function __get($class)
     {
+    	if ($class == 'member_info') {
+    		if (isset($GLOBALS['gouuse_member_info'])) {
+    			return $GLOBALS['gouuse_member_info'];
+    		}
+    		$GLOBALS['gouuse_member_info'] = Auth::user();
+    		return $GLOBALS['gouuse_member_info'];
+    	}
+    	
         if (substr($class, strlen($class) - 3)=='Lib') {
         	if (class_exists("GouuseCore\Libraries\\".$class)) {
         		$class_load = "GouuseCore\Libraries\\".$class;

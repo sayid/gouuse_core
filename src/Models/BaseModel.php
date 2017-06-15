@@ -25,7 +25,6 @@ abstract class BaseModel extends BaseGouuse
     public function __construct(array $attributes = [])
     {
         parent::__construct();
-        $this->member_info = Auth::user();
     }
     /**
      * 获取 mysql表的字段

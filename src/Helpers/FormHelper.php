@@ -43,4 +43,26 @@ class FormHelper
         $money = sprintf("%.2f", $money);
         return $money;
     }
+    
+    /**
+     * 表单获取数据
+     * @param $request 底层request对像
+     * @param $array 要获取的字段数组
+     * @return array
+     */
+    public static function formPost($request, $array, $is_filter = true){
+        $new_array=array();
+        foreach($array as $key=>$value){
+            $post = $request[$value];
+            $$value = is_array($post) ? $post : trim($post);
+            if($is_filter){
+                if($$value !== ''){
+                    $new_array[$value]=$$value;
+                }
+            }else{
+                $new_array[$value]=$$value;
+            }
+        }
+        return $new_array;
+    }
 }

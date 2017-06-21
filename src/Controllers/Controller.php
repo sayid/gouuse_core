@@ -105,7 +105,7 @@ class Controller extends BaseGouuse
 				$this->LogLib->log_info(['param' => json_encode($request), 'result' => json_encode($data)]);
 			}
 		}
-
+		$data = json_encode($data);
 		if ($encrypt) {
 			//执行加密
 			$key=substr(md5(env('AES_KEY')."gou"),0,8);

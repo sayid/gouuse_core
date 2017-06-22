@@ -5,7 +5,6 @@ use Ixudra\Curl\Facades\Curl;
 
 use Log;
 use Illuminate\Support\Facades\Auth;
-use GouuseCore\Core\BaseGouuse;
 
 /**
  * API SDK基类
@@ -34,7 +33,7 @@ class BaseRpc
 		}
 
 	}
-	 
+
 	public function postOutside($url, $header = [], $data = [])
 	{
 		if (strpos($url, '/')===false && strpos($url, 'http') === false) {
@@ -54,7 +53,7 @@ class BaseRpc
 		Log::info('API data: '.print_r($data, true));
 		return $this->buildResult($result);
 	}
-	 
+
 	public function post($url, $header = [], $data = [])
 	{
 		if (strpos($url, '/')===false && strpos($url, 'http') === false) {
@@ -94,10 +93,10 @@ class BaseRpc
 	{
 		Log::info('API Result: '.$result);
 		$result = json_decode($result, true);
-		 
+			
 		if (empty($result)) {
 			$result = array();
-			$result['code'] = 1000;
+			$result['code'] = 1;
 			$result['err_desc'] = '通信失败请稍后重试';
 		}
 		return $result;

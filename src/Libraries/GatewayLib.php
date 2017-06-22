@@ -50,6 +50,7 @@ class GatewayLib
 	public function getHost($uri)
 	{
 	    $upstream = $this->get_upstream($uri);
+	    return $upstream;
 	    if ($upstream) {
 	        $host = $this->get_targets_by_upstream($upstream);
 	        return $host;

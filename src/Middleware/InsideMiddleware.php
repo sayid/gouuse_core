@@ -22,7 +22,7 @@ class InsideMiddleWare
     {
         //验证只能内网访问
     	if (!preg_match('/192\.168\.(.*)/', $_SERVER['REMOTE_ADDR'])) {
-    		
+    		die('error inside');
     	}
     	define('REQUEST_IS_LOCAL', true);
     	return $next($request);

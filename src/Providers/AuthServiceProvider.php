@@ -65,10 +65,10 @@ class AuthServiceProvider extends ServiceProvider
 			 * 登录验证，权限判断
 			 */
 			if ($token) {
-				App::bindIf('GouuseCore\Rpcs\MemberRpc', null, true);
-				$member_api = App::make('GouuseCore\Rpcs\MemberRpc');
+				App::bindIf('GouuseCore\Rpcs\AuthCenterRpc', null, true);
+				$member_api = App::make('GouuseCore\Rpcs\AuthCenterRpc');
 
-				$result = $member_api->getByToken($token);
+				$result = $member_api->check($token);
 
 				if (isset($result['code']) && $result['code']==0) {
 					$result['data']['_token'] = $token;

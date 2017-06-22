@@ -51,15 +51,28 @@ class EncryptLib
 
 		$iv = $this->hexToStr($this->iv);
 
-		return openssl_decrypt(
+		$de = openssl_decrypt(
 				$message,
 				self::METHOD,
 				$key,
 				OPENSSL_RAW_DATA,
 				$iv
 				);
+		return $this->strippadding($de);
 	}
 
+	private function strippadding($string) {
+		$slast = ord(substr($string, -1));
+		$slastc = chr($slast);
+		$pcheck = substr($string, -$slast);
+		if (preg_match("/$slastc{" . $slast . "}/", $string)) {
+			$string = substr($string, 0, strlen($string) - $slast);
+			return $string;
+		} else {
+			return false;
+		}
+	}
+	
 	function hexToStr($hex)
 	{
 		$string='';

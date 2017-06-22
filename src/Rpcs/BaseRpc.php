@@ -97,7 +97,7 @@ class BaseRpc
 		 
 		if (empty($result)) {
 			$result = array();
-			$result['code'] = 1;
+			$result['code'] = 1000;
 			$result['err_desc'] = '通信失败请稍后重试';
 		}
 		return $result;

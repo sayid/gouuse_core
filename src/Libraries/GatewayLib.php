@@ -48,7 +48,7 @@ class GatewayLib
 	}
 	
 	public function getHost($uri)
-	{
+	{	return env('API_GATEWAY_HOST');
 	    $upstream = $this->get_upstream($uri);
 	    return $upstream;
 	    if ($upstream) {

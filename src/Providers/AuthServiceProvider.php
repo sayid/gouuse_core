@@ -3,10 +3,9 @@
 namespace GouuseCore\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Crypt;
-use GouuseCore\Rpcs\MemberRpc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -80,5 +79,15 @@ class AuthServiceProvider extends ServiceProvider
 
 		});
 
+		/**********定义权限*********/
+		Gate::define('admin-super-auth', function ($user) {
+			//A后台 超级管理员
+			return $user['member_id'] ?? true;
+		});
+				
+		Gate::define('admin-company-auth', function ($user, $company) {
+			//B后台 企业管理员
+			return $user['member_id'] == $company['admin_id'];
+		});
 	}
 }

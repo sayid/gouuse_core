@@ -94,7 +94,8 @@ class BaseRpc
 		Log::info('API Result: '.$result);
 		$result = json_decode($result, true);
 			
-		if (empty($result)) {
+		if (empty($result) || !is_array($result)) {
+			throw new Exception("通信失败请稍后重试");
 			$result = array();
 			$result['code'] = 1;
 			$result['err_desc'] = '通信失败请稍后重试';

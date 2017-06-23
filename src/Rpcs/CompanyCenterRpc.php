@@ -12,12 +12,14 @@ class CompanyCenterRpc extends BaseRpc
 {
 	protected $host;
 	
-	function __construct() {
+	function __construct()
+	{
 		$this->host = '';
 		
 	}
 	
-	function getById($company_id) {
+	function getById($company_id = 0)
+	{
 		$url = $this->host . '/company_center/v3/view';
 		$token = explode(' ', $token);
 		$token = end($token);

@@ -39,6 +39,9 @@ class BaseGouuse
     public function __get($class)
     {
     	if ($class == 'member_info') {
+    		if (!defined('NEED_AUTH_CHECK')) {
+    			return null;
+    		}
     		if (isset($GLOBALS['gouuse_member_info'])) {
     			return $GLOBALS['gouuse_member_info'];
     		}

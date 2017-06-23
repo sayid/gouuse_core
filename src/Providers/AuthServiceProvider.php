@@ -17,7 +17,8 @@ class AuthServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		//
+		//注册全局变量 标示启用auth
+		define('NEED_AUTH_CHECK', true);
 	}
 
 	/**

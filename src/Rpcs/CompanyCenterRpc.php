@@ -22,7 +22,7 @@ class CompanyCenterRpc extends BaseRpc
 		$token = explode(' ', $token);
 		$token = end($token);
 		$header[] = 'Authorization: bearer '.$token;
-		$result = $this->postOutside($url, $header, ['company_id' => $company_id]);
+		$result = $this->post($url, [], ['company_id' => $company_id]);
 		return $result;
 	}
 	

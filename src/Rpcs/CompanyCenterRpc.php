@@ -18,7 +18,7 @@ class CompanyCenterRpc extends BaseRpc
 	}
 	
 	function getById($company_id) {
-		$url = $this->host . '/company_center/v3/info';
+		$url = $this->host . '/company_center/v3/view';
 		$token = explode(' ', $token);
 		$token = end($token);
 		$header[] = 'Authorization: bearer '.$token;

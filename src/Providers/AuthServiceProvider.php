@@ -17,9 +17,8 @@ class AuthServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		
 	}
-
+	
 	/**
 	 * Boot the authentication services for the application.
 	 *
@@ -27,20 +26,24 @@ class AuthServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
+		
 		if (isset($_SERVER['GOUUSE_INSIDE'])) {
 			//内部调用
 			if (\preg_match('/192\.168\.(.*)/', $_SERVER['REMOTE_ADDR'])) {
 				define('REQUEST_IS_LOCAL', true);
 			}
 		}
-
+		
 		// Here you may define how you wish users to be authenticated for your Lumen
 		// application. The callback which receives the incoming request instance
 		// should return either a User instance or null. You're free to obtain
 		// the User instance via an API token or any other method necessary.
-
+		
 		$this->app['auth']->viaRequest('api', function ($request) {
-
+			
+			if (!defined('NEED_AUTH_CHECK')) {
+				return;
+			}
 			/**
 			 * 验证，权限判断
 			 */
@@ -53,10 +56,6 @@ class AuthServiceProvider extends ServiceProvider
 				}
 			}
 			
-			if (!defined('NEED_AUTH_CHECK')) {
-				return;
-			}
-			
 			$token = $request->header('Authorization');
 			if (empty($token)) {
 				$token = $request->input('_gouuse_token');
@@ -64,7 +63,7 @@ class AuthServiceProvider extends ServiceProvider
 				$token = explode(' ', $token);
 				$token = end($token);
 			}
-
+			
 			/**
 			 * 登录验证，权限判断
 			 */
@@ -85,9 +84,15 @@ class AuthServiceProvider extends ServiceProvider
 						return;
 					}
 					
-					$class_load = 'App\Libraries\MemberLib';
-					App::bindIf($class_load, null, true);
-					$this->MemberLib = App::make($class_load);
+					if (!empty($member_info)) {
+						return $member_info;
+					}
+					
+					$this->MemberLib= new \App\Libraries\MemberLib();
+					//$class_load = 'App\Libraries\MemberLib';
+					//App::bindIf($class_load, null, true);
+					//$this->MemberLib = App::make($class_load);
+					
 					//验证通过
 					$member_info = $this->MemberLib->memberInfo(['member_id' => $member_id]);
 					
@@ -95,11 +100,12 @@ class AuthServiceProvider extends ServiceProvider
 						return $member_info;
 					}
 				} else {
+					
 					App::bindIf('GouuseCore\Rpcs\AuthCenterRpc', null, true);
 					$member_api = App::make('GouuseCore\Rpcs\AuthCenterRpc');
-	
+					
 					$result = $member_api->check($token);
-	
+					
 					if (isset($result['code']) && $result['code']==0) {
 						$result['data']['_token'] = $token;
 						$result['data']['__source'] = $request->input('_source', 0);
@@ -107,18 +113,18 @@ class AuthServiceProvider extends ServiceProvider
 					}
 				}
 			}
-
+			
 		});
-
-		/**********定义权限*********/
-		Gate::define('admin-super-auth', function ($user) {
-			//A后台 超级管理员
-			return $user['member_id'] ?? true;
-		});
+			
+			/**********定义权限*********/
+			Gate::define('admin-super-auth', function ($user) {
+				//A后台 超级管理员
+				return $user['member_id'] ?? true;
+			});
 				
-		Gate::define('admin-company-auth', function ($user, $company) {
-			//B后台 企业管理员
-			return $user['member_id'] == $company['admin_id'];
-		});
+				Gate::define('admin-company-auth', function ($user, $company) {
+					//B后台 企业管理员
+					return $user['member_id'] == $company['admin_id'];
+				});
 	}
 }

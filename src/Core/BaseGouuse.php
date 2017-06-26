@@ -14,13 +14,12 @@ class BaseGouuse
 	
 	protected $app_id;
 	
-	public $member_info = array();
-	public $company_info = [];
+	//public $member_info = array();
+	//public $company_info = [];
 	
-	public function __construct()
+	public function __construct($params = [])
 	{
 		$this->app_id =  env('GOUUSE_APP_ID');
-		$this->memberInit();
 	}
 	
 	public function memberInit()
@@ -48,16 +47,34 @@ class BaseGouuse
 	public function __get($class)
 	{
 		
-		/*if ($class == 'member_info') {
-		 if (!defined('NEED_AUTH_CHECK')) {
-		 return null;
-		 }
-		 if (isset($GLOBALS['gouuse_member_info'])) {
-		 return $GLOBALS['gouuse_member_info'];
-		 }
-		 $GLOBALS['gouuse_member_info'] = Auth::user();
-		 return $GLOBALS['gouuse_member_info'];
-		 } */
+		if ($class == 'member_info') {
+			if (!defined('NEED_AUTH_CHECK')) {
+				return null;
+			}
+			if (isset(app()['gouuse_member_info'])) {
+				return app()['gouuse_member_info'];
+			}
+			app()['gouuse_member_info']= Auth::user();
+			return app()['gouuse_member_info'];
+		} else if ($class == 'company_info') {
+			if (isset(app()['gouuse_company_info'])) {
+				return app()['gouuse_company_info'];
+			}
+			$company_id = 0;
+			if (!empty(app()['gouuse_member_info'])) {
+				app()['gouuse_member_info']= Auth::user();
+			}
+			$company_id = app()['gouuse_member_info']['company_id'];
+			if ($company_id == 0) {
+				return;
+			}
+			$class_load = "App\Models\CompanyModel";
+			App::bindIf($class_load, null, true);
+			$companyModel= App::make($class_load);
+			
+			app()['gouuse_company_info'] = $companyModel->getById($company_id);
+			return app()['gouuse_company_info'];
+		}
 		
 		if (substr($class, strlen($class) - 3)=='Lib') {
 			if (class_exists("GouuseCore\Libraries\\".$class)) {

@@ -48,7 +48,8 @@ class GatewayLib
 	}
 	
 	public function getHost($uri)
-	{	//return env('API_GATEWAY_HOST');
+	{	
+		return env('API_GATEWAY_HOST');
 	    $upstream = $this->get_upstream($uri);
 	    //解析dns记录
 	    $dns = @dns_get_record(str_replace(['http://', 'https://'], '', $upstream), DNS_SRV);

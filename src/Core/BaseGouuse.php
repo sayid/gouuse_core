@@ -38,18 +38,7 @@ class BaseGouuse
 			app()['gouuse_member_info'] = $this->member_info;
 			
 			if (!empty($this->member_info)) {
-				if (env('SERVICE_ID') == 1007) {
-					//企业中心应用内
-					$this->company_info = $this->CompanyModel->getById($this->member_info['company_id']);
-				} else {
-					//非企业中心应用内
-					try {
-						$gouuse_company_info= $this->CompanyCenterRpc->getInfo($this->member_info['company_id']);
-						app()['gouuse_company_info'] = $this->company_info = $gouuse_company_info['data'];
-					} catch (\Exception $e) {
-						return null;
-					}
-				}
+				$this->company_info = $this->CompanyModel->getById($this->member_info['company_id']);
 			}
 			app()['gouuse_company_info'] = $this->company_info;
 		}

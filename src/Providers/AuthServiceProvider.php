@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Gate;
+use Namshi\JOSE\SimpleJWS;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -65,15 +66,37 @@ class AuthServiceProvider extends ServiceProvider
 			 * 登录验证，权限判断
 			 */
 			if ($token) {
-				App::bindIf('GouuseCore\Rpcs\AuthCenterRpc', null, true);
-				$member_api = App::make('GouuseCore\Rpcs\AuthCenterRpc');
-
-				$result = $member_api->check($token);
-
-				if (isset($result['code']) && $result['code']==0) {
-					$result['data']['_token'] = $token;
-					$result['data']['__source'] = $request->input('_source', 0);
-					return $result['data'];
+				if (env('SERVICE_ID') == 1005) {
+					//用户中心
+					$member_id = 0;
+					try {
+						$jwt = SimpleJWS::load($token, true);
+						$public_key = openssl_pkey_get_public(file_get_contents(ROOT_PATH . env('GATEWAY_APP_PUB_CERT')));
+						
+						if ($jwt->isValid($public_key, 'RS256')) {
+							$payload = $jwt->getPayload();
+							$member_id = $payload['member_id'];
+						}
+					} catch (DecryptException $e) {
+						//
+						return;
+					}
+					
+					$member_info = $this->MemberModel->getById($member_id);
+					if (!empty($member_info)) {
+						return $member_info;
+					}
+				} else {
+					App::bindIf('GouuseCore\Rpcs\AuthCenterRpc', null, true);
+					$member_api = App::make('GouuseCore\Rpcs\AuthCenterRpc');
+	
+					$result = $member_api->check($token);
+	
+					if (isset($result['code']) && $result['code']==0) {
+						$result['data']['_token'] = $token;
+						$result['data']['__source'] = $request->input('_source', 0);
+						return $result['data'];
+					}
 				}
 			}
 

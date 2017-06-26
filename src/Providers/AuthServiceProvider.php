@@ -17,8 +17,7 @@ class AuthServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		//注册全局变量 标示启用auth
-		define('NEED_AUTH_CHECK', true);
+		
 	}
 
 	/**
@@ -53,7 +52,11 @@ class AuthServiceProvider extends ServiceProvider
 					return $member_info;
 				}
 			}
-
+			
+			if (!defined('NEED_AUTH_CHECK')) {
+				return;
+			}
+			
 			$token = $request->header('Authorization');
 			if (empty($token)) {
 				$token = $request->input('_gouuse_token');

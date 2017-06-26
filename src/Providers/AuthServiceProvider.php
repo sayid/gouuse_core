@@ -82,7 +82,12 @@ class AuthServiceProvider extends ServiceProvider
 						return;
 					}
 					
-					$member_info = $this->MemberModel->getById($member_id);
+					$class_load = 'App\Libraries\MemberLib';
+					App::bindIf($class_load, null, true);
+					$this->MemberLib = App::make($class_load);
+					//验证通过
+					$member_info = $this->MemberLib->memberInfo(['member_id' => $member_id]);
+					
 					if (!empty($member_info)) {
 						return $member_info;
 					}

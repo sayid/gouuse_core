@@ -20,11 +20,14 @@ class AuthMiddleWare
      */
     public function handle($request, Closure $next)
     {
-        //验证只能内网访问
-    	if (!preg_match('/192\.168\.(.*)/', $_SERVER['REMOTE_ADDR'])) {
-    		die('error inside');
+    	// 注册全局变量 标示启用auth
+    	define('NEED_AUTH_CHECK', true);
+    	
+    	if ($this->auth->guard($guard)->guest()) {
+    		return response(json_encode([
+    				'code' => CodeLib::MEMBER_AUTH_FAILD]), 200);
     	}
-    	define('REQUEST_IS_LOCAL', true);
+    	
     	return $next($request);
     }
 }

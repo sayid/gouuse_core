@@ -1,5 +1,5 @@
 <?php
-namespace GouuseCore\Http\Middleware;
+namespace GouuseCore\Middleware;
 
 use Illuminate\Support\Facades\Cache;
 use Closure;

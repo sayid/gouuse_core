@@ -26,7 +26,7 @@ class Controller extends BaseGouuse
 		 * 2017-06-07
 		 * 增加：重写Request中提交的数据，如果是app端加密数据，进行解密后将数据重新组合到Request中
 		 */
-		if(isset(app()['Illuminate\Http\Request'])){
+		/*if(isset(app()['Illuminate\Http\Request'])){
 			$request_obj =app()['Illuminate\Http\Request'];
 			$info = $request_obj->input("info");
 			if($info){
@@ -40,7 +40,7 @@ class Controller extends BaseGouuse
                  * @see Symfony\Component\HttpFoundation\Request 底层方法封装
                  * @see Symfony\Component\HttpFoundation\ParameterBag 接口实现
                  */
-				if (count($request_array)>0) {
+				/*if (count($request_array)>0) {
                     foreach ($request_array as $key => $value) {
                         if ($key == 'source') {
                             if ($value == 2 || $value == 3) {
@@ -53,7 +53,7 @@ class Controller extends BaseGouuse
     				}
 				}
 			}
-		}
+		}*/
 	}
 
 	/**
@@ -63,9 +63,9 @@ class Controller extends BaseGouuse
 	 * @param boolean 是否写入日志
 	 * @return unknown
 	 */
-	public function display(array $data, $encrypt = 0, $is_log = true)
+	public function display(array $data, $is_log = true)
 	{
-		if (defined('REQUEST_IS_LOCAL')) {
+		/*if (defined('REQUEST_IS_LOCAL')) {
 			//内部访问时数据不加密
 			$encrypt = 0;
 		} else {
@@ -88,7 +88,7 @@ class Controller extends BaseGouuse
 			}
 		}
 		$data['msg'] = $msg;
-
+*/
 		/*
 		 * lihonglin
 		 * 2017-06-07
@@ -105,14 +105,14 @@ class Controller extends BaseGouuse
 				$this->LogLib->log_info(['param' => json_encode($request), 'result' => json_encode($data)]);
 			}
 		}
-		$data = json_encode($data);
+		/*$data = json_encode($data);
 		if ($encrypt) {
 			//执行加密
 			$key=substr(md5(env('AES_KEY')."gou"),0,8);
 			$data = $this->EncryptLib->encrypt($data, $key);
-		}
-		//return $data;
-		return response($data, 200)->send();
+		}*/
+		return $data;
+		//return response($data, 200)->send();
 	}
 
 	/**

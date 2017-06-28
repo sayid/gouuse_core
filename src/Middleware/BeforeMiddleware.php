@@ -2,6 +2,7 @@
 namespace GouuseCore\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\App;
 
 /**
  * 前置中间件

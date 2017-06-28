@@ -24,8 +24,8 @@ class AuthMiddleWare
     	define('NEED_AUTH_CHECK', true);
     	
     	if ($this->auth->guard($guard)->guest()) {
-    		return response(json_encode([
-    				'code' => CodeLib::MEMBER_AUTH_FAILD]), 200);
+    		return response([
+    				'code' => CodeLib::MEMBER_AUTH_FAILD], 200);
     	}
     	
     	return $next($request);

@@ -29,7 +29,7 @@ class AfterMiddleware
 			$content = json_encode($data);
 		}
 		
-		if ($request->input('source') == 2 || $request->input('source') == 3) {
+		if ($request->input('source') == 2 || $request->input('source') == 3 && !defined('REQUEST_IS_LOCAL')) {
 			//加密
 			$key=substr(md5(env('AES_KEY')."gou"),0,8);
 			$class_load = 'GouuseCore\Libraries\EncryptLib';

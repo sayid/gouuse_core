@@ -27,9 +27,9 @@ class AuthServiceProvider extends ServiceProvider
 	public function boot()
 	{
 		
-		if (isset($_SERVER['GOUUSE_INSIDE'])) {
+		if (isset($_SERVER['HTTP_GOUUSE_INSIDE'])) {
 			//内部调用
-			if (\preg_match('/192\.168\.(.*)/', $_SERVER['REMOTE_ADDR'])) {
+			if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || preg_match('/192\.168\.(\d+).(\d+)/', $_SERVER['REMOTE_ADDR'])) {
 				define('REQUEST_IS_LOCAL', true);
 			}
 		}
@@ -44,13 +44,15 @@ class AuthServiceProvider extends ServiceProvider
 			if (!defined('NEED_AUTH_CHECK')) {
 				return;
 			}
+			
 			/**
 			 * 验证，权限判断
 			 */
 			if (defined('REQUEST_IS_LOCAL')) {
-				if (isset($_SERVER['current_member_info'])) {
+				
+				if (isset($_SERVER['HTTP_CURRENT_MEMBER_INFO'])) {
 					//当前用户id 不用再查询数据库
-					$member_info = json_decode($_SERVER['HTTP_CURRENT_MEMBER_INFO'], true);
+					$member_info = json_decode(urldecode($_SERVER['HTTP_CURRENT_MEMBER_INFO']), true);
 					//返回数据给auth控件
 					return $member_info;
 				}

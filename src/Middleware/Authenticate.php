@@ -9,7 +9,7 @@ use Closure;
  * @author zhangyubo
  *
  */
-class AuthMiddleWare
+class Authenticate
 {
     /**
      * Handle an incoming request.

@@ -73,6 +73,7 @@ class AuthServiceProvider extends ServiceProvider
 				if (env('SERVICE_ID') == 1005) {
 					//用户中心
 					$member_id = 0;
+					$supper_admin = 0;
 					try {
 						$jwt = SimpleJWS::load($token, true);
 						$public_key = openssl_pkey_get_public(file_get_contents(ROOT_PATH . env('GATEWAY_APP_PUB_CERT')));
@@ -80,25 +81,30 @@ class AuthServiceProvider extends ServiceProvider
 						if ($jwt->isValid($public_key, 'RS256')) {
 							$payload = $jwt->getPayload();
 							$member_id = $payload['member_id'];
+							$supper_admin= $payload['supper_admin'] ?? 0;
 						}
 					} catch (DecryptException $e) {
 						//
 						return;
 					}
 					
-					if (!empty($member_info)) {
-						return $member_info;
+					
+					if ($a_site_user == 0) {
+						$class_load = 'App\Libraries\MemberLib';
+						App::bindIf($class_load, null, true);
+						$memberLib = App::make($class_load);
+						$member_info = $memberLib->memberInfo(['member_id' => $member_id]);
+					} else {
+						$class_load = 'App\Models\SystemMemberModel';
+						App::bindIf($class_load, null, true);
+						$systemMemberModel = App::make($class_load);
+						$member_info = $systemMemberModel->getById($member_id);
 					}
 					
-					$this->MemberLib= new \App\Libraries\MemberLib();
-					//$class_load = 'App\Libraries\MemberLib';
-					//App::bindIf($class_load, null, true);
-					//$this->MemberLib = App::make($class_load);
-					
-					//验证通过
-					$member_info = $this->MemberLib->memberInfo(['member_id' => $member_id]);
-					
 					if (!empty($member_info)) {
+						if ($supper_admin) {
+							$member_info['supper_admin'] = $supper_admin;
+						}
 						return $member_info;
 					}
 				} else {
@@ -109,8 +115,6 @@ class AuthServiceProvider extends ServiceProvider
 					$result = $member_api->check($token);
 					
 					if (isset($result['code']) && $result['code']==0) {
-						$result['data']['_token'] = $token;
-						$result['data']['__source'] = $request->input('_source', 0);
 						return $result['data'];
 					}
 				}
@@ -121,7 +125,7 @@ class AuthServiceProvider extends ServiceProvider
 			/**********定义权限*********/
 			Gate::define('admin-super-auth', function ($user) {
 				//A后台 超级管理员
-				return $user['member_id'] ?? true;
+				return isset($user['supper_admin']) && $user['type'] == 0 ? true : false;
 			});
 				
 				Gate::define('admin-company-auth', function ($user, $company) {

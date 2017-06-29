@@ -268,6 +268,21 @@ abstract class BaseModel extends BaseGouuse
         return $rows[0] ?? null;
     }
     
+    public function updateById($id, $data= "", $table = "")
+    {
+    	$table = $this->checkTable($table);
+    	
+    	extract($this->getTableFileds($table));
+    	$id_field = $field_pri;
+    	
+    	$where = [];
+    	$where[$field_pri] = array(
+    			"sign" => "==",
+    			"value" => $id
+    	);
+    	return $this->update($data, $where);
+    }
+    
     public function count($where = "", $distinct = "")
     {
         $table = "";

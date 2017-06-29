@@ -89,7 +89,7 @@ class AuthServiceProvider extends ServiceProvider
 					}
 					
 					
-					if ($a_site_user == 0) {
+					if ($supper_admin== 0) {
 						$class_load = 'App\Libraries\MemberLib';
 						App::bindIf($class_load, null, true);
 						$memberLib = App::make($class_load);

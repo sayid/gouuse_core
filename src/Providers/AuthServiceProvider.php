@@ -74,6 +74,7 @@ class AuthServiceProvider extends ServiceProvider
 					//用户中心
 					$member_id = 0;
 					$supper_admin = 0;
+					$frist_login = 0;
 					try {
 						$jwt = SimpleJWS::load($token, true);
 						$public_key = openssl_pkey_get_public(file_get_contents(ROOT_PATH . env('GATEWAY_APP_PUB_CERT')));
@@ -82,6 +83,7 @@ class AuthServiceProvider extends ServiceProvider
 							$payload = $jwt->getPayload();
 							$member_id = $payload['member_id'];
 							$supper_admin= $payload['supper_admin'] ?? 0;
+							$frist_login= $payload['frist_login'] ?? 0;
 						}
 					} catch (DecryptException $e) {
 						//
@@ -105,6 +107,7 @@ class AuthServiceProvider extends ServiceProvider
 						if ($supper_admin) {
 							$member_info['supper_admin'] = $supper_admin;
 						}
+						$member_info['frist_login'] = $frist_login;
 						return $member_info;
 					}
 				} else {

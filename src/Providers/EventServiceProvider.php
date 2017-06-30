@@ -26,11 +26,13 @@ class EventServiceProvider extends ServiceProvider {
 		Event::listen ( StatementPrepared::class, function ($event) {
 			$event->statement->setFetchMode(\PDO::FETCH_ASSOC);
 		});
-		Event::listen ( QueryExecuted::class, function ($event) {
-			$sql = str_replace("?", "'%s'", $event->sql);
-			$log = vsprintf($sql, $event->bindings);
-			Log::info($log);
-		});
+		if (env('APP_DEBUG') == true) {
+			Event::listen ( QueryExecuted::class, function ($event) {
+				$sql = str_replace("?", "'%s'", $event->sql);
+				$log = vsprintf($sql, $event->bindings);
+				Log::debug($log);
+			});
+		}
 	}
 	
 }

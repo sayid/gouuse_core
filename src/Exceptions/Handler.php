@@ -47,7 +47,11 @@ class Handler extends ExceptionHandler
 	 */
 	public function render($request, Exception $e)
 	{
-		$data = parent::render($request, $e);
+		if (env('APP_DEBUG') == true) {
+			$data = parent::render($request, $e);
+		} else {
+			$data = '';
+		}
 		if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
 			return response(['code'=>CodeLib::REQUEST_NOT_FOUND,'data'=>$data], 404);
 		} else if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {

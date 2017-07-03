@@ -1,6 +1,11 @@
 <?php
 namespace GouuseCore\Libraries;
 
+/**
+ * 定义公共基础code
+ * @author zhangyubo
+ *
+ */
 class CodeLib
 {
 	const REQUEST_NOT_FOUND = 404;//访问地址不存在

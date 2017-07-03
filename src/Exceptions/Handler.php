@@ -47,12 +47,13 @@ class Handler extends ExceptionHandler
 	 */
 	public function render($request, Exception $e)
 	{
+		$data = parent::render($request, $e);
 		if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-			return response(['code'=>CodeLib::REQUEST_NOT_FOUND], 404);
+			return response(['code'=>CodeLib::REQUEST_NOT_FOUND,'data'=>$data], 404);
 		} else if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
-			return response(['code'=>CodeLib::REQUEST_METHOD_ERROR], 405);
+			return response(['code'=>CodeLib::REQUEST_METHOD_ERROR,'data'=>$data], 405);
 		}
-		return response(['code'=>CodeLib::HTTP_ERROR], 500);
+		return response(['code'=>CodeLib::HTTP_ERROR,'data'=>$data], 500);
 		return parent::render($request, $e);
 	}
 }

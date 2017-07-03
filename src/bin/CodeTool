@@ -5,10 +5,7 @@ main($argc, $argv);
 
 function main($argc, $argv)
 {
-	 if ($argc <= 1) {
-            echo '请输入code目标文件名' . PHP_EOL;
-            echo  PHP_EOL;
-    } else {
+	
 
         $root = __DIR__.'/../../../../../';
         
@@ -25,10 +22,9 @@ function main($argc, $argv)
 		    echo '请确保app/Libraries/CodeLib.php是否在项目目录下';
 		    echo  PHP_EOL;
 		} else {
-		echo __DIR__;
 			$handle_base = fopen(__DIR__.'/../Libraries/CodeLib.php', 'r');
 		    $handle = fopen($codelib, 'r');
-		    $respon_file = $root . 'resources/options/zh_cn/'.$argv[1];
+		    $respon_file = $root . 'resources/options/zh_cn/error_code.inc.php';
 		    $str = "<?php\n".'$config = ['."\n";
 		    file_put_contents($respon_file, $str);
 		    $json = [];
@@ -66,13 +62,14 @@ function main($argc, $argv)
 		            $json[trim($key)] = addslashes($commds);
 		        }
 		    }
-		    
+		    $cache = new \GouuseCore\Libraries\CacheLib;
+		    $cache->delete("x_system_get_options_error_code_options_zh_cn");
 		    $str = '];'."\n";
 		    file_put_contents($respon_file, $str, FILE_APPEND);
 		    $json = json_encode($json, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
 		    file_put_contents($root."public/swagger-docs/code.json", $json);
 		}
         
-    }
+    
 }
 

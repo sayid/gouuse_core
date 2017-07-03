@@ -11,8 +11,10 @@ class AfterMiddleware
 	{
 		$response = $next($request);
 		
-		$content = $response->getContent();
-		$data = json_decode($content, true);
+		$content = $data= $response->getContent();
+		if (is_string($data)) {
+			$data = json_decode($data, true);
+		}
 		if (is_array($data) && $data['code']>0 && empty($data['msg'])) {
 			$code = $data['code'];
 			$lang = $request->input('app_lang') ? : 'zh_cn';

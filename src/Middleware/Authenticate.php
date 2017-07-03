@@ -1,7 +1,6 @@
 <?php
 namespace GouuseCore\Middleware;
 
-use Illuminate\Support\Facades\Cache;
 use Closure;
 
 /**
@@ -9,7 +8,7 @@ use Closure;
  * @author zhangyubo
  *
  */
-class Authenticate
+abstract  class Authenticate
 {
     /**
      * Handle an incoming request.

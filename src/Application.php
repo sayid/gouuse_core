@@ -26,4 +26,4 @@ if (!defined('TIME_START')){
 }
 
 if (!defined('ROOT_PATH'))
-	define('ROOT_PATH', substr(__DIR__,0,-9));
+	define('ROOT_PATH', substr(__DIR__,0,-22));

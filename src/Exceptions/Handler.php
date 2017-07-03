@@ -49,7 +49,8 @@ class Handler extends ExceptionHandler
         if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
             return response(['code'=>404], 404);
         } else if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
-            return response(['code'=>404], 404);
+            //post get方法不匹配
+        	return response(['code'=>405], 405);
         }
         return response(['code'=>500], 500);
         return parent::render($request, $e);

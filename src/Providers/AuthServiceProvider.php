@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Gate;
 use Namshi\JOSE\SimpleJWS;
+use App\Libraries\CodeLib;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -65,7 +66,10 @@ class AuthServiceProvider extends ServiceProvider
 				$token = explode(' ', $token);
 				$token = end($token);
 			}
-			
+			if (empty($token)) {
+				//需要token登录
+				return CodeLib::AUTH_REQUIRD;
+			}
 			/**
 			 * 登录验证，权限判断
 			 */
@@ -85,11 +89,12 @@ class AuthServiceProvider extends ServiceProvider
 							$supper_admin= $payload['supper_admin'] ?? 0;
 							$first_login= $payload['first_login'] ?? 0;
 						}
+					} catch (\InvalidArgumentException $e) {
+						return CodeLib::AUTH_FAILD;
 					} catch (DecryptException $e) {
 						//
-						return;
+						return CodeLib::AUTH_FAILD;
 					}
-					
 					
 					if ($supper_admin== 0) {
 						$class_load = 'App\Libraries\MemberLib';
@@ -102,13 +107,14 @@ class AuthServiceProvider extends ServiceProvider
 						$systemMemberModel = App::make($class_load);
 						$member_info = $systemMemberModel->getById($member_id);
 					}
-					
 					if (!empty($member_info)) {
 						if ($supper_admin) {
 							$member_info['supper_admin'] = $supper_admin;
 						}
 						$member_info['first_login'] = $first_login || empty($member_info['last_login_time']) ? 1 : 0;
 						return $member_info;
+					} else {
+						return CodeLib::AUTH_FAILD;
 					}
 				} else {
 					
@@ -120,6 +126,7 @@ class AuthServiceProvider extends ServiceProvider
 					if (isset($result['code']) && $result['code']==0) {
 						return $result['data'];
 					}
+					return $result['code'];
 				}
 			}
 			

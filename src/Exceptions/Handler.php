@@ -8,7 +8,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use App\Libraries\CodeLib;
+use GouuseCore\Libraries\CodeLib;
 
 class Handler extends ExceptionHandler
 {

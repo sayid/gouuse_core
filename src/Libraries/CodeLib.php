@@ -18,5 +18,6 @@ class CodeLib
 	const AUTH_TIMEOUT = 1005104101;//登录已过期，请重新登录
 	const AUTH_REQUIRD = 1005104102;//请登录
 	const AUTH_DENY = 1005104103;//无权访问
+	const AUTH_ON_OTHER_CLIENT = 1005104104;//账号已在其他设备登录
 	
 }

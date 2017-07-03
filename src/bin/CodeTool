@@ -30,6 +30,10 @@ function main($argc, $argv)
 		    $str = "<?php\n".'$config = ['."\n";
 		    file_put_contents($respon_file, $str);
 		    $json = [];
+		    $common_code = [
+		    	404 => '访问地址不存在',
+		    	500 => '服务器内部错误'
+		    ];
 		    while(!feof($handle)){
 		        $line = fgets($handle);
 		        if ($index = strpos($line, 'const')) {
@@ -45,7 +49,10 @@ function main($argc, $argv)
 		            file_put_contents($respon_file, $str, FILE_APPEND);
 		            $json[trim($key)] = addslashes($commds);
 		        }
-		       
+		    }
+		    foreach (common_code as $key => $info) {
+		    	 $str = "    ". trim($key) . " => '" . addslashes($info)."',\n";
+		    	  file_put_contents($respon_file, $str, FILE_APPEND);
 		    }
 		    $str = '];'."\n";
 		    file_put_contents($respon_file, $str, FILE_APPEND);

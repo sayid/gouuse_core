@@ -43,11 +43,11 @@ class MemberRpc extends BaseRpc
 	 * 注册员工
 	 * @param unknown $member_info
 	 * @return \GouuseCore\Rpcs\number[]|\GouuseCore\Rpcs\string[]|mixed
-	 */
+	
 	function register($member_info) {
 			
 		$url = $this->host . '/user_center/v3/member_add_do';
 		$result = $this->post($url, [], $member_info);
 		return $result;
-	}
+	} */
 }

@@ -53,11 +53,11 @@ class Handler extends ExceptionHandler
 			$data = '';
 		}
 		if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-			return response(['code'=>CodeLib::REQUEST_NOT_FOUND,'data'=>$data], 404);
+			return response(['code'=>CodeLib::REQUEST_NOT_FOUND,'exception'=>$data], 404);
 		} else if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
-			return response(['code'=>CodeLib::REQUEST_METHOD_ERROR,'data'=>$data], 405);
+			return response(['code'=>CodeLib::REQUEST_METHOD_ERROR,'exception'=>$data], 405);
 		}
-		return response(['code'=>CodeLib::HTTP_ERROR,'data'=>$data], 500);
+		return response(['code'=>CodeLib::HTTP_ERROR,'exception'=>$data], 500);
 		return parent::render($request, $e);
 	}
 }

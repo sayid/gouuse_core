@@ -5,6 +5,7 @@ use Ixudra\Curl\Facades\Curl;
 
 use Log;
 use Illuminate\Support\Facades\Auth;
+use GouuseCore\Exceptions\GouuseRpcException;
 
 /**
  * API SDK基类
@@ -95,10 +96,10 @@ class BaseRpc
 		$result = json_decode($result, true);
 			
 		if (empty($result) || !is_array($result)) {
-			throw new Exception("通信失败请稍后重试");
+			throw new RpcException("通信失败请稍后重试");
 			$result = array();
 			$result['code'] = 1;
-			$result['err_desc'] = '通信失败请稍后重试';
+			$result['msg'] = '通信失败请稍后重试';
 		}
 		return $result;
 	}

@@ -5,7 +5,7 @@ use Ixudra\Curl\Facades\Curl;
 
 use Log;
 use Illuminate\Support\Facades\Auth;
-use GouuseCore\Exceptions\GouuseRpcException;
+use GouuseCore\Exceptions\RpcException;
 
 /**
  * API SDK基类

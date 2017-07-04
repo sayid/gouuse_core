@@ -23,10 +23,10 @@ class DocumentRpc extends BaseRpc
 	 * @param int $file_id
 	 * @return \GouuseCore\Rpcs\number[]|\GouuseCore\Rpcs\string[]|mixed
 	 */
-	function getFileInfo(int $file_id) {
+	function getFileInfo($cond = []) {
 		 
 		$url = '/file_service/v3/file/info';
-		$result = $this->post($url, [], [ 'file_id' => $file_id]);
+		$result = $this->post($url, [], $cond);
 		return $result;
 	}
 

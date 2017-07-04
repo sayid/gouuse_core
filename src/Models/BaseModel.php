@@ -277,7 +277,7 @@ abstract class BaseModel extends BaseGouuse
     	
     	$where = [];
     	$where[$field_pri] = array(
-    			"sign" => "==",
+    			"sign" => "=",
     			"value" => $id
     	);
     	return $this->update($data, $where);

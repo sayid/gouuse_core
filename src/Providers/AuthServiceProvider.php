@@ -77,7 +77,7 @@ class AuthServiceProvider extends ServiceProvider
 				if (env('SERVICE_ID') == 1005) {
 					//用户中心
 					$member_id = 0;
-					$supper_admin = 0;
+					$super_admin= 0;
 					$first_login = 0;
 					try {
 						$jwt = SimpleJWS::load($token, true);
@@ -85,8 +85,9 @@ class AuthServiceProvider extends ServiceProvider
 						
 						if ($jwt->isValid($public_key, 'RS256')) {
 							$payload = $jwt->getPayload();
+							
 							$member_id = $payload['member_id'];
-							$supper_admin= $payload['supper_admin'] ?? 0;
+							$super_admin= $payload['super_admin'] ?? 0;
 							$first_login= $payload['first_login'] ?? 0;
 						}
 					} catch (\InvalidArgumentException $e) {
@@ -96,7 +97,7 @@ class AuthServiceProvider extends ServiceProvider
 						return CodeLib::AUTH_FAILD;
 					}
 					
-					if ($supper_admin== 0) {
+					if ($super_admin== 0) {
 						$class_load = 'App\Libraries\MemberLib';
 						App::bindIf($class_load, null, true);
 						$memberLib = App::make($class_load);
@@ -108,8 +109,8 @@ class AuthServiceProvider extends ServiceProvider
 						$member_info = $systemMemberModel->getById($member_id);
 					}
 					if (!empty($member_info)) {
-						if ($supper_admin) {
-							$member_info['supper_admin'] = $supper_admin;
+						if ($super_admin) {
+							$member_info['super_admin'] = $super_admin;
 						}
 						$member_info['first_login'] = $first_login || empty($member_info['last_login_time']) ? 1 : 0;
 						return $member_info;
@@ -135,7 +136,7 @@ class AuthServiceProvider extends ServiceProvider
 			/**********定义权限*********/
 			Gate::define('admin-super-auth', function ($user) {
 				//A后台 超级管理员
-				return isset($user['supper_admin']) && $user['type'] == 0 ? true : false;
+				return isset($user['super_admin']) && $user['type'] == 1 ? true : false;
 			});
 				
 				Gate::define('admin-company-auth', function ($user, $company) {

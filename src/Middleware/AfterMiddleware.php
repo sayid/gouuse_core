@@ -27,6 +27,7 @@ class AfterMiddleware
 					$msg=str_replace("{".$key."}", $value, $msg);
 				}
 			}
+			$data['code'] = strval($code);
 			$data['msg'] = $msg;
 			$content = json_encode($data);
 		}

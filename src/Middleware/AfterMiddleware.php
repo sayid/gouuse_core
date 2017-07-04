@@ -24,7 +24,9 @@ class AfterMiddleware
 			
 			if(isset($data['data'])){
 				foreach ($data['data'] as $key => $value) {
-					$msg=str_replace("{".$key."}", $value, $msg);
+					if (is_string($value)) {
+						$msg=str_replace("{".$key."}", $value, $msg);
+					}
 				}
 			}
 			$data['code'] = strval($code);

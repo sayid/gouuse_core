@@ -15,7 +15,7 @@ class AfterMiddleware
 		if (is_string($data)) {
 			$data = json_decode($data, true);
 		}
-		if (is_array($data) && $data['code']>0 && empty($data['msg'])) {
+		if (is_array($data) && isset($data['code']) && $data['code']>0 && empty($data['msg'])) {
 			$code = $data['code'];
 			$lang = $request->input('app_lang') ? : 'zh_cn';
 			$lang = $lang ? $lang : 'zh_cn';

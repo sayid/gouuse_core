@@ -14,12 +14,12 @@ class BaseGouuse
 	
 	protected $app_id;
 	
-	//public $member_info = array();
+	//public $member_info = [];
 	//public $company_info = [];
 	
 	public function __construct($params = [])
 	{
-		$this->app_id =  env('GOUUSE_APP_ID');
+		$this->app_id =  env('SERVICE_ID');
 	}
 	
 	public function memberInit()
@@ -37,7 +37,22 @@ class BaseGouuse
 			app()['gouuse_member_info'] = $this->member_info;
 			
 			if (!empty($this->member_info)) {
-				$this->company_info = $this->CompanyModel->getById($this->member_info['company_id']);
+				if (env('SERVICE_ID') == 1005) {
+					$class_load = "App\Models\CompanyModel";
+					App::bindIf($class_load, null, true);
+					$companyModel= App::make($class_load);
+					app()['gouuse_company_info'] = $companyModel->getById($company_id);
+					return app()['gouuse_company_info'];
+				} else {
+					App::bindIf('GouuseCore\Rpcs\CompanyCenterRpc', null, true);
+					$company_api = App::make('GouuseCore\Rpcs\CompanyCenterRpc');
+					$company_info = $company_api->getById($company_id);
+					app()['gouuse_company_info'] = [];
+					if ($company_info['code'] != 0) {
+						return response($company_info)->send();exit();
+					}
+					return app()['gouuse_company_info'];
+				}
 			}
 			app()['gouuse_company_info'] = $this->company_info;
 		}
@@ -60,20 +75,6 @@ class BaseGouuse
 			if (isset(app()['gouuse_company_info'])) {
 				return app()['gouuse_company_info'];
 			}
-			$company_id = 0;
-			if (!empty(app()['gouuse_member_info'])) {
-				app()['gouuse_member_info']= Auth::user();
-			}
-			$company_id = app()['gouuse_member_info']['company_id'];
-			if ($company_id == 0) {
-				return;
-			}
-			$class_load = "App\Models\CompanyModel";
-			App::bindIf($class_load, null, true);
-			$companyModel= App::make($class_load);
-			
-			app()['gouuse_company_info'] = $companyModel->getById($company_id);
-			return app()['gouuse_company_info'];
 		}
 		
 		if (substr($class, strlen($class) - 3)=='Lib') {

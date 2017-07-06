@@ -53,7 +53,8 @@ class AuthServiceProvider extends ServiceProvider
 				
 				if (isset($_SERVER['HTTP_CURRENT_MEMBER_ID'])) {
 					//当前用户id 不用再查询数据库
-					$member_info = json_decode(urldecode($request->input('GOUUSE_XX_V3_MEMBER_INFO')), true);
+					app()['gouuse_member_info'] = $member_info = json_decode(urldecode($request->input('GOUUSE_XX_V3_MEMBER_INFO')), true);
+					app()['gouuse_company_info'] = json_decode(urldecode($request->input('GOUUSE_XX_V3_COMPANY_INFO')), true);
 					//返回数据给auth控件
 					return $member_info;
 				}
@@ -113,19 +114,28 @@ class AuthServiceProvider extends ServiceProvider
 							$member_info['super_admin'] = $super_admin;
 						}
 						$member_info['first_login'] = $first_login || empty($member_info['last_login_time']) ? 1 : 0;
+						app()['gouuse_member_info'] = $member_info;
+						$company_info = [];
+						if (isset($member_info['company_id']) && $member_info['company_id'] > 0) {
+							$class_load = 'App\Models\CompanyModel';
+							App::bindIf($class_load, null, true);
+							$companyModel= App::make($class_load);
+							$company_info = $companyModel->getById($member_info['company_id']);
+						}
+						app()['gouuse_company_info'] = $company_info;
 						return $member_info;
 					} else {
 						return CodeLib::AUTH_FAILD;
 					}
 				} else {
-					
 					App::bindIf('GouuseCore\Rpcs\AuthCenterRpc', null, true);
 					$member_api = App::make('GouuseCore\Rpcs\AuthCenterRpc');
-					
 					$result = $member_api->check($token);
-					
 					if (isset($result['code']) && $result['code']==0) {
-						return $result['data'];
+						$result['data']['member_info']['_gouuse_token'] = $token;
+						app()['gouuse_member_info'] = $result['data']['member_info'];
+						app()['gouuse_company_info'] = $result['data']['company_info'];
+						return $result['data']['member_info'];
 					}
 					return $result['code'];
 				}

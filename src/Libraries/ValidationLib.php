@@ -94,4 +94,18 @@ $str) == 1;
     {
         return filter_var($str, FILTER_VALIDATE_IP) === false ? false : true;
     }
+    
+    /**
+     * 将error替换为自定义code
+     * @param array $errors
+     * @param array $messages
+     * @return unknown
+     */
+    public function getErrorCode($errors = [], $messages = [])
+    {
+    	$error = current(current($errors));
+    	$key = str_replace('validation.',key($errors).'.', $error);
+    	
+    	return isset($messages[$key]) ? $messages[$key] : $error;
+    }
 }

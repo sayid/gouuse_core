@@ -23,23 +23,25 @@ class DocumentRpc extends BaseRpc
 	 * @param int $file_id
 	 * @return \GouuseCore\Rpcs\number[]|\GouuseCore\Rpcs\string[]|mixed
 	 */
-	function getFileInfo($cond = []) {
+	function getFileInfo($cond = [])
+	{
 		 
 		$url = '/file_service/v3/file/info';
 		$result = $this->post($url, [], $cond);
 		return $result;
 	}
 
-	
 	/**
-	 * 注册员工
-	 * @param unknown $member_info
+	 * 删除文件
+	 * @param int $file_id
 	 * @return \GouuseCore\Rpcs\number[]|\GouuseCore\Rpcs\string[]|mixed
-	
-	function register($member_info) {
-			
-		$url = $this->host . '/user_center/v3/member_add_do';
-		$result = $this->post($url, [], $member_info);
+	 */
+	function delFile($file_id = 0)
+	{
+		
+		$url = '/file_service/v3/del_file_do';
+		$result = $this->post($url, [], ['file_id' => $file_id]);
 		return $result;
-	} */
+	}
+	
 }

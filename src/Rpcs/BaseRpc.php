@@ -71,10 +71,24 @@ class BaseRpc
 		$header[] = 'GOUUSE-INSIDE: '.time();
 		if (self::$current_member_id) {
 			$header[] = 'CURRENT-MEMBER-ID:' . self::$current_member_id;
-			$header[] = 'CURRENT-MEMBER-NAME:' . self::$user['member_name'];
-			$header[] = 'CURRENT-COMPANY-ID:' . self::$user['company_id'];
-			$header[] = 'CURRENT-MEMBER-INFO:' . json_encode(self::$user);
-			$header[] = 'CURRENT-COMPANY-INFO:' . json_encode(self::$company_info);
+			$header[] = 'CURRENT-MEMBER-NAME:' . self::$user ['member_name'];
+			$header [] = 'CURRENT-COMPANY-ID:' . self::$user ['company_id'];
+			/*$header [] = 'CURRENT-MEMBER-INFO:' . json_encode ( [ 
+					'member_id' => self::$user ['member_id'],
+					'member_name' => self::$user ['member_name'],
+					'company_id' => self::$user ['company_id'],
+					'super_admin' => self::$user ['super_admin'] ?? 0,
+					'email' => self::$user ['email'],
+					'mobile' => self::$user ['mobile'],
+					'mobile' => self::$user ['mobile'],
+			] );
+			$header [] = 'CURRENT-COMPANY-INFO:' . json_encode ( [ 
+					'company_id' => self::$company_info ['company_id'],
+					'company_name' => self::$company_info ['company_name'],
+					'admin_id' => self::$company_info ['admin_id'],
+			] );*/
+			$data['GOUUSE_XX_V3_MEMBER_INFO'] = json_encode (self::user);
+			//$data['GOUUSE_V3_COMPANY_INFO'] = json_encode (self::company_info);
 		}
 
 		$result = Curl::to($url)

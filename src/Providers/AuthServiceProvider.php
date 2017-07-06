@@ -51,9 +51,9 @@ class AuthServiceProvider extends ServiceProvider
 			 */
 			if (defined('REQUEST_IS_LOCAL')) {
 				
-				if (isset($_SERVER['HTTP_CURRENT_MEMBER_INFO'])) {
+				if (isset($_SERVER['HTTP_CURRENT_MEMBER_ID'])) {
 					//当前用户id 不用再查询数据库
-					$member_info = json_decode(urldecode($_SERVER['HTTP_CURRENT_MEMBER_INFO']), true);
+					$member_info = json_decode(urldecode($request->input('GOUUSE_XX_V3_MEMBER_INFO')), true);
 					//返回数据给auth控件
 					return $member_info;
 				}

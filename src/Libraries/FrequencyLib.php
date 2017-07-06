@@ -21,11 +21,18 @@ class FrequencyLib extends Lib
     	$this->CacheLib->set(md5($url.'_'.$key), $value, $life_time);
     }
     
+    /**
+     * 检测频率，生命周期内只能请求多少次
+     * @param unknown $url
+     * @param unknown $key
+     * @param number $times
+     * @return boolean
+     */
     public function check($url, $key, $times = 5)
     {
     	$value = $this->CacheLib->get(md5($url.'_'.$key));
     	$value = intval($value) + 1;
-    	if ($value >= $times) {
+    	if ($value > $times) {
     		return false;
     	}
     	return true;

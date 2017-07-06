@@ -40,8 +40,8 @@ vendor/bin/Swoole start | stop | reload | restart | quit
 9、阿里消息订阅服务
 在.env中配置：
 QUEUE_PREFIX=dev-
-QUEUE_MNS_ACCESS_KEY=dZXh0G2laatxxxx
-QUEUE_MNS_SECRET_KEY=hdEcO9HAIXtOxpMKjKppVBeixxxx
+QUEUE_MNS_ACCESS_KEY=
+QUEUE_MNS_SECRET_KEY=
 QUEUE_MNS_ENDPOINT=http://xxxxxxxxxxxxxxxxx.mns.cn-beijing.aliyuncs.com/
 发送消息到消息中心：
 $messge_data = [消息体组合数组];

@@ -1,7 +1,7 @@
 <?php 
 namespace GouuseCore\Exceptions;
 
-use Symfony\Component\HttpKernel\HttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class GouuseRpcException extends HttpException
 {

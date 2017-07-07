@@ -56,6 +56,8 @@ class Handler extends ExceptionHandler
 			return response(['code'=>CodeLib::REQUEST_NOT_FOUND,'exception'=>$data], 404);
 		} else if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
 			return response(['code'=>CodeLib::REQUEST_METHOD_ERROR,'exception'=>$data], 405);
+		} else if ($e instanceof \GouuseCore\Exceptions\GouuseRpcException) {
+			return response(['code'=>CodeLib::RPC_SERVER_ERR,'exception'=>$data], 500);
 		}
 		return response(['code'=>CodeLib::HTTP_ERROR,'exception'=>$data], 500);
 		return parent::render($request, $e);

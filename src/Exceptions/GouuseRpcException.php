@@ -1,9 +1,9 @@
 <?php 
 namespace GouuseCore\Exceptions;
 
-namespace Symfony\Component\HttpKernel\Exception;
+namespace Symfony\Component\HttpKernel\HttpException;
 
-class RpcException extends HttpException
+class GouuseRpcException extends HttpException
 {
 	public function __construct($message = null, \Exception $previous = null, $code = 0)
 	{

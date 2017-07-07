@@ -5,7 +5,7 @@ use Ixudra\Curl\Facades\Curl;
 
 use Log;
 use Illuminate\Support\Facades\Auth;
-use GouuseCore\Exceptions\RpcException;
+use GouuseCore\Exceptions\GouuseRpcException;
 
 /**
  * API SDK基类
@@ -71,7 +71,6 @@ class BaseRpc
 		$header[] = 'GOUUSE-INSIDE: '.time();
 		if (self::$current_member_id) {
 			$header[] = 'CURRENT-MEMBER-ID:' . self::$current_member_id;
-			$header[] = 'CURRENT-MEMBER-NAME:' . self::$user ['member_name'];
 			$header [] = 'CURRENT-COMPANY-ID:' . self::$user ['company_id'];
 			$data['GOUUSE_XX_V3_MEMBER_INFO'] = json_encode (self::user);
 			$data['GOUUSE_XX_V3_COMPANY_INFO'] = json_encode (self::company_info);
@@ -82,6 +81,7 @@ class BaseRpc
 		->withData($data)
 		->post();
 		Log::info('API data: '.print_r($data, true));
+		Log::info('API header: '.print_r($header, true));
 		return $this->buildResult($result);
 	}
 
@@ -96,7 +96,7 @@ class BaseRpc
 		$result = json_decode($result, true);
 			
 		if (empty($result) || !is_array($result)) {
-			throw new RpcException("通信失败请稍后重试");
+			throw new GouuseRpcException("通信失败请稍后重试");
 			$result = array();
 			$result['code'] = 1;
 			$result['msg'] = '通信失败请稍后重试';

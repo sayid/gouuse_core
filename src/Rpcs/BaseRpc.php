@@ -4,6 +4,7 @@ namespace GouuseCore\Rpcs;
 use Log;
 use Illuminate\Support\Facades\Auth;
 use GouuseCore\Exceptions\GouuseRpcException;
+use Ixudra\Curl\Facades\Curl;
 
 /**
  * API SDK基类

@@ -26,6 +26,12 @@ abstract class BaseModel extends BaseGouuse
     {
         parent::__construct();
     }
+    
+    public function getTable()
+    {
+    	return $this->table;
+    }
+    
     /**
      * 获取 mysql表的字段
      * @param  [type] $table [description]
@@ -128,7 +134,8 @@ abstract class BaseModel extends BaseGouuse
             foreach ($data as $index => $val) {
                 $index_format = str_replace(array("+", "-"), array("", ""), $index);
                 if (in_array($index_format, $field_list) == false && is_numeric($index_format) == false) {
-                    unset($data[$index]);
+                	throw new Exception($index_format . ' is not a field of ' . $table);
+                	unset($data[$index]);
                 }
             }
             return $data;

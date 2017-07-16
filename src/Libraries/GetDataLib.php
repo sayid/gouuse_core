@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 class GetDataLib extends Lib
 {
 
-    public $ci;
 
     public $no_sort = 0;
 
@@ -16,13 +15,10 @@ class GetDataLib extends Lib
     // 1-所有字段，2-取‘1’
     public function __construct()
     {
-        // echo 1;die;
-        // $this->ci=& get_instance();
     }
 
     public function start($data_name, $data, $array_cache, $get_total_type = 1, $return_out_data = 1)
     {
-        // $this->app->aa();die;
         $get_data = new GetDataLib();
         $sort_string = "";
         $config = OptionHelper::getOption($data_name, "data"); // 修改

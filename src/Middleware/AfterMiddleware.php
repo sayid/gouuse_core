@@ -4,6 +4,7 @@ namespace GouuseCore\Middleware;
 use GouuseCore\Helpers\OptionHelper;
 use Closure;
 use Illuminate\Support\Facades\App;
+use GouuseCore\Helpers\DateHelper;
 
 class AfterMiddleware
 {
@@ -15,7 +16,7 @@ class AfterMiddleware
 		if (is_string($data)) {
 			$data = json_decode($data, true);
 		}
-		$time = \GouuseCore\microtime_float();
+		$time = DateHelper::microtime_float();
 		$data['run_time'] = $time - TIME_START;
 		
 		if (is_array($data) && isset($data['code']) && $data['code']>0 && empty($data['msg'])) {

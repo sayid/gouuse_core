@@ -1,5 +1,6 @@
 <?php
 namespace GouuseCore;
+use GouuseCore\Helpers\DateHelper;
 
 class Application extends \Laravel\Lumen\Application
 {
@@ -16,12 +17,7 @@ class Application extends \Laravel\Lumen\Application
 }
 
 if (!defined('TIME_START')){
-	function microtime_float()
-	{
-		list($usec, $sec) = explode(" ", microtime());
-		return ((float)$usec + (float)$sec);
-	}
-	$time_start=microtime_float();
+	$time_start = DateHelper::microtime_float();
 	define('TIME_START', $time_start);
 }
 

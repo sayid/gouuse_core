@@ -15,6 +15,9 @@ class AfterMiddleware
 		if (is_string($data)) {
 			$data = json_decode($data, true);
 		}
+		$time = \GouuseCore\microtime_float();
+		$data['run_time'] = $time - TIME_START;
+		
 		if (is_array($data) && isset($data['code']) && $data['code']>0 && empty($data['msg'])) {
 			$code = $data['code'];
 			$lang = $request->input('app_lang') ? : 'zh_cn';
@@ -31,9 +34,10 @@ class AfterMiddleware
 			}
 			$data['code'] = strval($code);
 			$data['msg'] = $msg;
-			$content = json_encode($data);
 		}
-		
+		if (is_array($data)) {
+		  $content = json_encode($data);
+		}
 		if ($request->input('source') == 2 || $request->input('source') == 3 && !defined('REQUEST_IS_LOCAL')) {
 			//加密
 			$key=substr(md5(env('AES_KEY')."gou"),0,8);

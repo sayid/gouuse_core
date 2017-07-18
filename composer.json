@@ -2,7 +2,7 @@
     "name": "gouuse/core",
     "description": "gouuse core files",
     "type": "library",
-    "version": "1.1.90",
+    "version": "1.1.91",
     "bin": ["src/bin/CodeTool","src/bin/Swoole"],
     "require": {
         "ixudra/curl": "6.*",
@@ -15,7 +15,7 @@
         "lokielse/laravel-mns": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~6.0",
+        "phpunit/phpunit": "~5.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~0.9"
     },

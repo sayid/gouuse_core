@@ -2,31 +2,48 @@
 namespace GouuseCore\Middleware;
 
 use Closure;
-
-/**
- * 判断
- * @author zhangyubo
- *
- */
-abstract  class Authenticate
+use Illuminate\Contracts\Auth\Factory as Auth;
+class Authenticate
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
-    public function handle($request, Closure $next)
-    {
-    	// 注册全局变量 标示启用auth
-    	define('NEED_AUTH_CHECK', true);
-    	
-    	if ($this->auth->guard($guard)->guest()) {
-    		return response([
-    				'code' => CodeLib::MEMBER_AUTH_FAILD], 200);
-    	}
-    	
-    	return $next($request);
-    }
+	
+	/**
+	 * The authentication guard factory instance.
+	 *
+	 * @var \Illuminate\Contracts\Auth\Factory
+	 */
+	protected $auth;
+	
+	
+	/**
+	 * Create a new middleware instance
+	 * Authenticate constructor.
+	 * @param Auth $auth
+	 */
+	public function __construct(Auth $auth)
+	{
+		$this->auth = $auth;
+	}
+	
+	/**
+	 * Handle an incoming request.
+	 * @param $request
+	 * @param Closure $next
+	 * @param null $guard
+	 * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory|mixed
+	 */
+	public function handle($request, Closure $next, $guard = null)
+	{
+		// 注册全局变量 标示启用auth
+		define('NEED_AUTH_CHECK', true);
+		
+		if ($this->auth->guard($guard)->guest()) {
+			return response([
+					'code' => CodeLib::AUTH_REQUIRD], 200);
+		}
+		if (is_numeric($code = $request->user())) {
+			return response([
+					'code' => $code], 200);
+		}
+		return $next($request);
+	}
 }

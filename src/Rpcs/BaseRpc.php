@@ -26,8 +26,8 @@ class BaseRpc
 	}
 	public function preData()
 	{
-		if (empty(self::$_urrent_member_id)) {
-			self::$user = Auth::user();
+		if (empty(self::$current_member_id)) {
+			self::$user = isset(app()['gouuse_member_info']) ? app()['gouuse_member_info'] : [];
 			self::$current_member_id = self::$user['member_id'];
 			self::$company_info = isset(app()['gouuse_company_info']) ? app()['gouuse_company_info'] : [];
 		}
@@ -71,8 +71,8 @@ class BaseRpc
 		if (self::$current_member_id) {
 			$header[] = 'CURRENT-MEMBER-ID:' . self::$current_member_id;
 			$header [] = 'CURRENT-COMPANY-ID:' . self::$user ['company_id'];
-			$data['GOUUSE_XX_V3_MEMBER_INFO'] = json_encode (self::user);
-			$data['GOUUSE_XX_V3_COMPANY_INFO'] = json_encode (self::company_info);
+			$data['GOUUSE_XX_V3_MEMBER_INFO'] = json_encode (self::$user);
+			$data['GOUUSE_XX_V3_COMPANY_INFO'] = json_encode (self::$company_info);
 		}
 
 		$result = Curl::to($url)

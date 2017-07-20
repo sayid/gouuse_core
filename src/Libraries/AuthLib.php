@@ -18,9 +18,10 @@ class AuthLib extends Lib
 	 */
 	public function needCompanyAdminAuth()
 	{
-		if (empty($this->member_info)) {
+		if (empty($this->member_info['member_id'])) {
 			return ['code' => CodeLib::AUTH_DENY];
 		}
+		
 		if ($this->member_info['member_id'] != $this->company_info['admin_id']) {
 			return ['code' => CodeLib::AUTH_DENY];
 		}
@@ -31,12 +32,13 @@ class AuthLib extends Lib
 	 * 需要应用管理员权限
 	 * @return number
 	 */
-	public function needCompanyAppAdminAuth()
+	public function needCompanyAppAdminAuth($app_id)
 	{
-		if (empty($this->member_info)) {
+		if (empty($this->member_info['member_id'])) {
 			return ['code' => CodeLib::AUTH_DENY];
 		}
-		if (!in_array(env('SERVICE_ID'), $this->member_info['manage_app'])) {
+		
+		if (!in_array($app_id, $this->member_info['manage_app'])) {
 			//当前用户不能管理该应用
 			return ['code' => CodeLib::AUTH_DENY];
 		}

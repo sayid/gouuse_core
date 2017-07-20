@@ -16,9 +16,9 @@ class OptionHelper
             $lang_name = DEFAULT_LANG_NAME;
         }
         if ($lang_name) {
-            $cache_key = "x_system_get_options_".$option_name."_".$dir."_".$lang_name;
+            $cache_key = 'option:'.__FUNCTION__.$option_name."_".$dir."_".$lang_name;
         } else {
-            $cache_key = "x_system_get_options_".$option_name."_".$dir;
+        	$cache_key = 'option:'.__FUNCTION__.$option_name."_".$dir;
         }
     
         $cache_data = Cache::get($cache_key);

@@ -48,6 +48,10 @@ class DBCacheLib extends Lib
 				return $cache_data;
 			}
 		}
+		$need_field_is_empty = false;
+		if (empty($need_field)) {
+			$need_field_is_empty = true;
+		}
 		$models = [];
 		$tables = [];
 		if (is_array($model_names)) {
@@ -59,16 +63,32 @@ class DBCacheLib extends Lib
 				//一维数组
 				$models[isset($model_names['as']) ? $model_names['as'] : $model_names['model']] = $this->{$model_names['model']};
 				$tables[$model_names['model']] = isset($model_names['as']) ? ($this->{$model_names['model']}->getTable() . ' as ' . $model_names['as']) : $this->{$model_names['model']}->getTable();
+				if ($need_field_is_empty) {
+					$field = $this->{$model_names['model']}->getTableFileds();
+					$need_field = implode(',', $field['field_list']);
+				}
+				
 			} else {
 				//多维数组
 				foreach ($model_names as $row_model) {
 					$models[isset($row_model['as']) ? $row_model['as'] : $row_model['model']] = $row_model['load_obj'] = $this->{$row_model['model']};
 					$tables[$row_model['model']] = isset($row_model['as']) ? ($this->{$row_model['model']}->getTable() . ' as ' . $row_model['as']) : $this->{$row_model['model']}->getTable();
+					if ($need_field_is_empty) {
+						$field = $this->{$model_names}->getTableFileds();
+						$need_field = array_merge($need_field, $field['field_list']);
+					}
+				}
+				if ($need_field_is_empty) {
+					$need_field = implode(',', $need_field);
 				}
 			}
 		} else {
 			$models[$model_names] = $this->{$model_names};
 			$tables[$model_names] = $this->{$model_names}->getTable();
+			if ($need_field_is_empty) {
+				$field = $this->{$model_names}->getTableFileds();
+				$need_field = implode(',', $field['field_list']);
+			}
 		}
 		$limit_sql = "";
 		if ($limit) {
@@ -120,10 +140,7 @@ class DBCacheLib extends Lib
 				$out_data_total
 		);
 		if ($cache_time > 0) {
-			$this->CacheLib->saveWithKey($group_cache_key, $cache_key, array(
-					"do" => 1,
-					"data" => $out_put_data
-			), $cache_time);
+			$this->CacheLib->saveWithKey($group_cache_key, $cache_key, $out_put_data, $cache_time);
 		}
 		return $out_put_data;
 	}

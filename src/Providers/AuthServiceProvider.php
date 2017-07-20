@@ -55,6 +55,8 @@ class AuthServiceProvider extends ServiceProvider
 					//当前用户id 不用再查询数据库
 					app()['gouuse_member_info'] = $member_info = json_decode(urldecode($request->input('GOUUSE_XX_V3_MEMBER_INFO')), true);
 					app()['gouuse_company_info'] = json_decode(urldecode($request->input('GOUUSE_XX_V3_COMPANY_INFO')), true);
+					$request->gouuse_member_info = app()['gouuse_member_info'];
+					$request->gouuse_company_info= app()['gouuse_company_info'];
 					//返回数据给auth控件
 					return $member_info;
 				}
@@ -123,6 +125,8 @@ class AuthServiceProvider extends ServiceProvider
 							$company_info = $companyModel->getById($member_info['company_id']);
 						}
 						app()['gouuse_company_info'] = $company_info;
+						$request->gouuse_member_info = app()['gouuse_member_info'];
+						$request->gouuse_company_info= app()['gouuse_company_info'];
 						return $member_info;
 					} else {
 						return CodeLib::AUTH_FAILD;
@@ -135,6 +139,8 @@ class AuthServiceProvider extends ServiceProvider
 						$result['data']['member_info']['_gouuse_token'] = $token;
 						app()['gouuse_member_info'] = $result['data']['member_info'];
 						app()['gouuse_company_info'] = $result['data']['company_info'];
+						$request->gouuse_member_info = app()['gouuse_member_info'];
+						$request->gouuse_company_info= app()['gouuse_company_info'];
 						return $result['data']['member_info'];
 					}
 					return $result['code'];

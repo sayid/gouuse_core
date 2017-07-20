@@ -6,7 +6,7 @@ namespace GouuseCore\Libraries;
 /**
  * 判断是否有权限
  */
-class AccountLib extends Lib
+class AuthLib extends Lib
 {
 	public function __construct()
 	{

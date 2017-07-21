@@ -101,10 +101,10 @@ class AuthServiceProvider extends ServiceProvider
 					}
 					
 					if ($super_admin== 0) {
-						$class_load = 'App\Libraries\MemberLib';
+						$class_load = 'App\Models\MemberModel';
 						App::bindIf($class_load, null, true);
 						$memberLib = App::make($class_load);
-						$member_info = $memberLib->memberInfo(['member_id' => $member_id]);
+						$member_info = $memberLib->getMemberData($member_id);
 					} else {
 						$class_load = 'App\Models\SystemMemberModel';
 						App::bindIf($class_load, null, true);

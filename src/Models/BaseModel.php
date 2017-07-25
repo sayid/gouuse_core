@@ -160,6 +160,30 @@ abstract class BaseModel extends BaseGouuse
             return "";
         }
     }
+    
+    /**
+     * 批量添加
+     * @param $data 多维数组（批量添加数据不能超过100条）
+     * @return string
+     */
+    public function addAll($data)
+    {
+    	$table="";
+    	$table=$this->checkTable($table);
+    	if (count($data) > 100) {
+    		return false;
+    	}
+    	foreach ($data as $key => $val) {
+    		$data[$key] = $this->filter($val, $table);
+    	}
+    	
+    	if (count($data) > 0) {
+    		return DB::table($table)->insert($data);
+    	} else {
+    		return "";
+    	}
+    }
+    
     /**
      * 修改数据
      * @param  [type] $table [description]

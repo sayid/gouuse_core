@@ -46,4 +46,20 @@ class AuthLib extends Lib
 	}
 	
 	
+	/**
+	 * 平台管理员
+	 * @return number
+	 */
+	public function needSuperAdminAuth()
+	{
+		if (empty($this->member_info['member_id'])) {
+			return ['code' => CodeLib::AUTH_DENY];
+		}
+		if (isset($this->member_info['super_admin']) && $this->member_info['type'] == 1) {
+			return ['code' => CodeLib::AUTH_DENY];
+		}
+		return true;
+	}
+	
+	
 }

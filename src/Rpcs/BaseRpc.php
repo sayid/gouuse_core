@@ -100,6 +100,9 @@ class BaseRpc
 			$result['code'] = 1;
 			$result['msg'] = '通信失败请稍后重试';
 		}
+		if ($result['code'] != 0 && isset($result['exception'])) {
+			throw new GouuseRpcException($result['exception']);
+		}
 		return $result;
 	}
 }

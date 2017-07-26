@@ -48,7 +48,7 @@ class Handler extends ExceptionHandler
 	public function render($request, Exception $e)
 	{
 		if (env('APP_DEBUG') == true) {
-			$data = $e->__toString();
+			$data = env('SERVICE_ID').':'.$e->__toString();
 		} else {
 			$data = '';
 		}

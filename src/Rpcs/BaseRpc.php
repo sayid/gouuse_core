@@ -51,7 +51,7 @@ class BaseRpc
 		->withData($data)
 		->post();
 		Log::info('API data: '.print_r($data, true));
-		$ths->url = $url;
+		$this->url = $url;
 		return $this->buildResult($result);
 	}
 
@@ -82,7 +82,7 @@ class BaseRpc
 		->post();
 		Log::info('API data: '.print_r($data, true));
 		Log::info('API header: '.print_r($header, true));
-		$ths->url = $url;
+		$this->url = $url;
 		return $this->buildResult($result);
 	}
 

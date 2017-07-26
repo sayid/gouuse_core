@@ -4,11 +4,11 @@ namespace GouuseCore\Rpcs;
 use GouuseCore\Rpcs\BaseRpc;
 
 /**
- * 用户中心SDK
+ * 部门SDK
  * @author zhangyubo
  *
  */
-class MemberRpc extends BaseRpc
+class departmentRpc extends BaseRpc
 {
 	protected $host;
 

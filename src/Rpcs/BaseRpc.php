@@ -51,8 +51,7 @@ class BaseRpc
 		->withData($data)
 		->post();
 		Log::info('API data: '.print_r($data, true));
-		$this->url = $url;
-		return $this->buildResult($result);
+		return $this->buildResult($result, $url);
 	}
 
 	public function post($url, $header = [], $data = [])
@@ -82,8 +81,7 @@ class BaseRpc
 		->post();
 		Log::info('API data: '.print_r($data, true));
 		Log::info('API header: '.print_r($header, true));
-		$this->url = $url;
-		return $this->buildResult($result);
+		return $this->buildResult($result, $url);
 	}
 
 	/**
@@ -91,13 +89,13 @@ class BaseRpc
 	 * @param unknown $result
 	 * @return number[]|string[]|mixed
 	 */
-	public function buildResult($result)
+	public function buildResult($result, $url)
 	{
 		Log::info('API Result: '.$result);
 		$result = json_decode($result, true);
 			
 		if (empty($result) || !is_array($result)) {
-			throw new GouuseRpcException("通信失败请稍后重试：".$this->url);
+			throw new GouuseRpcException("通信失败请稍后重试：".$url);
 		}
 		if ($result['code'] != 0 && isset($result['exception'])) {
 			throw new GouuseRpcException($result['exception']);

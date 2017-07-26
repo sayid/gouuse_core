@@ -51,6 +51,7 @@ class BaseRpc
 		->withData($data)
 		->post();
 		Log::info('API data: '.print_r($data, true));
+		$ths->url = $url;
 		return $this->buildResult($result);
 	}
 
@@ -81,6 +82,7 @@ class BaseRpc
 		->post();
 		Log::info('API data: '.print_r($data, true));
 		Log::info('API header: '.print_r($header, true));
+		$ths->url = $url;
 		return $this->buildResult($result);
 	}
 
@@ -95,10 +97,7 @@ class BaseRpc
 		$result = json_decode($result, true);
 			
 		if (empty($result) || !is_array($result)) {
-			throw new GouuseRpcException("通信失败请稍后重试");
-			$result = array();
-			$result['code'] = 1;
-			$result['msg'] = '通信失败请稍后重试';
+			throw new GouuseRpcException("通信失败请稍后重试：".$this->url);
 		}
 		if ($result['code'] != 0 && isset($result['exception'])) {
 			throw new GouuseRpcException($result['exception']);

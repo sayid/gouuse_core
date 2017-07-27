@@ -12,8 +12,7 @@
         "laravel/lumen-framework": "5.4.6",
         "php": ">=7",
         "silentred/lumoon": "dev-master",
-        "lokielse/laravel-mns": "^1.0",
-        "sayid/aliyun-mns-php-sdk": "dev-master"
+        "lokielse/laravel-mns": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.0",

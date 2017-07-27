@@ -100,6 +100,32 @@ class AuthServiceProvider extends ServiceProvider
 						return CodeLib::AUTH_FAILD;
 					}
 					
+					//移动端或web端或pc端 app端需要单点登录
+					$client_type = $request->input('source') == 2 || $request->input('source') == 3 ? 1 : 0;
+					
+					$where = [];
+					$where['member_id'] = array(
+							"sign" => "=",
+							"value" => $member_id
+					);
+					$where['client_type'] = array(
+							"sign" => "=",
+							"value" => $client_type //单点登录
+					);
+					$where['member_type'] = array(
+							"sign" => "=",
+							"value" => $super_admin ? 1 : 0 //区分管理员token
+					);
+					$class_load = 'App\Models\AccessTokenModel';
+					App::bindIf($class_load, null, true);
+					$accessTokenModel= App::make($class_load);
+					
+					$token_row = $accessTokenModel->getOne("", $where);
+					if (empty($token_row) || $token_row['token'] != $token) {
+						//已在其他客户端登录
+						return CodeLib::AUTH_ON_OTHER_CLIENT;
+					}
+					
 					if ($super_admin== 0) {
 						$class_load = 'App\Models\MemberModel';
 						App::bindIf($class_load, null, true);

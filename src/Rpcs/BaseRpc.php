@@ -28,7 +28,7 @@ class BaseRpc
 	{
 		if (empty(self::$current_member_id)) {
 			self::$user = isset(app()['gouuse_member_info']) ? app()['gouuse_member_info'] : [];
-			self::$current_member_id = self::$user['member_id'];
+			self::$current_member_id = self::$user['member_id'] ?? 0;
 			self::$company_info = isset(app()['gouuse_company_info']) ? app()['gouuse_company_info'] : [];
 		}
 

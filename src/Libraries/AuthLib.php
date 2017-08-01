@@ -37,8 +37,8 @@ class AuthLib extends Lib
 		if (empty($this->member_info['member_id'])) {
 			return ['code' => CodeLib::AUTH_DENY];
 		}
-		
-		if (!in_array($app_id, $this->member_info['manage_app'])) {
+		$app_ids = array_column($this->member_info['manage_app'], 'app_id');
+		if (!in_array($app_id, $app_ids)) {
 			//当前用户不能管理该应用
 			return ['code' => CodeLib::AUTH_DENY];
 		}

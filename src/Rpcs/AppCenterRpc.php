@@ -40,5 +40,15 @@ class AppCenterRpc extends BaseRpc
 	    return $result;
 	}
 	
+	/**
+	 * 删除用户批量删除应用管理员
+	 * @param array $params
+	 */
+	public function deleteMemberAppRole($params = [])
+	{
+	    $url = $this->host . '/app_center/v3/app/delete_member_app_role';
+	    $result = $this->post($url, [], $params);
+	    return $result;
+	}
 
 }

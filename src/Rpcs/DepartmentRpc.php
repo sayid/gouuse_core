@@ -8,7 +8,7 @@ use GouuseCore\Rpcs\BaseRpc;
  * @author zhangyubo
  *
  */
-class departmentRpc extends BaseRpc
+class DepartmentRpc extends BaseRpc
 {
 	protected $host;
 
@@ -17,16 +17,18 @@ class departmentRpc extends BaseRpc
 
 	}
 
-	function getAllMembers() {
-		$url = $this->host . '/user_center/v3/member_list';
-		$result = $this->post($url, [], ['debug'=>1]);
+	/**
+	 * 获取部门信息
+	 * @param  [type] $deptId [description]
+	 * @return [type]         [description]
+	 */
+	function getDeptInfo($deptId)
+	{
+		$url = $this->host . '/user_center/v3/deptInfo';
+		$result = $this->post($url, [], [ 'department_id' => $deptId]);
 		return $result;
 	}
 
-	function getByMemberId(int $member_id, int $company_id) {
-		 
-		$url = $this->host . '/user_center/v3/member_info';
-		$result = $this->post($url, [], [ 'member_id' => $member_id, 'company_id' => $company_id]);
-		return $result;
-	}
+
+
 }

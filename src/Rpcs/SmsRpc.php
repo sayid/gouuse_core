@@ -23,7 +23,7 @@ class SmsRpc extends BaseRpc
 	 * @return \GouuseCore\Rpcs\number[]|\GouuseCore\Rpcs\string[]|mixed
 	 */
 	function send($data = []) {
-		$url = $this->host . '/sms_service/v3/send';
+		$url = $this->host . '/sms/v3/send';
 		$result = $this->post($url, [], $data);
 		return $result;
 	}

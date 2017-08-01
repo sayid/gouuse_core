@@ -37,9 +37,9 @@ class AuthCenterRpc extends BaseRpc
 	 * @param string $password
 	 * @return \GouuseCore\Rpcs\number[]|\GouuseCore\Rpcs\string[]|mixed
 	 */
-	function login(string $account, string $password) {
+	function login(string $account, string $password, $company_id = 0) {
 		$url = $this->host . '/auth_center/v3/login';
-		$result = $this->postOutside($url, [], [ 'account' => $account, 'password' => $password ]);
+		$result = $this->postOutside($url, [], [ 'account' => $account, 'password' => $password , 'company_id' => $company_id]);
 		return $result;
 	}
 	

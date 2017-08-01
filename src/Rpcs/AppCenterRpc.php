@@ -29,5 +29,16 @@ class AppCenterRpc extends BaseRpc
 		return $result;
 	}
 	
+	/**
+	 * 获取所有应用
+	 * @param array $params
+	 */
+	public function getAllApps($params = [])
+	{
+	    $url = $this->host . '/app_center/v3/app/all';
+	    $result = $this->post($url, [], $params);
+	    return $result;
+	}
+	
 
 }

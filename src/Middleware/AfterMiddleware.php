@@ -34,7 +34,7 @@ class AfterMiddleware
 				}
 				$time = DateHelper::microtime_float();
 				$data['run_time'] = $time - TIME_START;
-				$data['code'] = strval($code);
+				$data['code'] = intval($code);
 				$data['msg'] = $msg;
 			}
 			$content = json_encode($data);

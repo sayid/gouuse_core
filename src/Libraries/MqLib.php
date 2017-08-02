@@ -33,7 +33,6 @@ class MqLib extends Lib
     	$message_body = trim(FormHelper::__getData($msg_data, 'message_body'));
     	$topic_name_in = trim(FormHelper::__getData($msg_data, 'topic_name'));
         $queue = $this->client->getTopicRef($topic_name);
-        $message_body['topic_name'] = $topic_name_in;
         $push_message_obj = new PublishMessageRequest($message_body);
         $re_push_data = $queue->publishMessage($push_message_obj);
         return $re_push_data;

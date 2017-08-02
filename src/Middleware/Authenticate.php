@@ -35,7 +35,9 @@ class Authenticate
 	public function handle($request, Closure $next, $guard = null)
 	{
 		// 注册全局变量 标示启用auth
-		define('NEED_AUTH_CHECK', true);
+		if (!defined('NEED_AUTH_CHECK')) {
+			define('NEED_AUTH_CHECK', true);
+		}
 		
 		if ($this->auth->guard($guard)->guest()) {
 			return response([

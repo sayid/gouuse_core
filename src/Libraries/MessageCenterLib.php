@@ -8,35 +8,13 @@
 namespace GouuseCore\Libraries;
 
 use GouuseCore\Helpers\FormHelper;
-//以下为阿里消息队列推送
-use Aliyun\MNS\Queue;
-use Aliyun\MNS\Client;
-use Aliyun\MNS\Requests\PublishMessageRequest;
 
 class MessageCenterLib extends Lib
 {
-    public $client;
     public function __construct()
     {
-        $this->client = new Client(env('QUEUE_MNS_ENDPOINT'), env('QUEUE_MNS_ACCESS_KEY'), env('QUEUE_MNS_SECRET_KEY'));
     }
 
-    /**
-     * 通过消息订阅方式推送消息
-     * @param array $msg_data 消息内容，以下为数组需要的属性
-     * @param string topic_name 消息主题
-     * @param string message_body 消息内容
-     * @return array 返回数据;
-     */
-    public function sendMessageTopic($msg_data)
-    {
-        $topic_name = trim(FormHelper::__getData($msg_data, 'topic_name'));
-        $message_body = trim(FormHelper::__getData($msg_data, 'message_body'));    
-        $queue = $this->client->getTopicRef(env('QUEUE_PREFIX').$topic_name);
-        $push_message_obj = new PublishMessageRequest($message_body);
-        $re_push_data = $queue->publishMessage($push_message_obj);
-        return $re_push_data;
-    }
     
     /**
      * 给消息中心发消息
@@ -99,7 +77,7 @@ class MessageCenterLib extends Lib
         $push_message->status = $status;
         $push_message->send_time = time();
         $msg_data = ['topic_name' => 'user-message-center', 'message_body' => json_encode($push_message)];
-        $re_push_data = $this->sendMessageTopic($msg_data);
+        $re_push_data = $this->MqLib->sendTopic($msg_data);
         return $re_push_data;
     }
 
@@ -149,7 +127,7 @@ class MessageCenterLib extends Lib
             $push_message->type_id = $type_id;
         }
         $msg_data = ['topic_name' => 'user-message-center', 'message_body' => json_encode($push_message)];
-        $re_push_data = $this->sendMessageTopic($msg_data);
+        $re_push_data = $this->MqLib->sendTopic($msg_data);
         return $re_push_data;
     }
     

@@ -12,8 +12,21 @@ function main($argc, $argv)
         $app = require $root. '/bootstrap/app.php';
     
 		$codelib = $root . 'app/Libraries/CodeLib.php';
+		$od = opencc_open("s2twp.json");
+		if (!is_dir($root . 'resources/options/zh_cn/')) {
+			mkdir($root . 'resources/options/zh_cn/');
+		}
+		if (!is_dir($root . 'resources/options/zh_tw/')) {
+			mkdir($root . 'resources/options/zh_tw/');
+		}
 		if (!is_writable($root . 'resources/options/zh_cn/')) {
 		    echo '请将'.$root . 'resources/options/zh_cn/目录设为可写权限';
+		    echo  PHP_EOL;
+		    echo  PHP_EOL;
+		    return;
+		}
+		if (!is_writable($root . 'resources/options/zh_tw/')) {
+		    echo '请将'.$root . 'resources/options/zh_tw/目录设为可写权限';
 		    echo  PHP_EOL;
 		    echo  PHP_EOL;
 		    return;
@@ -25,8 +38,10 @@ function main($argc, $argv)
 			$handle_base = fopen(__DIR__.'/../Libraries/CodeLib.php', 'r');
 		    $handle = fopen($codelib, 'r');
 		    $respon_file = $root . 'resources/options/zh_cn/error_code.inc.php';
+		    $respon_file_tw = $root . 'resources/options/zh_tw/error_code.inc.php';
 		    $str = "<?php\n".'$config = ['."\n";
 		    file_put_contents($respon_file, $str);
+		     file_put_contents($respon_file_tw, $str);
 		    $json = [];
 		    
 		    while(!feof($handle)){
@@ -41,7 +56,9 @@ function main($argc, $argv)
 		            $commds = str_replace("\n", '', substr($line,$index_comm));
 		           
 		            $str = "    ". trim($key) . " => '" . addslashes($commds)."',\n";
+		            $str_tw = "    ". trim($key) . " => '" . opencc_convert(addslashes($commds), $od)."',\n";
 		            file_put_contents($respon_file, $str, FILE_APPEND);
+		            file_put_contents($respon_file_tw, $str_tw, FILE_APPEND);
 		            $json[trim($key)] = addslashes($commds);
 		        }
 		    }
@@ -58,14 +75,18 @@ function main($argc, $argv)
 		            $commds = str_replace("\n", '', substr($line,$index_comm));
 		           
 		            $str = "    ". trim($key) . " => '" . addslashes($commds)."',\n";
+		            $str_tw = "    ". trim($key) . " => '" . opencc_convert(addslashes($commds), $od)."',\n";
 		            file_put_contents($respon_file, $str, FILE_APPEND);
+		            file_put_contents($respon_file_tw, $str_tw, FILE_APPEND);
 		            $json[trim($key)] = addslashes($commds);
 		        }
 		    }
 		    $cache = new \GouuseCore\Libraries\CacheLib;
 		    $cache->delete("x_system_get_options_error_code_options_zh_cn");
+		    $cache->delete("x_system_get_options_error_code_options_zh_tw");
 		    $str = '];'."\n";
 		    file_put_contents($respon_file, $str, FILE_APPEND);
+		    file_put_contents($respon_file_tw, $str, FILE_APPEND);
 		    $json = json_encode($json, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
 		    file_put_contents($root."public/swagger-docs/code.json", $json);
 		}

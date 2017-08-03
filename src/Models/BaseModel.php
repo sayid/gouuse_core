@@ -299,6 +299,36 @@ abstract class BaseModel extends BaseGouuse
         return $rows[0] ?? null;
     }
     
+    /**
+     * 从缓存里面读取
+     * @param unknown $id
+     * @param string $id_field
+     * @param number $expire_time
+     * @return NULL|unknown
+     */
+    public function getByIdFromCache($id, $id_field = "", $expire_time = 3600)
+    {
+    	$table = $this->checkTable($table);
+    	
+    	extract($this->getTableFileds($table));
+    	if ($id_field == "") {
+    		$id_field = $field_pri;
+    	}
+    	
+    	$need_field = join(",", $field_list);
+    	$key == get_class($this) . __FUNCTION__ . $id_field . '_' . $id;
+    	$data = $this->CacheLib->get($key);
+    	if (empty($data)) {
+    		$data = $this->getById($id, $id_field);
+    		$this->CacheLib->set($this->cacheKey(), $data, $expire_time);
+    	}
+    	if (!empty($data)) {
+    		//将缓存key写入数据方便清理
+    		$data['cache_key'] = $key;
+    	}
+    	return $data;
+    }
+    
     public function updateById($id, $data= "", $table = "")
     {
     	$table = $this->checkTable($table);

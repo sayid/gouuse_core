@@ -320,7 +320,7 @@ abstract class BaseModel extends BaseGouuse
     	$data = $this->CacheLib->get($key);
     	if (empty($data)) {
     		$data = $this->getById($id, $id_field);
-    		$this->CacheLib->set($this->cacheKey(), $data, $expire_time);
+    		$this->CacheLib->set($key, $data, $expire_time);
     	}
     	if (!empty($data)) {
     		//将缓存key写入数据方便清理

@@ -25,5 +25,16 @@ class CompanyCenterRpc extends BaseRpc
 		return $result;
 	}
 	
+	/**
+	 * 添加公司默认职位
+	 * @param integer $company_id
+	 */
+	public function addCompanyDefaultPosition($company_id)
+	{
+	    $url = $this->host . '/company_center/v3/auto_add_positions';
+	    $result = $this->post($url, [], ['company_id' => $company_id]);
+	    return $result;
+	}
+	
 
 }

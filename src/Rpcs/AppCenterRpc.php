@@ -50,5 +50,17 @@ class AppCenterRpc extends BaseRpc
 	    $result = $this->post($url, [], $params);
 	    return $result;
 	}
+	
+	/**
+	 * 添加公司安装应用和增加应用超级管理员
+	 * @param integer $company_id
+	 * @param integer $member_id
+	 */
+	public function addDefaultAppAndManage($company_id, $member_id)
+	{
+	    $url = $this->host . '/app_center/v3/app/add_app_manage';
+	    $result = $this->post($url, [], ['company_id' => $company_id, 'member_id' => $member_id]);
+	    return $result;
+	}
 
 }

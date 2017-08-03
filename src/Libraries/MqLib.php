@@ -7,9 +7,9 @@ namespace GouuseCore\Libraries;
 
 use GouuseCore\Helpers\FormHelper;
 //以下为阿里消息队列推送
-use Aliyun\MNS\Queue;
-use Aliyun\MNS\Client;
-use Aliyun\MNS\Requests\PublishMessageRequest;
+use AliyunMNS\Queue;
+use AliyunMNS\Client;
+use AliyunMNS\Requests\PublishMessageRequest;
 
 class MqLib extends Lib
 {
@@ -29,13 +29,22 @@ class MqLib extends Lib
      */
     public function sendTopic($msg_data)
     {
-    	$topic_name = env('QUEUE_TOPIC');
+    	//$topic_name = env('QUEUE_TOPIC');
     	$message_body = trim(FormHelper::__getData($msg_data, 'message_body'));
-    	$topic_name_in = trim(FormHelper::__getData($msg_data, 'topic_name'));
-        $queue = $this->client->getTopicRef($topic_name);
-        $push_message_obj = new PublishMessageRequest($message_body);
-        $re_push_data = $queue->publishMessage($push_message_obj);
-        return $re_push_data;
+    	//获取主题名称
+    	$topic_name = trim(FormHelper::__getData($msg_data, 'topic_name', 'v3-main'));
+    	try
+    	{
+    		$queue = $this->client->getTopicRef($topic_name);
+    		$push_message_obj = new PublishMessageRequest($message_body);
+    		$re_push_data = $queue->publishMessage($push_message_obj);
+    		return [$res->isSucceed(), $res->getMessageId()];
+    	}
+    	catch (MnsException $e)
+    	{ //失败
+    		return [0, $e->getMnsErrorCode()];
+    	}
+    	
     }
     
     /**

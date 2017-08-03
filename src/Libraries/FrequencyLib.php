@@ -38,5 +38,13 @@ class FrequencyLib extends Lib
     	return true;
     }
     
+ /**
+     * 清除此缓存
+     */
+    public function clearCache($url, $key)
+    {
+        $this->CacheLib->delete(md5($url . '_' . $key));
+    }
+
     
 }

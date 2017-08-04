@@ -1,8 +1,7 @@
 <?php
 namespace GouuseCore\Rpcs;
 
-use Log;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\App;
 use GouuseCore\Exceptions\GouuseRpcException;
 use Ixudra\Curl\Facades\Curl;
 

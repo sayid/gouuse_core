@@ -23,11 +23,6 @@ class BaseRpc
 	public function __construct()
 	{
 		self::$gatewaylib = new \GouuseCore\Libraries\GatewayLib();
-		$class_load = 'GouuseCore\Libraries\LogLib';
-		App::bindIf($class_load, null, true);
-		$this->LogLib = App::make($class_load);
-		
-		$this->LogLib->setDriver('rpc');
 	}
 	public function preData()
 	{
@@ -54,6 +49,12 @@ class BaseRpc
 		->withHeaders($header)
 		->withData($data)
 		->post();
+		
+		$class_load = 'GouuseCore\Libraries\LogLib';
+		App::bindIf($class_load, null, true);
+		$this->LogLib = App::make($class_load);
+		
+		$this->LogLib->setDriver('rpc');
 		
 		$log_data = [
 				'uri' => $url,
@@ -92,6 +93,12 @@ class BaseRpc
 		->withHeaders($header)
 		->withData($data)
 		->post();
+		
+		$class_load = 'GouuseCore\Libraries\LogLib';
+		App::bindIf($class_load, null, true);
+		$this->LogLib = App::make($class_load);
+		
+		$this->LogLib->setDriver('rpc');
 		
 		$log_data = [
 				'uri' => $url,

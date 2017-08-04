@@ -46,7 +46,7 @@ class AfterMiddleware
 		$log_data['param'] = $request->all();//提交参数
 		$log_data['token'] = $request->header('Authorization');//提交参数
 		$log_data['result'] = $data ?? $result;//返回数据
-		$log_data['uri'] = $request->uri();
+		$log_data['uri'] = $request->url();
 		$log_data['user_agent'] = $request->header('user_agent');
 		$log_data['member_id'] = $member_info['member_id'] ?? 0;//用户id
 		$log_data['company_id'] = $member_info['company_id'] ?? 0;//公司id

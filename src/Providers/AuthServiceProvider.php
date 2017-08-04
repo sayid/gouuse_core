@@ -164,7 +164,7 @@ class AuthServiceProvider extends ServiceProvider
 					if (isset($result['code']) && $result['code']==0) {
 						$result['data']['member_info']['_gouuse_token'] = $token;
 						app()['gouuse_member_info'] = $result['data']['member_info'];
-						app()['gouuse_company_info'] = $result['data']['company_info'];
+						app()['gouuse_company_info'] = $result['data']['company_info'] ?? [];
 						$request->gouuse_member_info = app()['gouuse_member_info'];
 						$request->gouuse_company_info= app()['gouuse_company_info'];
 						return $result['data']['member_info'];
@@ -174,16 +174,5 @@ class AuthServiceProvider extends ServiceProvider
 			}
 			
 		});
-			
-			/**********定义权限*********/
-			Gate::define('admin-super-auth', function ($user) {
-				//A后台 超级管理员
-				return isset($user['super_admin']) && $user['type'] == 1 ? true : false;
-			});
-				
-				Gate::define('admin-company-auth', function ($user, $company) {
-					//B后台 企业管理员
-					return $user['member_id'] == $company['admin_id'];
-				});
 	}
 }

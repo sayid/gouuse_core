@@ -18,11 +18,16 @@ class BaseRpc
 	private static $user;
 	private static $company_info;
 	private static $gatewaylib;
-
+	private $LogLib;
+	
 	public function __construct()
 	{
 		self::$gatewaylib = new \GouuseCore\Libraries\GatewayLib();
-
+		$class_load = 'GouuseCore\Libraries\LogLib';
+		App::bindIf($class_load, null, true);
+		$this->LogLib = App::make($class_load);
+		
+		$this->LogLib->setDriver('rpc');
 	}
 	public function preData()
 	{
@@ -45,12 +50,20 @@ class BaseRpc
 			}
 			$url = self::$gatewaylib->getHost($url) . $url;
 		}
-		Log::info('API URL OUT: '.date('Y-m-d H:i:s') .' '. $url);
 		$result = Curl::to($url)
 		->withHeaders($header)
 		->withData($data)
 		->post();
-		Log::info('API data: '.print_r($data, true));
+		
+		$log_data = [
+				'uri' => $url,
+				'member_id' => self::$current_member_id ?? 0,
+				'company_id' => self::$user ['company_id'] ?? 0,
+				'param' => $data,
+				'header' => $header
+		];
+		$this->LogLib->info('', $log_data, true);
+		
 		return $this->buildResult($result, $url);
 	}
 
@@ -65,12 +78,12 @@ class BaseRpc
 			}
 			$url = self::$gatewaylib->getHost($url).$url;
 		}
-		Log::info('API URL: '.date('Y-m-d H:i:s') .' '. $url);
+
 		$this->preData();
 		$header[] = 'GOUUSE-INSIDE: '.time();
 		if (self::$current_member_id) {
 			$header[] = 'CURRENT-MEMBER-ID:' . self::$current_member_id;
-			$header [] = 'CURRENT-COMPANY-ID:' . self::$user ['company_id'];
+			$header [] = 'CURRENT-COMPANY-ID:' . self::$user ['company_id'] ?? 0;
 			$data['GOUUSE_XX_V3_MEMBER_INFO'] = json_encode (self::$user);
 			$data['GOUUSE_XX_V3_COMPANY_INFO'] = json_encode (self::$company_info);
 		}
@@ -79,8 +92,16 @@ class BaseRpc
 		->withHeaders($header)
 		->withData($data)
 		->post();
-		Log::info('API data: '.print_r($data, true));
-		Log::info('API header: '.print_r($header, true));
+		
+		$log_data = [
+				'uri' => $url,
+				'member_id' => self::$current_member_id ?? 0,
+				'company_id' => self::$user ['company_id'] ?? 0,
+				'param' => $data,
+				'header' => $header
+		];
+		$this->LogLib->info('', $log_data, true);
+		
 		return $this->buildResult($result, $url);
 	}
 
@@ -91,10 +112,9 @@ class BaseRpc
 	 */
 	public function buildResult($result, $url)
 	{
-		Log::info('API Result: '.$result);
 		$result = json_decode($result, true);
 			
-		if (empty($result) || !is_array($result)) {
+		if (empty($result) || !is_array($result) || !isset($result['code'])) {
 			throw new GouuseRpcException("通信失败请稍后重试：".$url);
 		}
 		if ($result['code'] != 0 && isset($result['exception'])) {

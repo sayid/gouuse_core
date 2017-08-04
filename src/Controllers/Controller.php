@@ -65,54 +65,7 @@ class Controller extends BaseGouuse
 	 */
 	public function display(array $data, $is_log = true)
 	{
-		/*if (defined('REQUEST_IS_LOCAL')) {
-			//内部访问时数据不加密
-			$encrypt = 0;
-		} else {
-		    if(!$encrypt){
-		      $encrypt = $this->is_encrypt;
-		    }
-		}
-		$msg = 'ok';
-		$code = isset($data['code']) ? $data['code'] : 0;
-		if (!empty($code)) {
-			$lang = isset($_REQUEST['app_lang']) ? $_REQUEST['app_lang'] : 'zh_cn';
-			$lang = $lang ? $lang : 'zh_cn';
-			$error_code = OptionHelper::getOption('error_code','options',$lang);
-			$msg = isset($error_code[$code]) ? $error_code[$code] : '未知错误';
-
-			if(isset($data['data'])){
-				foreach ($data['data'] as $key => $value) {
-					$msg=str_replace("{".$key."}", $value, $msg);
-				}
-			}
-		}
-		$data['msg'] = $msg;
-*/
-		/*
-		 * lihonglin
-		 * 2017-06-07
-		 * 增加:系统底层统一日志
-		 */
-		//判断有提交和返回数据，写入到日志中
-		if($is_log){
-			if(isset(app()['Illuminate\Http\Request'])){
-
-				//从底层获取request对像，并获得提交的全部参数，除header信息除外
-				$request = app()['Illuminate\Http\Request']->request->all();
-
-				//统一将提交的参数和返回的数据写入日程
-				$this->LogLib->log_info(['param' => json_encode($request), 'result' => json_encode($data)]);
-			}
-		}
-		/*$data = json_encode($data);
-		if ($encrypt) {
-			//执行加密
-			$key=substr(md5(env('AES_KEY')."gou"),0,8);
-			$data = $this->EncryptLib->encrypt($data, $key);
-		}*/
 		return $data;
-		//return response($data, 200)->send();
 	}
 
 	/**

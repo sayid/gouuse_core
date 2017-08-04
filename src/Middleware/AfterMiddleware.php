@@ -40,6 +40,24 @@ class AfterMiddleware
 			$content = json_encode($data);
 		}
 		
+		$member_info = $request->user();
+		
+		$log_data = array();
+		$log_data['param'] = $request->all();//提交参数
+		$log_data['token'] = $request->header('Authorization');//提交参数
+		$log_data['result'] = $data ?? $result;//返回数据
+		$log_data['uri'] = $request->uri();
+		$log_data['user_agent'] = $request->header('user_agent');
+		$log_data['member_id'] = $member_info['member_id'] ?? 0;//用户id
+		$log_data['company_id'] = $member_info['company_id'] ?? 0;//公司id
+		
+		$class_load = 'GouuseCore\Libraries\LogLib';
+		App::bindIf($class_load, null, true);
+		$this->LogLib = App::make($class_load);
+		
+		$this->LogLib->setDriver('log');
+		$this->LogLib->info('', $log_data, true);
+		
 		if ($request->input('source') == 2 || $request->input('source') == 3 && !defined('REQUEST_IS_LOCAL')) {
 			//加密
 			$key=substr(md5(env('AES_KEY')."gou"),0,8);

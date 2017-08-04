@@ -38,11 +38,11 @@ class MqLib extends Lib
     		$queue = $this->client->getTopicRef($topic_name);
     		$push_message_obj = new PublishMessageRequest($message_body);
     		$re_push_data = $queue->publishMessage($push_message_obj);
-    		return [$res->isSucceed(), $res->getMessageId()];
+    		return [$re_push_data->isSucceed() ? 0 : 1, $re_push_data->getMessageId()];
     	}
     	catch (MnsException $e)
     	{ //失败
-    		return [0, $e->getMnsErrorCode()];
+    		return [1, $e->getMnsErrorCode()];
     	}
     	
     }

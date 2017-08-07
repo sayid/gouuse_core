@@ -51,13 +51,35 @@ class MqLib extends Lib
      * 从队列中取出数据
      * @param unknown $quen_name
      */
+    public function setMq($quen_name, $value)
+    {
+    	$receiptHandle = NULL;
+    	try
+    	{
+    		//获取队列实例
+    		$queue = $this->client->getQueueRef($quen_name);
+    		$res = $queue->receiveMessage(30);
+    		// 2. 获取ReceiptHandle，这是一个有时效性的Handle，可以用来设置Message的各种属性和删除Message。具体的解释请参考：help.aliyun.com/document_detail/27477.html 页面里的ReceiptHandle
+    		$receiptHandle = $res->getReceiptHandle();
+    		
+    		return $receiptHandle;
+    	} catch (MnsException $e)
+    	{
+    		return false;
+    	}
+    }
+    
+    /**
+     * 从队列中取出数据
+     * @param unknown $quen_name
+     */
     public function getMq($quen_name)
     {
     	$receiptHandle = NULL;
     	try
     	{
 	    	//获取队列实例
-	    	$queue = $this->client->getQueueRef($topic_name);
+    		$queue = $this->client->getQueueRef($quen_name);
 	    	$res = $queue->receiveMessage(30);
 	    	// 2. 获取ReceiptHandle，这是一个有时效性的Handle，可以用来设置Message的各种属性和删除Message。具体的解释请参考：help.aliyun.com/document_detail/27477.html 页面里的ReceiptHandle
 	    	$receiptHandle = $res->getReceiptHandle();

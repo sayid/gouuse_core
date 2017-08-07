@@ -2,7 +2,7 @@
     "name": "gouuse/core",
     "description": "gouuse core files",
     "type": "library",
-    "version": "1.1.125",
+    "version": "1.1.126",
     "bin": ["src/bin/CodeTool","src/bin/Swoole"],
     "require": {
         "ixudra/curl": "6.*",
@@ -12,7 +12,8 @@
         "laravel/lumen-framework": "5.4.6",
         "php": ">=7",
         "silentred/lumoon": "dev-master",
-        "sayid/aliyun-mns-php-sdk": "dev-master"
+        "sayid/aliyun-mns-php-sdk": "dev-master",
+        "sayid/hessian": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.0",

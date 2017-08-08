@@ -1,13 +1,19 @@
 <?php
 namespace GouuseCore\Helpers;
 
-use App;
+use Illuminate\Support\Facades\App;
 
 class RpcHelper
 {
 	
 	public static function load($service_name, $class)
 	{
-	    return App::make('\GouuseCore\Rpcs\\'.$service_name.'\\'.$class);
+		if (substr($class, strlen($class) - 3)=='Lib') {
+			$class_load = '\GouuseCore\Rpcs\\'.$service_name.'\Libraries\\'.$class;
+		} elseif (substr($class, strlen($class) - 5)=='Model') {
+			$class_load = '\GouuseCore\Rpcs\\'.$service_name.'\Models\\'.$class;
+		}
+		
+		return App::make($class_load);
 	}
 }

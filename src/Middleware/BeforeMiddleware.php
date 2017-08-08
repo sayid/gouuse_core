@@ -46,6 +46,7 @@ class BeforeMiddleware
 			} elseif (substr($class, strlen($class) - 5)=='Model') {
 				$class_load = "App\Models\\".$class;
 			}
+			
 			App::bindIf($class_load, null, true);
 			$obj = App::make($class_load);
 			$data = call_user_func_array(array($obj, $method), $args);

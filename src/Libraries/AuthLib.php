@@ -65,9 +65,10 @@ class AuthLib extends Lib
             return ['code' => CodeLib::AUTH_DENY];
         }
         if (isset($this->member_info['super_admin']) && $this->member_info['type'] == 1) {
-            return ['code' => CodeLib::AUTH_DENY];
+            //是平台管理员 并且 type=1
+        	return true;
         }
-        return true;
+        return ['code' => CodeLib::AUTH_DENY];
     }
     
     

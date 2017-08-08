@@ -58,11 +58,12 @@ class MqLib extends Lib
     	{
     		//获取队列实例
     		$queue = $this->client->getQueueRef($quen_name);
-    		$res = $queue->receiveMessage(30);
-    		// 2. 获取ReceiptHandle，这是一个有时效性的Handle，可以用来设置Message的各种属性和删除Message。具体的解释请参考：help.aliyun.com/document_detail/27477.html 页面里的ReceiptHandle
-    		$receiptHandle = $res->getReceiptHandle();
     		
-    		return $receiptHandle;
+    		$request = new SendMessageRequest($value);
+    		
+    		$res = $queue->sendMessage($request);
+    		
+    		return true;
     	} catch (MnsException $e)
     	{
     		return false;

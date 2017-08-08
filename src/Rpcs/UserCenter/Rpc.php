@@ -4,6 +4,7 @@ namespace GouuseCore\Rpcs\UserCenter;
 use Illuminate\Support\Facades\App;
 use GouuseCore\Exceptions\GouuseRpcException;
 use Ixudra\Curl\Facades\Curl;
+use GouuseCore\Helpers\StringHelper;
 
 /**
  * API SDK基类
@@ -13,13 +14,7 @@ use Ixudra\Curl\Facades\Curl;
 class Rpc
 {
 	
-	private static $current_member_id;
-	private static $user;
-	private static $company_info;
-	
 	protected $host_pre = '/user_center/';
-	
-	protected $client;
 	
 	protected $service_name = 'UserCenter';
 	
@@ -43,8 +38,6 @@ class Rpc
 	
 	public function __construct()
 	{
-		//$host = env('API_GATEWAY_HOST').$this->host_pre.'rpc';
-		//$this->hprose_client = new \Hprose\Http\Client($host, false);
 	}
 	
 	/**
@@ -112,4 +105,15 @@ class Rpc
 		return $data;
 	}
 	
+	/**
+	 * 魔术方法 自动调用远程方法
+	 * @param unknown $name
+	 * @param unknown $arguments
+	 * @return unknown
+	 */
+	public function ___call($name, $arguments) 
+	{ 
+		return StringHelper::getClassname(get_class($this));
+		return $this->do(StringHelper::getClassname(get_class($this)), $name, $arguments);
+	}
 }

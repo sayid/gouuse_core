@@ -109,4 +109,16 @@ class Rpc
 		return $data;
 	}
 	
+	
+	/**
+	 * 魔术方法 自动调用远程方法
+	 * @param unknown $name
+	 * @param unknown $arguments
+	 * @return unknown
+	 */
+	public function ___call($name, $arguments)
+	{
+		return StringHelper::getClassname(get_class($this));
+		return $this->do(StringHelper::getClassname(get_class($this)), $name, $arguments);
+	}
 }

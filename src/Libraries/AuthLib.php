@@ -30,9 +30,10 @@ class AuthLib extends Lib
     
     /**
      * 需要应用管理员权限
+     * @param $type 0=全部，1=超管，2=子管理员
      * @return number
      */
-    public function needCompanyAppAdminAuth($app_id)
+    public function needCompanyAppAdminAuth($app_id, $type = 0)
     {
         if (empty($this->member_info['member_id'])) {
             return ['code' => CodeLib::AUTH_DENY];
@@ -41,6 +42,14 @@ class AuthLib extends Lib
         if (!in_array($app_id, $app_ids)) {
             //当前用户不能管理该应用
             return ['code' => CodeLib::AUTH_DENY];
+        }
+        if ($type > 0) {
+        	foreach ($this->member_info['manage_apps'] as $row) {
+        		if (($type == 1 && $row['super_manage'] == 1) || ($type == 2 && $row['super_manage'] == 0)) {
+        			return true;
+        		}
+        	}
+        	return false;
         }
         return true;
     }

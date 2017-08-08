@@ -44,6 +44,16 @@ class StringHelper
 	        return ['code'=>$re->error_code,'msg'=>$re->error];
 	    }
 	    return ['code'=>0,'data'=>array('url'=>$re[0]->url_short)];
-	    
+	}
+	
+	
+	public static function getNamespace($class)
+	{
+		return array_slice(explode('\\', $class), 0, -1);
+	}
+	
+	public static function getClassname($class)
+	{
+		return join('', array_slice(explode('\\', $name), -1));
 	}
 }

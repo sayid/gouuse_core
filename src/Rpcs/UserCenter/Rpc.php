@@ -73,6 +73,7 @@ class Rpc
 		
 		$client = new \swoole_client(SWOOLE_SOCK_TCP);
 		$host = env('API_GATEWAY_HOST');
+		$host = str_replace(['http://','https://'], '', $host);
 		if (!$client->connect($host, 80, -1))
 		{
 			exit("connect failed. Error: {$client->errCode}\n");
@@ -100,7 +101,14 @@ class Rpc
 		} catch (\ErrorException $e) {
 			
 		}
+		
 		$client->close(true);
+		
+		if (is_array($data) && isset($data['code']) && isset($data['exception'])) {
+			//异常
+			throw new GouuseRpcException($data['exception']);
+		}
+		
 		return $data;
 	}
 	

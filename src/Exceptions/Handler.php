@@ -52,14 +52,27 @@ class Handler extends ExceptionHandler
 		} else {
 			$data = '';
 		}
-		if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-			return response(['code'=>CodeLib::REQUEST_NOT_FOUND,'exception'=>$data], 404);
-		} else if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
-			return response(['code'=>CodeLib::REQUEST_METHOD_ERROR,'exception'=>$data], 405);
-		} else if ($e instanceof \GouuseCore\Exceptions\GouuseRpcException) {
-			return response(['code'=>CodeLib::RPC_SERVER_ERR,'exception'=>$data], 500);
+		if (defined('IS_RPC')) {
+			if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+				$response = response('#'.msgpack_pack(['code'=>CodeLib::REQUEST_NOT_FOUND,'exception'=>$data]), 404);
+			} else if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
+				$response = response('#'.msgpack_pack(['code'=>CodeLib::REQUEST_METHOD_ERROR,'exception'=>$data]), 405);
+			} else if ($e instanceof \GouuseCore\Exceptions\GouuseRpcException) {
+				$response = response('#'.msgpack_pack(['code'=>CodeLib::RPC_SERVER_ERR,'exception'=>$data]), 500);
+			} else {
+				$response = response('#'.msgpack_pack(['code'=>CodeLib::HTTP_ERROR,'exception'=>$data]), 500);
+			}
+		} else {
+			if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+				$response = response(['code'=>CodeLib::REQUEST_NOT_FOUND,'exception'=>$data], 404);
+			} else if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
+				$response = response(['code'=>CodeLib::REQUEST_METHOD_ERROR,'exception'=>$data], 405);
+			} else if ($e instanceof \GouuseCore\Exceptions\GouuseRpcException) {
+				$response = response(['code'=>CodeLib::RPC_SERVER_ERR,'exception'=>$data], 500);
+			} else {
+				$response = response(['code'=>CodeLib::HTTP_ERROR,'exception'=>$data], 500);
+			}
 		}
-		return response(['code'=>CodeLib::HTTP_ERROR,'exception'=>$data], 500);
-		return parent::render($request, $e);
+		return $response;
 	}
 }

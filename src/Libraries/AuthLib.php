@@ -54,6 +54,48 @@ class AuthLib extends Lib
         return true;
     }
     
+    /**
+     * 获取应用管理员设置权限和数据权限
+     * @param unknown $app_id 应用id
+     * @param string $set_auth 获取应用设置权限
+     * @param string $data_auth 获取数据权限
+     * @return number[]|boolean
+     */
+    public function needCompanyAppSetAuth($app_id, $set_auth = false, $data_auth = false)
+    {
+        if (empty($this->member_info['member_id'])) {
+            return ['code' => CodeLib::AUTH_DENY];
+        }
+        $app_ids = array_column($this->member_info['manage_apps'], 'app_id');
+        if (!in_array($app_id, $app_ids)) {
+            //当前用户不能管理该应用
+            return ['code' => CodeLib::AUTH_DENY];
+        }
+    
+        foreach ($this->member_info['manage_apps'] as $row) {
+            if ($row['app_id'] == $app_id) {
+                $app_info = $row;
+            }
+        }
+        if (!isset($app_info) || empty($app_info)) {
+            return ['code' => CodeLib::AUTH_DENY];
+        }
+    
+        if ($set_auth === true && $data_auth === true) {    //获取设置权限，数据权限
+            if ($app_info['set_permission'] == 1 && $app_info['data_permission']) {
+                return true;
+            }
+        } elseif ($set_auth === true && $data_auth === false) { //获取设置权限
+            if ($app_info['set_permission'] == 1) {
+                return true;
+            }
+        } elseif ($set_auth === false && $data_auth === true) { //获取数据权限
+            if ($app_info['data_permission'] == 1) {
+                return true;
+            }
+        }
+        return ['code' => CodeLib::AUTH_DENY];
+    }
     
     /**
      * 平台管理员

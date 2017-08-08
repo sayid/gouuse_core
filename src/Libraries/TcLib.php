@@ -11,8 +11,8 @@ use GouuseCore\Helpers\RpcHelper;
  */
 class TcLib extends Lib
 {
-	//通知地址
-	private $notify_url;
+	//通知时调用的方法
+	private $notify;
 	
 	private $tc_id; //事务id
 	
@@ -43,29 +43,19 @@ class TcLib extends Lib
 	 * @param $notify_url 设置回调通知地址,通知回滚、撤销等等
 	 * @param $notify_level 事务等级 0=发出去后不管，不用回调不用通知，1=需要通知需要回调，2=失败时需要回滚
 	 */
-	public function tcStart($notify_url)
+	public function tcStart($notify)
 	{
 		//本地事务开启
 		DB::beginTransaction();
+		
+		$this->notify = $notify;
 	}
 	
 	/**
-	 * 撤回事务 往阿里消息服务发送订阅
+	 * 撤回事务
 	 */
 	public function tcRollback()
 	{
-		$push_message= [
-				'service_id' => $this->service_id,
-				'step' => self::STEP_CANCEL,
-				'trunsaction_id' => $this->tc_id
-		];
-		
-		$msg_data = ['topic_name' => $this->topic_name, 'message_body' => json_encode($push_message)];
-		$re_push_data = $this->MqLib->sendTopic($msg_data);
-		if ($re_push_data[0] != 0) {
-			//消息发送失败
-			return $re_push_data;
-		}
 		DB::rollback();
 		
 	}
@@ -97,20 +87,23 @@ class TcLib extends Lib
 	{
 		$request = app('Illuminate\Http\Request');
 		$from_url = $request->url();
-		//通知阿里队列 开启事务
-		$push_message= [
+	
+		$tc_log_data= [
 				'service_id' => $this->service_id,
 				'from_url' => $from_url,
-				'notify_url' => $this->notify_url,
+				'notify' => $this->notify,
 				'step' => self::STEP_START
 		];
 		
 		$tcLibServer = RpcHelper::load('TcCenter', 'TcLib');
-		if ($re_push_data[0] != 0) {
-			//消息发送失败
-			return $re_push_data;
+		$tc_server_id = $tcLibServer->addTcLog($tc_log_data);
+		
+		if (!$tc_server_id) {
+			//创建事务失败 回滚本地事务
+			$this->tcRollback();
+			return false;
 		}
-		$this->tc_id = $re_push_data[1];
+		$this->tc_id = $tc_server_id;
 		
 		$this->child_tcs = array_merge($child_log_data, $this->child_tcs);
 		$this->rollback_data = array_merge($rollback_data, $this->rollback_data);
@@ -135,6 +128,7 @@ class TcLib extends Lib
 		}
 		
 		DB::commit();
+		return true;
 	}
 	
 	/**

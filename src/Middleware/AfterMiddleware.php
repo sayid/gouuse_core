@@ -13,6 +13,7 @@ class AfterMiddleware
 		$response = $next($request);
 		
 		$content = $response->getContent();
+		
 		if (is_string($content)) {
 			$data = json_decode($content, true);
 		}
@@ -36,8 +37,9 @@ class AfterMiddleware
 				$data['run_time'] = $time - TIME_START;
 				$data['code'] = intval($code);
 				$data['msg'] = $msg;
+				$content = json_encode($data);
 			}
-			$content = json_encode($data);
+			
 		}
 		
 		$member_info = $request->user();
@@ -66,6 +68,7 @@ class AfterMiddleware
 			$this->EncryptLib= App::make($class_load);
 			$content = $this->EncryptLib->encrypt($content, $key);
 		}
+		
 		$response->setContent($content);
 		return $response;
 	}

@@ -1,5 +1,5 @@
 <?php
-namespace GouuseCore\Rpcs\UserCenters\Models;
+namespace GouuseCore\Rpcs\UserCenter\Models;
 
 use GouuseCore\Rpcs\UserCenter\Rpc;
 
@@ -11,7 +11,7 @@ use GouuseCore\Rpcs\UserCenter\Rpc;
 class MemberModel extends Rpc
 {
 	function __construct() {
-		parent::__construct($service_name);
+		parent::__construct();
 	}
 		
 	/**

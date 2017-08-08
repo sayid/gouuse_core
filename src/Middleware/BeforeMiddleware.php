@@ -21,8 +21,8 @@ class BeforeMiddleware
 		 */
 		$paths = explode('/', $request->path());
 		if ( end($paths) === 'rpc') {
-			app()->configure('rpc');
-			$config = config('rpc');
+			//定义rpc调用，在后置中间件中要判断
+			define('IS_RPC', true);
 			
 			$data = file_get_contents('php://input');
 			$data = msgpack_unpack($data);
@@ -50,9 +50,7 @@ class BeforeMiddleware
 			App::bindIf($class_load, null, true);
 			$obj = App::make($class_load);
 			$data = call_user_func_array(array($obj, $method), $args);
-			//一定要带上#号标记
-			$data = '#'.msgpack_pack($data);
-			return response($data);
+			return response('#'.msgpack_pack($data));
 		}
 		// 执行动作
 		$info = $request->input("info");

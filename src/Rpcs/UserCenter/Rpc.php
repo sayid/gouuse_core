@@ -64,17 +64,25 @@ class Rpc
 				'm' => $method
 		];
 		
+		ksort($userdata);
+		//计算签名
+		$userdata['sign'] = md5(http_build_query($userdata).env('AES_KEY'));
 		
 		$userdata = msgpack_pack($userdata);
 		
-		//$host = env('API_GATEWAY_HOST').$this->host_pre.'rpc';
 		
 		$client = new \swoole_client(SWOOLE_SOCK_TCP);
-		$host = 'user_center.localhost.com';
-		if (!$client->connect('user_center.localhost.com', 80, -1))
+		$host = env('API_GATEWAY_HOST');
+		if (!$client->connect($host, 80, -1))
 		{
 			exit("connect failed. Error: {$client->errCode}\n");
 		}
+		
+		$client->set(array(
+				'open_eof_check' => true,
+				'package_eof' => "\r\n\r\n",
+		));
+		
 		$msg = "POST   ".$this->host_pre."v3/rpc   HTTP/1.0\r\n"
 				. "Host: $host\r\n"
 				. "Content-Type: application/x-www-form-urlencoded\r\n"
@@ -82,10 +90,18 @@ class Rpc
 				. "Connection: Keep-Alive\r\n\r\n"
 				.$userdata;
 										
-		$client->send($msg);
-		$data = $client->recv(8192, \swoole_client::MSG_PEEK);
-		echo $data;
-		$client->close(true);
+				$client->send($msg);
+				
+				$data = $client->recv();
+				$length = strpos($data, "#");
+				$data = substr($data, $length + 1);
+				try {
+					$data = msgpack_unpack($data);
+				} catch (\ErrorException $e) {
+					
+				}
+				$client->close(true);
+				return $data;
 	}
 	
 }

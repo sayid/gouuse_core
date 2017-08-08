@@ -26,6 +26,16 @@ class BeforeMiddleware
 			
 			$data = file_get_contents('php://input');
 			$data = msgpack_unpack($data);
+			$sign = $data['sign'] ?? '';
+			unset($data['sign']);
+			ksort($data);
+			$check_sign = md5(http_build_query($data).env('AES_KEY'));
+			if ($check_sign != $sign) {
+				//验签失败
+				throw new \Exception("check sign fail");
+			}
+			
+			
 			$class = $data['c'] ?? '';
 			$method = $data['m'] ?? '';
 			$args = $data['args'] ?? [];
@@ -39,6 +49,8 @@ class BeforeMiddleware
 			App::bindIf($class_load, null, true);
 			$obj = App::make($class_load);
 			$data = call_user_func_array(array($obj, $method), $args);
+			//一定要带上#号标记
+			$data = '#'.msgpack_pack($data);
 			return response($data);
 		}
 		// 执行动作

@@ -49,7 +49,7 @@ class AuthLib extends Lib
         			return true;
         		}
         	}
-        	return false;
+        	return ['code' => CodeLib::AUTH_DENY];
         }
         return true;
     }

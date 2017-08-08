@@ -90,18 +90,18 @@ class Rpc
 				. "Connection: Keep-Alive\r\n\r\n"
 				.$userdata;
 										
-				$client->send($msg);
-				
-				$data = $client->recv();
-				$length = strpos($data, "#");
-				$data = substr($data, $length + 1);
-				try {
-					$data = msgpack_unpack($data);
-				} catch (\ErrorException $e) {
-					
-				}
-				$client->close(true);
-				return $data;
+		$client->send($msg);
+		
+		$data = $client->recv();
+		$length = strpos($data, "#");
+		$data = substr($data, $length + 1);
+		try {
+			$data = msgpack_unpack($data);
+		} catch (\ErrorException $e) {
+			
+		}
+		$client->close(true);
+		return $data;
 	}
 	
 }

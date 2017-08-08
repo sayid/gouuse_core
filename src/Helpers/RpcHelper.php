@@ -12,6 +12,8 @@ class RpcHelper
 			$class_load = '\GouuseCore\Rpcs\\'.$service_name.'\Libraries\\'.$class;
 		} elseif (substr($class, strlen($class) - 5)=='Model') {
 			$class_load = '\GouuseCore\Rpcs\\'.$service_name.'\Models\\'.$class;
+		} elseif ($class == 'Rpc') {
+			$class_load = '\GouuseCore\Rpcs\\'.$service_name.'\Rpc';
 		}
 		
 		return App::make($class_load);

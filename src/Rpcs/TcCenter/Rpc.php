@@ -92,7 +92,17 @@ class Rpc
 										
 		$client->send($msg);
 		
-		$data = $client->recv();
+		$data = '';
+		$i = 0;
+		while (1) {
+			$i++;
+			$tmp = $client->recv();
+			if (empty($tmp)) {
+				break;
+			}
+			$data = $data . $tmp;
+		}
+		
 		$length = strpos($data, "#");
 		$data = substr($data, $length + 1);
 		try {

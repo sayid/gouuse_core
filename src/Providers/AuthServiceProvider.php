@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Gate;
 use Namshi\JOSE\SimpleJWS;
 use App\Libraries\CodeLib;
+use GouuseCore\Helpers\RpcHelper;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -158,9 +159,13 @@ class AuthServiceProvider extends ServiceProvider
 						return CodeLib::AUTH_FAILD;
 					}
 				} else {
-					App::bindIf('GouuseCore\Rpcs\AuthCenterRpc', null, true);
+					/*App::bindIf('GouuseCore\Rpcs\AuthCenterRpc', null, true);
 					$member_api = App::make('GouuseCore\Rpcs\AuthCenterRpc');
-					$result = $member_api->check($token);
+					$result = $member_api->check($token);*/
+					
+					$app = RpcHelper::load('UserCenter', 'Rpc');
+					$result = $app->do('AccountLib', 'check', [$token]);
+					
 					if (isset($result['code']) && $result['code']==0) {
 						$result['data']['member_info']['_gouuse_token'] = $token;
 						app()['gouuse_member_info'] = $result['data']['member_info'];

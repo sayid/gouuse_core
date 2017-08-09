@@ -118,7 +118,6 @@ class Rpc
 	 */
 	public function ___call($name, $arguments)
 	{
-		return StringHelper::getClassname(get_class($this));
 		return $this->do(StringHelper::getClassname(get_class($this)), $name, $arguments);
 	}
 }

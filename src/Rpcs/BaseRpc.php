@@ -147,6 +147,9 @@ class BaseRpc
      */
     public function do($class, $method, $args = [])
     {
+    	if (env('APP_DEBUG') == true) {
+    		$GLOBALS['rpc_count'] = isset($GLOBALS['rpc_count']) ? $GLOBALS['sql_count'] + 1 : 1;
+    	}
     	
     	$userdata = [
     			'GOUUSE_XX_V3_MEMBER_INFO' => defined('GOUUSE_MEMBER_INFO') ? GOUUSE_MEMBER_INFO : [],
@@ -161,7 +164,6 @@ class BaseRpc
     	$userdata['sign'] = md5(http_build_query($userdata).env('AES_KEY'));
     	
     	$userdata = msgpack_pack($userdata);
-    	
     	
     	$host = env('API_GATEWAY_HOST');
     	$host = str_replace(['http://','https://'], '', $host);

@@ -56,7 +56,7 @@ $this->sendMessageCenter->sendMessageTopic($messge_data);
 $this->MessageCenterLib->getMessageData($request);
 
 10、通用日志方法
-成功日志：$this->LogLib->log_info(['param' => '提交数据', 'result' => '返回数据', 'startTime' => '开始时间戳']);
+成功日志：$this->LogLib->info(['param' => '提交数据', 'result' => '返回数据', 'startTime' => '开始时间戳']);
 错语日志：$this->LogLib->log_err(['param' => '提交数据', 'result' => '返回数据', 'startTime' => '开始时间戳']);
 
 11、CodeTool工具是自动将CodeLib.php文件的注释自动转换成数组配置文件
@@ -69,3 +69,7 @@ ode.inc.php执行
 
 13、生成文档
 php vendor/zircote/swagger-php/bin/swagger app/Http/Controllers -o public/swagger-docs
+
+14、rpc调用远程方法
+
+

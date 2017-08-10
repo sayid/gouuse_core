@@ -30,6 +30,9 @@ class EventServiceProvider extends ServiceProvider {
 			if (env('APP_DEBUG') == true) {
 				Event::listen ( QueryExecuted::class, function ($event) {
 					if (strpos($event->sql, 'explain')===false) {
+						if (env('APP_DEBUG') == true) {
+							$GLOBALS['sql_count'] = isset($GLOBALS['sql_count']) ? $GLOBALS['sql_count'] + 1 : 1;
+						}
 						$sql = str_replace("?", "'%s'", $event->sql);
 						$log = vsprintf($sql, $event->bindings);
 						if (strpos($log, 'select')!==false) {

@@ -488,8 +488,8 @@ abstract class BaseModel extends BaseGouuse
         $error_message = $error_message."time:".date("Y-m-d H:i:s");
         $error_message = $error_message."\r\n----------------------------\r\n\r\n\r\n\r\n";
     
-        file_put_contents(WRITEABLE_DIR.'error/'.$type.'_all_data.txt', $error_message, FILE_APPEND);
-    
+        //file_put_contents(WRITEABLE_DIR.'error/'.$type.'_all_data.txt', $error_message, FILE_APPEND);
+        Log::error($error_message);
         echo "Not allow to ".$type." all data!";
         exit;
     }

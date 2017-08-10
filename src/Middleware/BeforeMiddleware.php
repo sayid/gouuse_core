@@ -3,8 +3,6 @@ namespace GouuseCore\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\App;
-use Hprose\Http\Server;
-use GouuseCore\Rpcs\Filters\AuthFilter;
 
 /**
  * 前置中间件
@@ -21,8 +19,6 @@ class BeforeMiddleware
 		 */
 		$paths = explode('/', $request->path());
 		if ( end($paths) === 'rpc') {
-			//定义rpc调用，在后置中间件中要判断
-			define('IS_RPC', true);
 			
 			$data = file_get_contents('php://input');
 			$data = msgpack_unpack($data);
@@ -39,8 +35,12 @@ class BeforeMiddleware
 			$class = $data['c'] ?? '';
 			$method = $data['m'] ?? '';
 			$args = $data['args'] ?? [];
-			app()['gouuse_member_info'] = $data['GOUUSE_XX_V3_MEMBER_INFO'] ?? [];
-			app()['gouuse_company_info'] = $data['GOUUSE_XX_V3_COMPANY_INFO'] ?? [];
+			if (!defined('GOUUSE_MEMBER_INFO')) {
+				define('GOUUSE_MEMBER_INFO', $data['GOUUSE_XX_V3_MEMBER_INFO'] ?? []);
+			}
+			if (!defined('GOUUSE_COMPANY_INFO')) {
+				define('GOUUSE_COMPANY_INFO', $data['GOUUSE_XX_V3_COMPANY_INFO'] ?? []);
+			}
 			if (substr($class, strlen($class) - 3)=='Lib') {
 				$class_load = "App\Libraries\\".$class;
 			} elseif (substr($class, strlen($class) - 5)=='Model') {

@@ -12,52 +12,10 @@ use Illuminate\Support\Facades\App;
 class BaseGouuse
 {
 	
-	protected $app_id;
-	
-	//public $member_info = [];
-	//public $company_info = [];
 	
 	public function __construct($params = [])
 	{
-		$this->app_id =  env('SERVICE_ID');
 	}
-	
-	public function memberInit()
-	{
-		if (!defined('NEED_AUTH_CHECK')) {
-			return null;
-		}
-		if (isset(app()['gouuse_member_info'])) {
-			$this->member_info = app()['gouuse_member_info'];
-			if (isset(app()['gouuse_company_info'])) {
-				$this->company_info = app()['gouuse_company_info'];
-			}
-		} else {
-			$this->member_info = Auth::user();
-			app()['gouuse_member_info'] = $this->member_info;
-			
-			if (!empty($this->member_info)) {
-				if (env('SERVICE_ID') == 1005) {
-					$class_load = "App\Models\CompanyModel";
-					App::bindIf($class_load, null, true);
-					$companyModel= App::make($class_load);
-					app()['gouuse_company_info'] = $companyModel->getById($company_id);
-					return app()['gouuse_company_info'];
-				} else {
-					App::bindIf('GouuseCore\Rpcs\CompanyCenterRpc', null, true);
-					$company_api = App::make('GouuseCore\Rpcs\CompanyCenterRpc');
-					$company_info = $company_api->getById($company_id);
-					app()['gouuse_company_info'] = [];
-					if ($company_info['code'] != 0) {
-						return response($company_info)->send();exit();
-					}
-					return app()['gouuse_company_info'];
-				}
-			}
-			app()['gouuse_company_info'] = $this->company_info;
-		}
-	}
-	
 	
 	public function __get($class)
 	{
@@ -66,14 +24,14 @@ class BaseGouuse
 			if (!defined('NEED_AUTH_CHECK')) {
 				return null;
 			}
-			if (isset(app()['gouuse_member_info'])) {
-				return app()['gouuse_member_info'];
+			if (defined('GOUUSE_MEMBER_INFO')) {
+				return GOUUSE_MEMBER_INFO;
 			}
-			app()['gouuse_member_info']= Auth::user();
-			return app()['gouuse_member_info'];
+			//define('GOUUSE_MEMBER_INFO', Auth::user());
+			//return GOUUSE_MEMBER_INFO;
 		} else if ($class == 'company_info') {
-			if (isset(app()['gouuse_company_info'])) {
-				return app()['gouuse_company_info'];
+			if (defined('GOUUSE_COMPANY_INFO')) {
+				return GOUUSE_COMPANY_INFO;
 			}
 		}
 		
@@ -99,13 +57,5 @@ class BaseGouuse
 		App::bindIf($class_load, null, true);
 		$obj = App::make($class_load);
 		return $obj;
-		/**
-		 * 优化单利模式，使用lumen自带对
-		 if (isset(app()['gouuse_'.$class_load])) {
-		 return app()['gouuse_'.$class_load];
-		 }
-		 app()['gouuse_'.$class_load] = new $class_load;
-		 return app()['gouuse_'.$class_load];
-		 */
 	}
 }

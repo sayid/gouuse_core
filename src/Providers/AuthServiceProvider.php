@@ -54,10 +54,16 @@ class AuthServiceProvider extends ServiceProvider
 				
 				if (isset($_SERVER['HTTP_CURRENT_MEMBER_ID'])) {
 					//当前用户id 不用再查询数据库
-					app()['gouuse_member_info'] = $member_info = json_decode(urldecode($request->input('GOUUSE_XX_V3_MEMBER_INFO')), true);
-					app()['gouuse_company_info'] = json_decode(urldecode($request->input('GOUUSE_XX_V3_COMPANY_INFO')), true);
-					$request->gouuse_member_info = app()['gouuse_member_info'];
-					$request->gouuse_company_info= app()['gouuse_company_info'];
+					$member_info = json_decode(urldecode($request->input('GOUUSE_XX_V3_MEMBER_INFO')), true);
+					if (!defined('GOUUSE_MEMBER_INFO')) {
+						define('GOUUSE_MEMBER_INFO', $member_info);
+					}
+					$gouuse_company_info = json_decode(urldecode($request->input('GOUUSE_XX_V3_COMPANY_INFO')), true);
+					if (!defined('GOUUSE_COMPANY_INFO')) {
+						define('GOUUSE_COMPANY_INFO', $gouuse_company_info);
+					}
+					$request->gouuse_member_info = $member_info;
+					$request->gouuse_company_info= $gouuse_company_info;
 					//返回数据给auth控件
 					return $member_info;
 				}
@@ -143,7 +149,7 @@ class AuthServiceProvider extends ServiceProvider
 							$member_info['super_admin'] = $super_admin;
 						}
 						$member_info['first_login'] = $first_login || empty($member_info['last_login_time']) ? 1 : 0;
-						app()['gouuse_member_info'] = $member_info;
+						define('GOUUSE_MEMBER_INFO', $member_info);
 						$company_info = [];
 						if (isset($member_info['company_id']) && $member_info['company_id'] > 0) {
 							$class_load = 'App\Models\CompanyModel';
@@ -151,27 +157,30 @@ class AuthServiceProvider extends ServiceProvider
 							$companyModel= App::make($class_load);
 							$company_info = $companyModel->getById($member_info['company_id']);
 						}
-						app()['gouuse_company_info'] = $company_info;
-						$request->gouuse_member_info = app()['gouuse_member_info'];
-						$request->gouuse_company_info= app()['gouuse_company_info'];
+						define('GOUUSE_COMPANY_INFO', $company_info);
+						$request->gouuse_member_info = $member_info;
+						$request->gouuse_company_info= $company_info;
 						return $member_info;
 					} else {
 						return CodeLib::AUTH_FAILD;
 					}
 				} else {
-					/*App::bindIf('GouuseCore\Rpcs\AuthCenterRpc', null, true);
-					$member_api = App::make('GouuseCore\Rpcs\AuthCenterRpc');
-					$result = $member_api->check($token);*/
 					
 					$app = RpcHelper::load('UserCenter', 'Rpc');
 					$result = $app->do('AccountLib', 'check', [$token]);
 					
 					if (isset($result['code']) && $result['code']==0) {
 						$result['data']['member_info']['_gouuse_token'] = $token;
-						app()['gouuse_member_info'] = $result['data']['member_info'];
-						app()['gouuse_company_info'] = $result['data']['company_info'] ?? [];
-						$request->gouuse_member_info = app()['gouuse_member_info'];
-						$request->gouuse_company_info= app()['gouuse_company_info'];
+						$gouuse_member_info = $result['data']['member_info'];
+						if (!defined('GOUUSE_MEMBER_INFO')) {
+							define('GOUUSE_MEMBER_INFO', $gouuse_member_info);
+						}
+						$gouuse_company_info = $result['data']['company_info'] ?? [];
+						if (!defined('GOUUSE_COMPANY_INFO')) {
+							define('GOUUSE_COMPANY_INFO', $gouuse_company_info);
+						}
+						$request->gouuse_member_info = $gouuse_member_info;
+						$request->gouuse_company_info= $gouuse_company_info;
 						return $result['data']['member_info'];
 					}
 					return $result['code'];

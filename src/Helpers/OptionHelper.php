@@ -23,7 +23,7 @@ class OptionHelper
     
         $cache_data = Cache::get($cache_key);
     
-        if (!$cache_data) {
+        if (!$cache_data || 1) {
             $sub_dir = "";
     
             $separate_point=strpos($dir, '/');

@@ -17,7 +17,7 @@ class ValidationLib
      */
     function checkMobile($str)
     {
-        return (bool) preg_match("/^1[3|4|5|6|7|8|5|9]\d{9}$/is", $str);
+        return (bool) preg_match("/^1[3|4|5|6|7|8|5|9]\d{9}$|^[2|5|6|8|9]\d{7}$/is", $str);
     }
 
     function checkTel($str)

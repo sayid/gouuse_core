@@ -220,4 +220,16 @@ class ArrayHelper
         }
         return $arrayresult;
     }
+    /**
+     * 数组更具某个字段排序
+     * @param unknown $array
+     * @param unknown $field
+     * @param string $sort
+     */
+    public function arraySort($array, $field, $sort = "SORT_ASC")
+    {
+        $sort_field = array_column($array, $field);
+        array_multisort($sort_field, $sort, $array);
+        return $array;
+    }
 }

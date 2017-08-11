@@ -148,7 +148,7 @@ class BaseRpc
     public function do($class, $method, $args = [])
     {
     	if (env('APP_DEBUG') == true) {
-    		$GLOBALS['rpc_count'] = isset($GLOBALS['rpc_count']) ? $GLOBALS['sql_count'] + 1 : 1;
+    		$GLOBALS['rpc_count'] = isset($GLOBALS['rpc_count']) ? $GLOBALS['rpc_count'] + 1 : 1;
     	}
     	
     	$userdata = [

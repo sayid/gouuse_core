@@ -69,14 +69,15 @@ class AfterMiddleware
 		$this->LogLib->setDriver('access');
 		$this->LogLib->info('', $log_data, true);
 		
-		if ($request->input('source') == 2 || $request->input('source') == 3 && !defined('REQUEST_IS_LOCAL')) {
+		/*if ($request->input('source') == 2 || $request->input('source') == 3 && !defined('REQUEST_IS_LOCAL')) {
+		 * 暂不加密
 			//加密
 			$key=substr(md5(env('AES_KEY')."gou"),0,8);
 			$class_load = 'GouuseCore\Libraries\EncryptLib';
 			App::bindIf($class_load, null, true);
 			$this->EncryptLib= App::make($class_load);
 			$content = $this->EncryptLib->encrypt($content, $key);
-		}
+		}*/
 		
 		$response->setContent($content);
 		return $response;

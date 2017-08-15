@@ -6,7 +6,7 @@ use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Database\Events\StatementPrepared;
 use Event;
 use Illuminate\Database\Events\QueryExecuted;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 class EventServiceProvider extends ServiceProvider {
@@ -29,6 +29,9 @@ class EventServiceProvider extends ServiceProvider {
 		});
 			if (env('APP_DEBUG') == true) {
 				Event::listen ( QueryExecuted::class, function ($event) {
+					App::bindIf("GouuseCore\Libraries\LogLib", null, true);
+					$logLib = App::make("GouuseCore\Libraries\LogLib");
+					
 					if (strpos($event->sql, 'explain')===false) {
 						if (env('APP_DEBUG') == true) {
 							$GLOBALS['sql_count'] = isset($GLOBALS['sql_count']) ? $GLOBALS['sql_count'] + 1 : 1;
@@ -42,13 +45,13 @@ class EventServiceProvider extends ServiceProvider {
 								if ($row['type'] == 'ALL') {
 									$msg = "OOPS, FOUND FULLTABLE SCAN!\n ";
 									$msg .= "\nSQL: \n $log\n";
-									Log::warning($msg);
+									$logLib->warning($msg);
 									return;
 									//throw new \Exception($msg);
 								}
 							}
 						}
-						Log::debug($log);
+						$logLib->debug($log);
 					}
 				});
 			}

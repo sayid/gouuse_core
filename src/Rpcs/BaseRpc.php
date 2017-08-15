@@ -25,7 +25,10 @@ class BaseRpc
     public function __construct()
     {
         self::$gatewaylib = new \GouuseCore\Libraries\GatewayLib();
-
+        $class_load = 'GouuseCore\Libraries\LogLib';
+        App::bindIf($class_load, null, true);
+        $this->LogLib = App::make($class_load);
+        $this->LogLib->setDriver('rpc');
     }
 
     public function preData()
@@ -54,11 +57,9 @@ class BaseRpc
             ->withData($data)
             ->post();
 
-        $class_load = 'GouuseCore\Libraries\LogLib';
-        App::bindIf($class_load, null, true);
-        $this->LogLib = App::make($class_load);
+       
 
-        $this->LogLib->setDriver('rpc');
+        
 
         $log_data = [
             'uri' => $url,
@@ -101,12 +102,6 @@ class BaseRpc
             ->withHeaders($header)
             ->withData($data)
             ->post();
-
-        $class_load = 'GouuseCore\Libraries\LogLib';
-        App::bindIf($class_load, null, true);
-        $this->LogLib = App::make($class_load);
-
-        $this->LogLib->setDriver('rpc');
 
         $log_data = [
             'uri' => $url,
@@ -220,7 +215,21 @@ class BaseRpc
     	} catch (\ErrorException $e) {
     										
     	}
-    									
+    	
+    	$class_load = 'GouuseCore\Libraries\LogLib';
+    	App::bindIf($class_load, null, true);
+    	$this->LogLib = App::make($class_load);
+    	$this->LogLib->setDriver('rpc');
+    	
+    	$log_data = [
+    			'uri' => $class.'->'.$method.'()',
+    			'member_id' => $userdata['GOUUSE_XX_V3_MEMBER_INFO']['member_id'] ?? 0,
+    			'company_id' => $userdata['GOUUSE_XX_V3_MEMBER_INFO']['company_id'] ?? 0,
+    			'param' => $args,
+    			'response' => $data
+    	];
+    	$this->LogLib->info('', $log_data, true);
+    	
     	if (is_array($data) && isset($data['code']) && isset($data['exception'])) {
     		//异常
     		throw new GouuseRpcException($data['exception']);

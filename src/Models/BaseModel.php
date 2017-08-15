@@ -92,7 +92,7 @@ abstract class BaseModel extends BaseGouuse
     {
         $table=$this->checkTable($table);
     
-        $cache_key = "getTableFileds_".$table;
+        $cache_key = env('SERVICE_ID') . ":getTableFileds_".$table;
         $cache_data = Cache::get($cache_key);
         if (!$cache_data) {
             $this->mysql_dont_plain=1;
@@ -134,7 +134,7 @@ abstract class BaseModel extends BaseGouuse
             foreach ($data as $index => $val) {
                 $index_format = str_replace(array("+", "-"), array("", ""), $index);
                 if (in_array($index_format, $field_list) == false && is_numeric($index_format) == false) {
-                	//throw new \Exception($index_format . ' is not a field of ' . $table);
+                	throw new \Exception($index_format . ' is not a field of ' . $table);
                 	unset($data[$index]);
                 }
             }
@@ -240,8 +240,8 @@ abstract class BaseModel extends BaseGouuse
         $where = $this->filter($where, $table);
         list($where_list, $val) = $this->parseWhere($where, $table);
     
-        if ($where_list=="1") {
-            //记录错误日志
+        if ($where_list == "1") {
+            //记录错误日志 不能整表删除
             $this->fullTableWriteErrorReport('delete:'.$table);
         }
     

@@ -25,7 +25,8 @@ class AfterMiddleware
 					$data ['debug'] = [
 							'run_time' => $time - TIME_START,
 							'sql_count' => $GLOBALS ['sql_count'] ?? 0,
-							'rpc_count' => $GLOBALS ['rpc_count'] ?? 0
+							'rpc_count' => $GLOBALS ['rpc_count'] ?? 0,
+							'memory_use' => sprintf("%3.2f",memory_get_usage()/1024/1024)."M"
 					];
 				}
 				if ($data['code']>0 && empty($data['msg'])) {
@@ -60,7 +61,7 @@ class AfterMiddleware
 		$log_data['company_id'] = $member_info['company_id'] ?? 0;//公司id
 		$log_data['sql_count'] = $GLOBALS ['sql_count'] ?? 0;
 		$log_data['rpc_count'] = $GLOBALS ['rpc_count'] ?? 0;
-		
+		$log_data['memory_use'] = sprintf("%3.2f",memory_get_usage()/1024/1024)."M";
 		$class_load = 'GouuseCore\Libraries\LogLib';
 		App::bindIf($class_load, null, true);
 		$this->LogLib = App::make($class_load);

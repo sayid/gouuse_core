@@ -11,12 +11,12 @@ class AfterMiddleware
 	public function handle($request, Closure $next)
 	{
 		$response = $next($request);
+		$content = $data = $response->original;
 		
-		$content = $response->getContent();
-		
+		/*$content = $response->getContent();
 		if (is_string($content)) {
 			$data = json_decode($content, true);
-		}
+		}*/
 		
 		if (isset($data) && is_array($data)) {
 			if (isset($data['code'])) {
@@ -44,8 +44,8 @@ class AfterMiddleware
 					$data['code'] = intval($code);
 					$data['msg'] = $msg;
 				}
-				$content = json_encode($data);
 			}
+			$content = json_encode($data);
 		}
 		
 		$member_info = $request->user();

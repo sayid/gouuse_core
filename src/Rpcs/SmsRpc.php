@@ -10,10 +10,9 @@ use GouuseCore\Rpcs\BaseRpc;
  */
 class SmsRpc extends BaseRpc
 {
-	protected $host;
-
+	protected $host_pre = '/sms_service/';
+	
 	function __construct() {
-		$this->host = '';
 
 	}
 
@@ -23,7 +22,7 @@ class SmsRpc extends BaseRpc
 	 * @return \GouuseCore\Rpcs\number[]|\GouuseCore\Rpcs\string[]|mixed
 	 */
 	function send($data = []) {
-		$url = $this->host . '/sms_service/v3/send';
+		$url = '/sms_service/v3/send';
 		$result = $this->post($url, [], $data);
 		return $result;
 	}

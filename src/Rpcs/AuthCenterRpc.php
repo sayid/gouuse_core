@@ -10,10 +10,9 @@ use GouuseCore\Rpcs\BaseRpc;
  */
 class AuthCenterRpc extends BaseRpc
 {
-	protected $host;
+	protected $host_pre = '/auth_center/';
 	
 	function __construct() {
-		$this->host = '';
 		
 	}
 	
@@ -23,7 +22,7 @@ class AuthCenterRpc extends BaseRpc
 	 * @return \GouuseCore\Rpcs\number[]|\GouuseCore\Rpcs\string[]|mixed
 	 */
 	function check($token) {
-		$url = $this->host . '/auth_center/v3/check';
+		$url = '/auth_center/v3/check';
 		$token = explode(' ', $token);
 		$token = end($token);
 		$header[] = 'Authorization: bearer '.$token;
@@ -38,7 +37,7 @@ class AuthCenterRpc extends BaseRpc
 	 * @return \GouuseCore\Rpcs\number[]|\GouuseCore\Rpcs\string[]|mixed
 	 */
 	function login(string $account, string $password, $company_id = 0) {
-		$url = $this->host . '/auth_center/v3/login';
+		$url = '/auth_center/v3/login';
 		$result = $this->postOutside($url, [], [ 'account' => $account, 'password' => $password , 'company_id' => $company_id]);
 		return $result;
 	}

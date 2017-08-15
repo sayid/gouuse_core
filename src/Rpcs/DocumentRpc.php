@@ -10,10 +10,8 @@ use GouuseCore\Rpcs\BaseRpc;
  */
 class DocumentRpc extends BaseRpc
 {
-	protected $host;
 
 	function __construct() {
-		$this->host = '';
 
 	}
 

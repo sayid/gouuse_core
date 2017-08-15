@@ -10,10 +10,9 @@ use GouuseCore\Rpcs\BaseRpc;
  */
 class EmailRpc extends BaseRpc
 {
-	protected $host;
-
+	protected $host_pre = '/email_service/';
+	
 	function __construct() {
-		$this->host = '';
 
 	}
 
@@ -23,7 +22,7 @@ class EmailRpc extends BaseRpc
 	 * @return \GouuseCore\Rpcs\number[]|\GouuseCore\Rpcs\string[]|mixed
 	 */
 	function send($data = []) {
-		$url = $this->host . '/email_service/v3/send';
+		$url = '/email_service/v3/send';
 		$result = $this->post($url, [], $data);
 		return $result;
 	}

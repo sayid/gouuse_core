@@ -10,10 +10,10 @@ use GouuseCore\Rpcs\BaseRpc;
  */
 class DepartmentRpc extends BaseRpc
 {
-	protected $host;
 
+	protected $host_pre = '/user_center/';
+	
 	function __construct() {
-		$this->host = '';
 
 	}
 
@@ -24,7 +24,7 @@ class DepartmentRpc extends BaseRpc
 	 */
 	function getDeptInfo($deptId)
 	{
-		$url = $this->host . '/user_center/v3/deptInfo';
+		$url = '/user_center/v3/deptInfo';
 		$result = $this->post($url, [], [ 'department_id' => $deptId]);
 		return $result;
 	}

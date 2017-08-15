@@ -52,7 +52,8 @@ class Handler extends ExceptionHandler
 		} else {
 			$data = '';
 		}
-		if (defined('IS_RPC')) {
+		$paths = explode('/', $request->path());
+		if ( end($paths) === 'rpc') {
 			if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
 				$response = response('#'.msgpack_pack(['code'=>CodeLib::REQUEST_NOT_FOUND,'exception'=>$data]), 404);
 			} else if ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {

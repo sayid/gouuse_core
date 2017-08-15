@@ -10,12 +10,11 @@ use GouuseCore\Rpcs\BaseRpc;
  */
 class AppCenterRpc extends BaseRpc
 {
-	protected $host;
+	protected $host_pre = '/app_center/';
 	
 	function __construct()
 	{
-		$this->host = '';
-		
+		parent::__construct();
 	}
 	
 	/**
@@ -24,7 +23,7 @@ class AppCenterRpc extends BaseRpc
 	 */
 	function getManageApps()
 	{
-		$url = $this->host . '/app_center/v3/app/member_app';
+		$url = '/app_center/v3/app/member_app';
 		$result = $this->post($url, [], []);
 		return $result;
 	}
@@ -35,7 +34,7 @@ class AppCenterRpc extends BaseRpc
 	 */
 	public function getAllApps($params = [])
 	{
-	    $url = $this->host . '/app_center/v3/app/all';
+	    $url = '/app_center/v3/app/all';
 	    $result = $this->post($url, [], $params);
 	    return $result;
 	}
@@ -46,7 +45,7 @@ class AppCenterRpc extends BaseRpc
 	 */
 	public function deleteMemberAppRole($params = [])
 	{
-	    $url = $this->host . '/app_center/v3/app/delete_member_app_role';
+	    $url = '/app_center/v3/app/delete_member_app_role';
 	    $result = $this->post($url, [], $params);
 	    return $result;
 	}
@@ -58,9 +57,8 @@ class AppCenterRpc extends BaseRpc
 	 */
 	public function addDefaultAppAndManage($company_id, $member_id)
 	{
-	    $url = $this->host . '/app_center/v3/app/add_app_manage';
+	    $url = '/app_center/v3/app/add_app_manage';
 	    $result = $this->post($url, [], ['company_id' => $company_id, 'member_id' => $member_id]);
 	    return $result;
 	}
-
 }

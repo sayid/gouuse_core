@@ -13,7 +13,7 @@ class SmsRpc extends BaseRpc
 	protected $host_pre = '/sms_service/';
 	
 	function __construct() {
-
+		parent::__construct();
 	}
 
 	/**

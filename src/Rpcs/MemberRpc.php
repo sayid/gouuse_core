@@ -13,7 +13,7 @@ class MemberRpc extends BaseRpc
 	protected $host_pre = '/user_center/';
 
 	function __construct() {
-
+		parent::__construct();
 	}
 
 	function getAllMembers() {

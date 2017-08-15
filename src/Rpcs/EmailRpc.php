@@ -13,7 +13,7 @@ class EmailRpc extends BaseRpc
 	protected $host_pre = '/email_service/';
 	
 	function __construct() {
-
+		parent::__construct();
 	}
 
 	/**

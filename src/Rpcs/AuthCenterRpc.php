@@ -13,7 +13,7 @@ class AuthCenterRpc extends BaseRpc
 	protected $host_pre = '/auth_center/';
 	
 	function __construct() {
-		
+		parent::__construct();
 	}
 	
 	/**

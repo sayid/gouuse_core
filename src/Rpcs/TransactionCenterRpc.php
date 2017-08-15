@@ -14,7 +14,7 @@ class transactionCenterRpc extends BaseRpc
 	
 	function __construct() {
 		$this->host = '';
-		
+		parent::__construct();
 	}
 	
 	/**

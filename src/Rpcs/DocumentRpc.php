@@ -12,7 +12,7 @@ class DocumentRpc extends BaseRpc
 {
 
 	function __construct() {
-
+		parent::__construct();
 	}
 
 

@@ -14,7 +14,7 @@ class CompanyCenterRpc extends BaseRpc
 	
 	function __construct()
 	{
-		
+		parent::__construct();
 	}
 	
 	function getById($company_id = 0)

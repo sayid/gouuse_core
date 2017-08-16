@@ -134,7 +134,7 @@ abstract class BaseModel extends BaseGouuse
             foreach ($data as $index => $val) {
                 $index_format = str_replace(array("+", "-"), array("", ""), $index);
                 if (in_array($index_format, $field_list) == false && is_numeric($index_format) == false) {
-                	throw new \Exception($index_format . ' is not a field of ' . $table);
+                	//throw new \Exception($index_format . ' is not a field of ' . $table);
                 	unset($data[$index]);
                 }
             }

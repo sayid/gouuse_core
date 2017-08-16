@@ -213,7 +213,7 @@ class BaseRpc
     	try {
     		$data = msgpack_unpack($data);
     	} catch (\ErrorException $e) {
-    										
+    		throw new GouuseRpcException($e->getMessage());
     	}
     	
     	$class_load = 'GouuseCore\Libraries\LogLib';

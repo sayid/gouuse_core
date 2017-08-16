@@ -19,4 +19,7 @@ class CodeLib
 	const AUTH_REQUIRD = 1005104102;//请登录
 	const AUTH_DENY = 1005104103;//无权访问
 	const AUTH_ON_OTHER_CLIENT = 1005104104;//账号已在其他设备登录
+	
+	const NOT_INSTALLED_APP_ID = "1008000003";//没有安装该应用
+	const APP_INFO_NOT_EXIST = 1008000018;//应用信息不存在
 }

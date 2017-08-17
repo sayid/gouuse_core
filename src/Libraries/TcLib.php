@@ -92,7 +92,7 @@ class TcLib extends Lib
 				'service_id' => $this->service_id,
 				'from_url' => $from_url,
 				'notify' => $this->notify,
-				'step' => self::STEP_START
+				'child_tcs' => json_encode($child_log_data)
 		];
 		
 		$tcLibServer = RpcHelper::load('TcCenter', 'TcLib');

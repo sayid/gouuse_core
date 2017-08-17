@@ -57,6 +57,9 @@ abstract class BaseModel extends BaseGouuse
         $where = $this->filter($where, $table);
         if (count($where) > 0) {
             foreach ($where as $k => $v) {
+            	if (isset($v['field']) && is_int($k)) {
+            		$k = $v['field'];
+            	}
                 if ($v["sign"] == "in") {
                     $fileds=" (".substr(str_repeat("?,", count($v['value'])), 0, -1).")";
                     $where_list = $where_list ? $where_list . " and " . $k
@@ -132,6 +135,9 @@ abstract class BaseModel extends BaseGouuse
         }
         if (is_array($data) == true) {
             foreach ($data as $index => $val) {
+            	if (isset($val['field']) && is_int($index)) {
+            		$index = $val['field'];
+            	}
                 $index_format = str_replace(array("+", "-"), array("", ""), $index);
                 if (in_array($index_format, $field_list) == false && is_numeric($index_format) == false) {
                 	//throw new \Exception($index_format . ' is not a field of ' . $table);

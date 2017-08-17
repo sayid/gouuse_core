@@ -22,6 +22,5 @@ class MemberModel extends Rpc
 	public function getAllMemberId($company_id = 0)
 	{
 		return $this->do('MemberModel', 'getAllMemberId', [$company_id]);
-		
 	}
 }

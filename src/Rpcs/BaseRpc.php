@@ -20,7 +20,7 @@ class BaseRpc
     private static $company_info;
     private static $gatewaylib;
     private $LogLib;
-
+	
 
     public function __construct()
     {
@@ -139,8 +139,9 @@ class BaseRpc
      * @param unknown $class
      * @param unknown $method
      * @param array $args
+     * @param int $async 是否异步调用
      */
-    public function do($class, $method, $args = [])
+    public function do($class, $method, $args = [], $async = 0)
     {
     	if (env('APP_DEBUG') == true) {
     		$GLOBALS['rpc_count'] = isset($GLOBALS['rpc_count']) ? $GLOBALS['rpc_count'] + 1 : 1;
@@ -153,12 +154,59 @@ class BaseRpc
     			'c' => $class,
     			'm' => $method
     	];
+    	if ($async) {
+    		$userdata['rpc_folder'] = $this->rpc_folder;
+    	}
+    	//实例化日志类
+    	$class_load = 'GouuseCore\Libraries\LogLib';
+    	App::bindIf($class_load, null, true);
+    	$this->LogLib = App::make($class_load);
+    	$this->LogLib->setDriver('rpc');
+    	
+    	if ($async) {
+    		//异步调用 将调用信息放入队列异步执行
+    		
+    		$class_load = 'GouuseCore\Libraries\MqLib';
+    		App::bindIf($class_load, null, true);
+    		$this->MqLib = App::make($class_load);
+    		
+    		$data_mq = array();
+    		$data_mq['data'] = $userdata;
+    		$data_mq['topic_name'] = 'rpc_async'; //rpc 异步执行
+    		$data_mq['service_id'] = env('SERVICE_ID');
+    		ksort($data_mq);
+    		//计算签名
+    		$data_mq['sign'] = md5(http_build_query($data_mq).env('AES_KEY'));
+    		
+    		$data = array();
+    		$data['topic_name'] = 'v3-main';
+    		$data['message_body'] = json_encode($data_mq);
+    		$re = $this->MqLib->sendTopic($data);
+    		$result = (array)$re;
+    		
+    		$log_data = [
+    				'uri' => $this->rpc_folder . '->' . $class.'->'.$method.'()',
+    				'member_id' => $userdata['GOUUSE_XX_V3_MEMBER_INFO']['member_id'] ?? 0,
+    				'company_id' => $userdata['GOUUSE_XX_V3_MEMBER_INFO']['company_id'] ?? 0,
+    				'param' => $args,
+    				'async' => 1,
+    				'response' => $result
+    		];
+    		$this->LogLib->info('', $log_data, true);
+    		
+    		if ($result) {
+    			return true;
+    		} else {
+    			return false;
+    		}
+    	}
     	
     	ksort($userdata);
     	//计算签名
     	$userdata['sign'] = md5(http_build_query($userdata).env('AES_KEY'));
-    	
     	$userdata = msgpack_pack($userdata);
+    	
+    	
     	
     	$host = env('API_GATEWAY_HOST');
     	$host = str_replace(['http://','https://'], '', $host);
@@ -216,17 +264,13 @@ class BaseRpc
     		throw new GouuseRpcException($e->getMessage());
     	}
     	
-    	$class_load = 'GouuseCore\Libraries\LogLib';
-    	App::bindIf($class_load, null, true);
-    	$this->LogLib = App::make($class_load);
-    	$this->LogLib->setDriver('rpc');
-    	
     	$log_data = [
-    			'uri' => $class.'->'.$method.'()',
+    			'uri' => $this->rpc_folder . '->' . $class.'->'.$method.'()',
     			'member_id' => $userdata['GOUUSE_XX_V3_MEMBER_INFO']['member_id'] ?? 0,
     			'company_id' => $userdata['GOUUSE_XX_V3_MEMBER_INFO']['company_id'] ?? 0,
     			'param' => $args,
-    			'response' => $data
+    			'response' => $data,
+    			'async' => 1
     	];
     	$this->LogLib->info('', $log_data, true);
     	

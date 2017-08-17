@@ -15,7 +15,9 @@ class RpcHelper
 		} elseif ($class == 'Rpc') {
 			$class_load = '\GouuseCore\Rpcs\\'.$service_name.'\Rpc';
 		}
-		
-		return App::make($class_load);
+		App::bindIf($class_load, null, true);
+		$obj = App::make($class_load);
+		$obj->rpc_folder = $service_name;
+		return $obj;
 	}
 }

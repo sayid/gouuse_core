@@ -24,9 +24,9 @@ class TcLib extends Lib
 	
 	private $topic_name = 'v3-transaction-center';
 	
-	const STEP_START = 0;//开启事务
-	const STEP_CANCEL = 1;//撤回事务
-	const STEP_CONFIRM =2;//确认事务
+	const STEP_START = 1;//开启事务
+	const STEP_CANCEL = 2;//撤回事务
+	const STEP_CONFIRM =3;//确认事务
 	//const STEP_CANCEL_FAILD =3;//撤回事务失败
 	
 	public $client;

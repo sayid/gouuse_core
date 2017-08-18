@@ -9,12 +9,14 @@ use Elasticsearch\ClientBuilder;
 
 class ElasticsearchLib extends Lib
 {
-	private $host = env('ELASTICSEARCH_SERVER');
+	private $host;
 	private $client;
-	private $type = env('ELASTICSEARCH_TYPE', 'gouuse');
+	private $type;
 	
     public function __construct()
     {
+    	$this->type = env('ELASTICSEARCH_TYPE', 'gouuse');
+    	$this->host = env('ELASTICSEARCH_SERVER', '192.168.5.223:9200');
     	$hosts = $this->host;
     	$this->client = ClientBuilder::create()
     	->setHosts($hosts)
@@ -39,7 +41,7 @@ class ElasticsearchLib extends Lib
     			'body' => $body
     	];
     	
-    	return $client->index($params);
+    	return $this->client->index($params);
     }
     
     /**
@@ -58,7 +60,7 @@ class ElasticsearchLib extends Lib
     			'type' => $this->type,
     			'id' => $id
     	];
-    	return $client->get($params);
+    	return $this->client->get($params);
     }
     
     /**
@@ -77,7 +79,7 @@ class ElasticsearchLib extends Lib
     			'type' => $this->type,
     			'id' => $id
     	];
-    	return $client->getSource($params);
+    	return $this->client->getSource($params);
     }
     
     /**
@@ -107,7 +109,7 @@ class ElasticsearchLib extends Lib
     			]
     		]
     	];
-    	return $client->search($params);
+    	return $this->client->search($params);
     }
     
     /**
@@ -127,7 +129,7 @@ class ElasticsearchLib extends Lib
     			'type' => $this->type,
     			'id' => $id
     	];
-    	return $client->delete($params);
+    	return $this->client->delete($params);
     }
     
     /**
@@ -140,7 +142,7 @@ class ElasticsearchLib extends Lib
     	$params = [
     			'index' => $index,
     	];
-    	return $client->indices()->delete($params);
+    	return $this->client->indices()->delete($params);
     }
     
     /**
@@ -164,7 +166,7 @@ class ElasticsearchLib extends Lib
     					$setting
     			]
     	];
-    	return $client->indices()->create($params);
+    	return $this->client->indices()->create($params);
     }
     
 

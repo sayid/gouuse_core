@@ -424,7 +424,8 @@ abstract class BaseModel extends BaseGouuse
         $perpage = 0,
         $order_by = "",
         $distinct = false,
-        $table = ""
+        $table = "",
+    	$group_by = ""
     ) {
         $sql_limit = "";
         $sql_distinct = "";
@@ -452,7 +453,11 @@ abstract class BaseModel extends BaseGouuse
         if ($perpage>0) {
             $sql_limit = " limit " . $offset . "," .$perpage;
         }
-        $sql = "select " . $sql_distinct ." ".$need_field . " from " . $table . $sql_where . $sql_order . $sql_limit;
+        $sql_group = '';
+        if ($group_by) {
+        	$sql_group = " group by " . $sql_group;
+        }
+        $sql = "select " . $sql_distinct ." ".$need_field . " from " . $table . $sql_where . $sql_order . $sql_limit . $sql_group;
         $rows = DB::select($sql, $val);
         return $rows;
     }

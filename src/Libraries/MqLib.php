@@ -48,7 +48,7 @@ class MqLib extends Lib
     }
     
     /**
-     * 从队列中取出数据
+     * 忘队列中加数据
      * @param unknown $quen_name
      */
     public function setMq($quen_name, $value)

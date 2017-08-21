@@ -31,7 +31,7 @@ class EventServiceProvider extends ServiceProvider {
 				Event::listen ( QueryExecuted::class, function ($event) {
 					App::bindIf("GouuseCore\Libraries\LogLib", null, true);
 					$logLib = App::make("GouuseCore\Libraries\LogLib");
-					
+					$logLib->setDriver('log');
 					if (strpos($event->sql, 'explain')===false) {
 						if (env('APP_DEBUG') == true) {
 							$GLOBALS['sql_count'] = isset($GLOBALS['sql_count']) ? $GLOBALS['sql_count'] + 1 : 1;

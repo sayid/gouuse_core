@@ -486,6 +486,41 @@ abstract class BaseModel extends BaseGouuse
         return isset($rows[0])?$rows[0]:array();
     }
     
+    /**
+     * 获取最大值
+     * @param string $id_field
+     * @return number|unknown
+     */
+    public function getMax($id_field = "")
+    { 
+    	$table = $this->checkTable("");
+    	extract($this->getTableFileds($table));
+    	
+    	if ($id_field == "") {
+    		$id_field = $field_pri;
+    	}
+    	$sql = "select  MAX(".$id_field.") as max  from " . $table;
+    	$rows=DB::select($sql, []);
+    	return $rows[0]['max'] ?? 0;
+    }
+    
+    /**
+     * 获取最小值
+     * @param string $id_field
+     * @return number|unknown
+     */
+    public function getMin($id_field = "")
+    {
+    	$table = $this->checkTable("");
+    	extract($this->getTableFileds($table));
+    	
+    	if ($id_field == "") {
+    		$id_field = $field_pri;
+    	}
+    	$sql = "select  MIN(".$id_field.") as min  from " . $table;
+    	$rows=DB::select($sql, []);
+    	return $rows[0]['min'] ?? 0;
+    }
     
     public function fullTableWriteErrorReport($type)
     {

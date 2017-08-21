@@ -85,84 +85,14 @@ class AuthServiceProvider extends ServiceProvider
 			 */
 			if ($token) {
 				if (env('SERVICE_ID') == 1005) {
-					//用户中心
-					$member_id = 0;
-					$super_admin= 0;
-					$first_login = 0;
-					try {
-						$jwt = SimpleJWS::load($token, true);
-						$public_key = openssl_pkey_get_public(file_get_contents(ROOT_PATH . env('GATEWAY_APP_PUB_CERT')));
-						
-						if ($jwt->isValid($public_key, 'RS256')) {
-							$payload = $jwt->getPayload();
-							
-							$member_id = $payload['member_id'];
-							$super_admin= $payload['super_admin'] ?? 0;
-							$first_login= $payload['first_login'] ?? 0;
-						}
-					} catch (\InvalidArgumentException $e) {
-						return CodeLib::AUTH_FAILD;
-					} catch (DecryptException $e) {
-						//
-						return CodeLib::AUTH_FAILD;
-					}
-					
-					//移动端或web端或pc端 app端需要单点登录
-					$client_type = $request->input('source') == 2 || $request->input('source') == 3 ? 1 : 0;
-					
-					$where = [];
-					$where['member_id'] = array(
-							"sign" => "=",
-							"value" => $member_id
-					);
-					$where['client_type'] = array(
-							"sign" => "=",
-							"value" => $client_type //单点登录
-					);
-					$where['member_type'] = array(
-							"sign" => "=",
-							"value" => $super_admin ? 1 : 0 //区分管理员token
-					);
-					$class_load = 'App\Models\AccessTokenModel';
+					$class_load = 'App\Libraries\AccountLib';
 					App::bindIf($class_load, null, true);
-					$accessTokenModel= App::make($class_load);
-					
-					$token_row = $accessTokenModel->getOne("", $where);
-					if (empty($token_row) || $token_row['token'] != $token) {
-						//已在其他客户端登录
-						return CodeLib::AUTH_ON_OTHER_CLIENT;
-					}
-					
-					if ($super_admin== 0) {
-						$class_load = 'App\Models\MemberModel';
-						App::bindIf($class_load, null, true);
-						$memberLib = App::make($class_load);
-						$member_info = $memberLib->getMemberData($member_id);
+					$accountLib= App::make($class_load);
+					$check_result = $accountLib->check($token);
+					if ($check_result['code'] > 0) {
+						return $check_result['code'];
 					} else {
-						$class_load = 'App\Models\SystemMemberModel';
-						App::bindIf($class_load, null, true);
-						$systemMemberModel = App::make($class_load);
-						$member_info = $systemMemberModel->getById($member_id);
-					}
-					if (!empty($member_info)) {
-						if ($super_admin) {
-							$member_info['super_admin'] = $super_admin;
-						}
-						$member_info['first_login'] = $first_login || empty($member_info['last_login_time']) ? 1 : 0;
-						define('GOUUSE_MEMBER_INFO', $member_info);
-						$company_info = [];
-						if (isset($member_info['company_id']) && $member_info['company_id'] > 0) {
-							$class_load = 'App\Models\CompanyModel';
-							App::bindIf($class_load, null, true);
-							$companyModel= App::make($class_load);
-							$company_info = $companyModel->getById($member_info['company_id']);
-						}
-						define('GOUUSE_COMPANY_INFO', $company_info);
-						$request->gouuse_member_info = $member_info;
-						$request->gouuse_company_info= $company_info;
-						return $member_info;
-					} else {
-						return CodeLib::AUTH_FAILD;
+						return $check_result['data']['member_info'];
 					}
 				} else {
 					

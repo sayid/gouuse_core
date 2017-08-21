@@ -14,6 +14,8 @@ class Rpc extends BaseRpc
 	
 	protected $host_pre = '/user_center/';
 	
+	protected $service_id = 1005;
+	
 	public function __get($class)
 	{
 

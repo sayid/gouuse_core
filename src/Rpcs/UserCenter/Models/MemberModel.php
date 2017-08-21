@@ -23,4 +23,18 @@ class MemberModel extends Rpc
 	{
 		return $this->do('MemberModel', 'getAllMemberId', [$company_id]);
 	}
+	
+	/**
+	 * 获取公司下所有用户简要信息
+	 * @param unknown $company_id
+	 */
+	public function getAllSimple($company_id)
+	{
+		$cache_key = $this->service_id . StringHelper::getClassname(get_class($this)) . __FUNCTION__ . $company_id;
+		$cache_data= $this->CacheLib->get($cache_key);
+		if (empty($cache_data_ids)) {
+			return $this->do('MemberModel', 'getAllSimple', [$company_id]);
+		}
+		return $cache_data;
+	}
 }

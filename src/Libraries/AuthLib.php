@@ -44,6 +44,9 @@ class AuthLib extends Lib
             return ['code' => CodeLib::AUTH_DENY];
         }
         if ($type > 0) {
+        	if (!isset($this->member_info['manage_apps'])) {
+        		return ['code' => CodeLib::AUTH_DENY];
+        	}
         	foreach ($this->member_info['manage_apps'] as $row) {
         		if (($type == 1 && $row['super_manage'] == 1) || ($type == 2 && $row['super_manage'] == 0)) {
         			return true;
@@ -65,6 +68,9 @@ class AuthLib extends Lib
     {
         if (empty($this->member_info['member_id'])) {
             return ['code' => CodeLib::AUTH_DENY];
+        }
+        if (!isset($this->member_info['manage_apps'])) {
+        	return ['code' => CodeLib::AUTH_DENY];
         }
         $app_ids = array_column($this->member_info['manage_apps'], 'app_id');
         if (!in_array($app_id, $app_ids)) {

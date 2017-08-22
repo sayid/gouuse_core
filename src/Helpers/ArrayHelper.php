@@ -60,10 +60,10 @@ class ArrayHelper
 
     public static function arrayOrderBy()
     {
-        $args = funcgetargs();
-        $data = arrayshift($args);
+        $args = func_get_args();
+        $data = array_shift($args);
         foreach ($args as $n => $field) {
-            if (isstring($field)) {
+            if (is_string($field)) {
                 $tmp = array();
                 foreach ($data as $key => $row) {
                     $tmp[$key] = $row[$field];
@@ -72,8 +72,8 @@ class ArrayHelper
             }
         }
         $args[] = & $data;
-        calluserfuncarray('arraymultisort', $args);
-        return arraypop($args);
+        call_user_func_array('array_multisort', $args);
+        return array_pop($args);
     }
     public static function arrayKey2Value($source, $keys, $sign = ",", $keepkey = false)
     {

@@ -78,7 +78,7 @@ class ExcelLib extends Lib
 		$page_index = 0;
 		$activeSheet = $spreadsheet->setActiveSheetIndex(0);
 		foreach ($data as $page_index => $page_info) {
-			$sheet_name = $page_info['sheet_name'] ?? 'sheet' . $page_index;
+			$sheet_name = $page_info['sheet_name'] ?? 'sheet' . 'Sheet'.$page_index;
 			if ($page_index > 0) {
 				$activeSheet= clone $spreadsheet->getActiveSheet();
 			}
@@ -96,7 +96,7 @@ class ExcelLib extends Lib
 			if (is_array($page_data)) {
 				foreach ($page_data as $index => $row) {
 					foreach ($header_key as $key => $alp) {
-						$activeSheet->setCellValue($alp.($index+2), $row[$key]);
+						$activeSheet->setCellValue($alp.($index+2), $row[$key] ?? '');
 					}
 				}
 			}

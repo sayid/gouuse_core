@@ -2,7 +2,7 @@
     "name": "gouuse/core",
     "description": "gouuse core files",
     "type": "library",
-    "version": "1.1.153",
+    "version": "1.1.154",
     "bin": ["src/bin/CodeTool","src/bin/Swoole"],
     "require": {
         "ixudra/curl": "6.*",
@@ -12,7 +12,9 @@
         "laravel/lumen-framework": "5.4.6",
         "php": ">=7",
         "sayid/aliyun-mns-php-sdk": "dev-master",
-        "elasticsearch/elasticsearch": "~5.0"
+        "elasticsearch/elasticsearch": "~5.0",
+        "phpoffice/phpspreadsheet": "^1.0@beta",
+        "mk-j/PHP_XLSXWriter": "^0.32.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.0",

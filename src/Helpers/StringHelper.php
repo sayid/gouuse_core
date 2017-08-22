@@ -56,4 +56,26 @@ class StringHelper
 	{
 		return join('', array_slice(explode('\\', $class), -1));
 	}
+	
+	/**
+	 * 传入序号获得字母
+	 * @param unknown $index
+	 * @return string
+	 */
+	public static function getAlp($index)
+	{
+		if ($index > 25) {
+			$times = floor($index/26) + 1;
+			
+			if ($index%26 == 0) {
+				$alp = 'A';
+			} else {
+				$alp = chr($index%26+65);
+			}
+			$str = str_repeat($alp, $times);
+		} else {
+			$str = chr($index+65);
+		}
+		return $str;
+	}
 }

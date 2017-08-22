@@ -291,4 +291,34 @@ class BaseRpc
     {
     	return $this->do(StringHelper::getClassname(get_class($this)), $name, $arguments);
     }
+    
+    public function __get($class)
+    {
+    	
+    	if ($class == 'member_info') {
+    		if (!defined('NEED_AUTH_CHECK')) {
+    			return null;
+    		}
+    		if (defined('GOUUSE_MEMBER_INFO')) {
+    			return GOUUSE_MEMBER_INFO;
+    		}
+    	} else if ($class == 'company_info') {
+    		if (defined('GOUUSE_COMPANY_INFO')) {
+    			return GOUUSE_COMPANY_INFO;
+    		}
+    	}
+    	
+    	if (substr($class, strlen($class) - 3)=='Lib') {
+    		$class_load = "GouuseCore\Rpcs\\'.$this->rpc_folder.'\Libraries\\".$class;
+    	} elseif (substr($class, strlen($class) - 5)=='Model') {
+    		$class_load = "GouuseCore\Rpcs\\'.$this->rpc_folder.'\Models\\".$class;
+    	}  elseif (substr($class, strlen($class) - 3)=='Rpc') {
+    		$class_load = "GouuseCore\Rpcs\\'.$this->rpc_folder.'\Rpc";
+    	} else {
+    		return;
+    	}
+    	App::bindIf($class_load, null, true);
+    	$obj = App::make($class_load);
+    	return $obj;
+    }
 }

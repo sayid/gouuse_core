@@ -2,6 +2,8 @@
 namespace GouuseCore\Rpcs\UserCenter\Models;
 
 use GouuseCore\Rpcs\UserCenter\Rpc;
+use GouuseCore\Helpers\StringHelper;
+use GouuseCore\Helpers\OptionHelper;
 
 /**
  * 用户中心SDK
@@ -12,6 +14,7 @@ class MemberModel extends Rpc
 {
 	function __construct() {
 		parent::__construct();
+		$this->obj = OptionHelper::getGouuse();
 	}
 		
 	/**
@@ -31,8 +34,8 @@ class MemberModel extends Rpc
 	public function getAllSimple($company_id)
 	{
 		$cache_key = $this->service_id . StringHelper::getClassname(get_class($this)) . __FUNCTION__ . $company_id;
-		$cache_data= $this->CacheLib->get($cache_key);
-		if (empty($cache_data_ids)) {
+		$cache_data= $this->obj->CacheLib->get($cache_key);
+		if (empty($cache_data)) {
 			return $this->do('MemberModel', 'getAllSimple', [$company_id]);
 		}
 		return $cache_data;

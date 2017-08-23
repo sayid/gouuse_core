@@ -16,13 +16,10 @@ class Rpc extends BaseRpc
 	
 	protected $service_id = 1005;
 	
-	public function __get($class)
-	{
-
-	}
 	
 	public function __construct()
 	{
+		
 	}
 	
 }

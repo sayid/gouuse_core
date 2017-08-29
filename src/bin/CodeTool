@@ -12,7 +12,12 @@ function main($argc, $argv)
         $app = require $root. '/bootstrap/app.php';
     
 		$codelib = $root . 'app/Libraries/CodeLib.php';
-		$od = opencc_open("s2twp.json");
+		$tw = false;
+		if (function_exists("opencc_open")) {
+			$tw= true;
+			$od = opencc_open("s2twp.json");
+		}
+		
 		if (!is_dir($root . 'resources/options/zh_cn/')) {
 			mkdir($root . 'resources/options/zh_cn/');
 		}
@@ -25,6 +30,8 @@ function main($argc, $argv)
 		    echo  PHP_EOL;
 		    return;
 		}
+		
+		
 		if (!is_writable($root . 'resources/options/zh_tw/')) {
 		    echo '请将'.$root . 'resources/options/zh_tw/目录设为可写权限';
 		    echo  PHP_EOL;
@@ -56,8 +63,10 @@ function main($argc, $argv)
 		            $commds = str_replace("\n", '', substr($line,$index_comm));
 		           
 		            $str = "    ". trim($key) . " => '" . addslashes($commds)."',\n";
+		            if ($tw)
 		            $str_tw = "    ". trim($key) . " => '" . opencc_convert(addslashes($commds), $od)."',\n";
 		            file_put_contents($respon_file, $str, FILE_APPEND);
+		            if ($tw)
 		            file_put_contents($respon_file_tw, $str_tw, FILE_APPEND);
 		            $json[trim($key)] = addslashes($commds);
 		        }
@@ -75,8 +84,10 @@ function main($argc, $argv)
 		            $commds = str_replace("\n", '', substr($line,$index_comm));
 		           
 		            $str = "    ". trim($key) . " => '" . addslashes($commds)."',\n";
+		            if ($tw)
 		            $str_tw = "    ". trim($key) . " => '" . opencc_convert(addslashes($commds), $od)."',\n";
 		            file_put_contents($respon_file, $str, FILE_APPEND);
+		            if ($tw)
 		            file_put_contents($respon_file_tw, $str_tw, FILE_APPEND);
 		            $json[trim($key)] = addslashes($commds);
 		        }
@@ -86,6 +97,7 @@ function main($argc, $argv)
 		    $cache->delete("x_system_get_options_error_code_options_zh_tw");
 		    $str = '];'."\n";
 		    file_put_contents($respon_file, $str, FILE_APPEND);
+		    if ($tw)
 		    file_put_contents($respon_file_tw, $str, FILE_APPEND);
 		    $json = json_encode($json, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
 		    file_put_contents($root."public/swagger-docs/code.json", $json);

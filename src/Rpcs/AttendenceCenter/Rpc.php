@@ -12,7 +12,7 @@ class Rpc extends BaseRpc
 {
 	protected $host_pre = '/attendence_center/';
 	
-	protected $service_id = 101;
+	protected $service_id = 1011;
 	
 	/**
 	 * 执行考勤统计接口

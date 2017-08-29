@@ -31,6 +31,9 @@ class BeforeMiddleware
 				throw new \Exception("check sign fail");
 			}
 			
+			if (!defined('NEED_AUTH_CHECK')) {
+				define('NEED_AUTH_CHECK', true);
+			}
 			
 			$class = $data['c'] ?? '';
 			$method = $data['m'] ?? '';

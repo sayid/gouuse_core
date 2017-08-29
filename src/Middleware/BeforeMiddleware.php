@@ -13,6 +13,14 @@ class BeforeMiddleware
 {
 	public function handle($request, Closure $next)
 	{
+		$lang = $request->input('app_lang');
+		if (!in_array($lang, ['zh_cn', 'zh_tw'])) {
+			$lang = 'zh_cn';
+		}
+		if (!defined('DEFAULT_LANG_NAME')) {
+			define('DEFAULT_LANG_NAME', $lang);
+		}
+		
 		/**
 		 *
 		 * @var unknown $paths
@@ -32,6 +40,7 @@ class BeforeMiddleware
 			}
 			
 			if (!defined('NEED_AUTH_CHECK')) {
+				//rpc添加校验获取用户信息
 				define('NEED_AUTH_CHECK', true);
 			}
 			

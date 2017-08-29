@@ -1,5 +1,5 @@
 <?php
-namespace GouuseCore\Rpcs\MessageCenter;
+namespace GouuseCore\Rpcs\AttendenceCenter;
 
 use GouuseCore\Rpcs\BaseRpc;
 

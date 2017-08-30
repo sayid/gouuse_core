@@ -206,8 +206,6 @@ class BaseRpc
 		$userdata['sign'] = md5(http_build_query($userdata).env('AES_KEY'));
 		$userdata = msgpack_pack($userdata);
 		
-		
-		
 		$host = env('API_GATEWAY_HOST');
 		$host = str_replace(['http://','https://'], '', $host);
 		
@@ -242,26 +240,35 @@ class BaseRpc
 											));
 											
 											$client->send($msg);
+											$data = $client->recv();
+											$length = strpos($data, "#");
+											$json_length = stripos($data, '{"code":');
 											
-											$data = '';
-											$i = 0;
-											while (1) {
-												$i++;
-												$tmp = $client->recv();
-												if (empty($tmp)) {
-													break;
+											if ($length === false) {
+												throw new GouuseRpcException($host.'v3/rpc not found:' . $data);
+											} else {
+												$i = 0;
+												while (1) {
+													$i++;
+													$tmp = $client->recv();
+													if (empty($tmp)) {
+														break;
+													}
+													$data = $data . $tmp;
 												}
-												$data = $data . $tmp;
 											}
 											$client->close(true);
 										}
 										
-										$length = strpos($data, "#");
-										$data = substr($data, $length + 1);
-										try {
-											$data = msgpack_unpack($data);
-										} catch (\ErrorException $e) {
-											throw new GouuseRpcException($e->getMessage());
+										if ($json_length > 0 && $json_length < $length) {
+											$data = json_decode(substr($data, $json_length), true);
+										} else {
+											$data = substr($data, $length + 1);
+											try {
+												$data = msgpack_unpack($data);
+											} catch (\ErrorException $e) {
+												throw new GouuseRpcException($e->getMessage());
+											}
 										}
 										
 										$log_data = [

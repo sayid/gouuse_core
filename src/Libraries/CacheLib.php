@@ -3,7 +3,7 @@ namespace GouuseCore\Libraries;
 
 //引入缓存
 use Illuminate\Support\Facades\Cache;
-
+use Illuminate\Support\Facades\Redis;
 /**
  * 缓存封装类
  * @author W_wang
@@ -16,7 +16,13 @@ class CacheLib extends Lib
     {
         parent::__construct();
     }
-
+    public function incr($key)
+    {
+        if (!$key) {
+            return false;
+        }
+        return Redis::incr($key);
+    }
 
     /**
      * 添加缓存

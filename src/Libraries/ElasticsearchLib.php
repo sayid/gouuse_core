@@ -17,7 +17,7 @@ class ElasticsearchLib extends Lib
     {
     	$this->type = env('ELASTICSEARCH_TYPE', 'gouuse');
     	$this->host = env('ELASTICSEARCH_SERVER', '192.168.5.223:9200');
-    	$hosts = $this->host;
+    	$hosts = [$this->host];
     	$this->client = ClientBuilder::create()
     	->setHosts($hosts)
     	->build();
@@ -110,6 +110,33 @@ class ElasticsearchLib extends Lib
     		]
     	];
     	return $this->client->search($params);
+    }
+
+
+    /**
+     * 组合多查询
+     * @param $index        索引
+     * @param $where        查询条件
+     * @param int $from     分页开始位置
+     * @param int $size     分页数据条数
+     * @return mixed
+     */
+    public function multi_search($index, $where,  $from = 0, $size = 0)
+    {
+        $params = [
+            'index' => $index,
+            'type' => $this->type,
+            'body' => [
+                'query' => [
+                    'bool' => $where
+                ]
+            ]
+        ];
+        if (!empty($size)) {
+            $params['from'] = $from;
+            $params['size'] = $size;
+        }
+        return $this->client->search($params);
     }
     
     /**

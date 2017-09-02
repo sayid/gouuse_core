@@ -34,14 +34,18 @@ class ExcelLib extends Lib
 			if (is_array($value)) {
 				$styles = $value['style'] ?? [];//样式
 				$format = $value['formart'] ?? '';//格式
-				$value = $value['value'] ?? '';//值
+				$line  = $value['line'];//标题行数
+				$val = $value['value'] ?? '';//值
+			}
+			if(isset($value['is_check'])){
+				$index = 0;
 			}
 			$alp = StringHelper::getAlp($index);
 			$index++;
 			$header_key[$key] = $alp;
-			$cell = $activeSheet->setCellValue($alp.'1', $value);
+			$cell = $activeSheet->setCellValue($alp.$line, $val);
 			if ($styles) {
-				$style_excel = $activeSheet->getStyle($alp.'1');
+				$style_excel = $activeSheet->getStyle($alp.$line);
 				foreach ($styles as $key => $style) {
 					/*if ($key == 'width') {
 					 $cell->setWidth($style);
@@ -58,9 +62,11 @@ class ExcelLib extends Lib
 				}
 				}
 			}
+			$number = $line;
 		}
 		if (is_array($data)) {
 			foreach ($data as $index => $row) {
+				$index = $number;
 				foreach ($header_key as $key => $alp) {
 					
 					$styles = null;
@@ -75,7 +81,7 @@ class ExcelLib extends Lib
 					}
 					if (isset($col_data['formula1'])) {
 						//下拉选择
-						$objValidation1 = $activeSheet->getCell($alp.($index+2))->getDataValidation();
+						$objValidation1 = $activeSheet->getCell($alp.($index+1))->getDataValidation();
 						$objValidation1_c = $objValidation1->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
 						->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
 						->setAllowBlank(false)
@@ -94,9 +100,9 @@ class ExcelLib extends Lib
 						}
 						$objValidation1_c->setFormula1('"' . $value . '"');
 					} else {
-						$activeSheet->setCellValue($alp.($index+2), $value);
+						$activeSheet->setCellValue($alp.($index+1), $value);
 						if ($styles) {
-							$style_excel = $activeSheet->getStyle($alp.($index+2));
+							$style_excel = $activeSheet->getStyle($alp.($index+1));
 							foreach ($styles as $key => $style) {
 								/*if ($key == 'width') {
 								 $cell->setWidth($style);
@@ -128,6 +134,12 @@ class ExcelLib extends Lib
 					if (is_array($style)) {
 						foreach ($style as $row => $height) {
 							$spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight($height);
+						}
+					}
+				} else if ($key == 'merge') {
+					if (is_array($style)) {
+						foreach ($style as $merge => $unit) {
+							$spreadsheet->getActiveSheet()->mergeCells($unit);
 						}
 					}
 				}

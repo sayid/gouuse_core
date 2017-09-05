@@ -43,6 +43,18 @@ class ElasticsearchLib extends Lib
     	
     	return $this->client->index($params);
     }
+
+
+    /**
+     * 检查索引是否存在
+     * @param $index
+     * @return mixed
+     */
+    public function isExistIndex($index)
+    {
+        $params['index']  = $index;
+        return $this->client->indices()->exists($params);
+    }
     
     /**
      * $params = [

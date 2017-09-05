@@ -29,6 +29,7 @@ class EventServiceProvider extends ServiceProvider {
 		});
 			if (env('APP_DEBUG') == true) {
 				Event::listen ( QueryExecuted::class, function ($event) {
+					print_r($event);exit();
 					App::bindIf("GouuseCore\Libraries\LogLib", null, true);
 					$logLib = App::make("GouuseCore\Libraries\LogLib");
 					$logLib->setDriver('log');
@@ -38,6 +39,7 @@ class EventServiceProvider extends ServiceProvider {
 						}
 						$sql = str_replace("?", "'%s'", $event->sql);
 						$log = vsprintf($sql, $event->bindings);
+						$log = 'execute tiem:' . $event->time . 'ms;' . $log;
 						if (strpos($log, 'select')!==false) {
 							$sql1 = "explain ".$sql;
 							$results = DB::select($sql1, []);

@@ -29,7 +29,6 @@ class EventServiceProvider extends ServiceProvider {
 		});
 			if (env('APP_DEBUG') == true) {
 				Event::listen ( QueryExecuted::class, function ($event) {
-					print_r($event);exit();
 					App::bindIf("GouuseCore\Libraries\LogLib", null, true);
 					$logLib = App::make("GouuseCore\Libraries\LogLib");
 					$logLib->setDriver('log');

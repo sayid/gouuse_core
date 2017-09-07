@@ -58,15 +58,14 @@ class ExcelLib extends Lib
 				}  else if ($key == 'color') {
 					$style_excel->getFont()->getColor()->setRGB($style);
 				}  else if ($key == 'fill') {
-					$style_excel->getFont()->getColor()->setRGB($style);
+					$style_excel->getFill()->getStartColor()->setARGB($style);;
 				}
 				}
 			}
-			$number = $line;
 		}
+		$number = $line;
 		if (is_array($data)) {
 			foreach ($data as $index => $row) {
-				$index = $number;
 				foreach ($header_key as $key => $alp) {
 					
 					$styles = null;
@@ -76,12 +75,12 @@ class ExcelLib extends Lib
 						$format = $col_data['formart'] ?? '';//格式
 						$value = $col_data['value'] ?? '';//值
 					}
-					if (is_numeric($value) && strlen($value) > 9) {
-						$value= html_entity_decode("&iuml;&raquo;&iquest;".$value);
-					}
+					// if (is_numeric($value) && strlen($value) > 9) {
+					// 	$value= html_entity_decode("&iuml;&raquo;&iquest;".$value);
+					// }
 					if (isset($col_data['formula1'])) {
 						//下拉选择
-						$objValidation1 = $activeSheet->getCell($alp.($index+1))->getDataValidation();
+						$objValidation1 = $activeSheet->getCell($alp.($index+$number+1))->getDataValidation();
 						$objValidation1_c = $objValidation1->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST )
 						->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION )
 						->setAllowBlank(false)
@@ -100,9 +99,9 @@ class ExcelLib extends Lib
 						}
 						$objValidation1_c->setFormula1('"' . $value . '"');
 					} else {
-						$activeSheet->setCellValue($alp.($index+1), $value);
+						$activeSheet->setCellValue($alp.($index+$number+1), $value);
 						if ($styles) {
-							$style_excel = $activeSheet->getStyle($alp.($index+1));
+							$style_excel = $activeSheet->getStyle($alp.($index+$number+1));
 							foreach ($styles as $key => $style) {
 								/*if ($key == 'width') {
 								 $cell->setWidth($style);

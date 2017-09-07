@@ -73,18 +73,12 @@ class MemberLib extends Rpc
         $department_list = $this->do('DepartmentModel', 'getAllWithId', [$company_id]);
         // 获取职位列表
         $position_list = $this->do('CompanyPositionLib', 'getNameList', [$company_id]);
-        // 转换
-        $member_opt = OptionHelper::getOption('member');
-        $sex = $member_opt['sex'];
-        $blood_type = $member_opt['blood_type'];
         $list = [];
         if (!empty($member_list)) {
             foreach ($member_list as $key => $val) {
                 // 处理用户数据
                 $val['department_name'] = $department_list[$val['department_id']]['department_name'] ?? '';
                 $val['position_name'] = $position_list[$val['position_id']] ?? '';
-                $val['sex_text'] = $sex[$val['sex']] ?? '';
-                $val['blood_type_text'] = $blood_type[$val['blood_type']] ?? '';
                 // 过滤
                 // 部门查询
                 if (!empty($extra['department_id'])) {

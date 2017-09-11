@@ -128,21 +128,17 @@ class ElasticsearchLib extends Lib
     /**
      * 组合多查询
      * @param $index        索引
-     * @param $where        查询条件
+     * @param $body        查询条件
      * @param int $from     分页开始位置
      * @param int $size     分页数据条数
      * @return mixed
      */
-    public function multi_search($index, $where,  $from = 0, $size = 0)
+    public function multi_search($index, $body,  $from = 0, $size = 0)
     {
         $params = [
             'index' => $index,
             'type' => $this->type,
-            'body' => [
-                'query' => [
-                    'bool' => $where
-                ]
-            ]
+            'body' => $body
         ];
         if (!empty($size)) {
             $params['from'] = $from;

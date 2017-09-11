@@ -206,93 +206,98 @@ class BaseRpc
 		$userdata['sign'] = md5(http_build_query($userdata).env('AES_KEY'));
 		$userdata = msgpack_pack($userdata);
 		
-		$host = env('API_GATEWAY_HOST');
+		if (isset($this->_private_host) && $this->_private_host) {
+			$host = $this->_private_host;
+		} else {
+			$host = env('API_GATEWAY_HOST');
+		}
+		
 		$host = str_replace(['http://','https://'], '', $host);
 		
 		$msg = "POST   ".$this->host_pre."v3/rpc   HTTP/1.0\r\n"
 				. "Host: $host\r\n"
 				. "Content-Type: application/x-www-form-urlencoded\r\n"
-						. "Content-Length: ".strlen($userdata)."\r\n"
-								. "Connection: Keep-Alive\r\n\r\n"
-										.$userdata;
+				. "Content-Length: ".strlen($userdata)."\r\n"
+				. "Connection: Keep-Alive\r\n\r\n"
+				.$userdata;
 										
-										if(!extension_loaded('swoole')) {
-											//没有安装Swoole扩展
-											$fp = fsockopen($host, 80, $errno, $errstr, 30);
-											if (!$fp) {
-												exit("connect failed. Error: {$client->errCode}\n");
-											}
-											fwrite($fp, $msg);
-											$data = fgets($fp, 1024);
-											$length = strpos($data, "#");
-											$json_length = stripos($data, '{"code":');
-											
-											if ($length === false) {
-												throw new GouuseRpcException($host.'v3/rpc not found:' . $data);
-											} else {
-												while (!feof($fp)) {
-													$data = $data . fgets($fp, 1024);
-												}
-											}
-											fclose($fp);
-										} else {
-											$client = new \swoole_client(SWOOLE_SOCK_TCP);
-											if (!$client->connect($host, 80, -1))
-											{
-												exit("connect failed. Error: {$client->errCode}\n");
-											}
-											$client->set(array(
-													'open_eof_check' => true,
-													'package_eof' => "\r\n\r\n",
-											));
-											
-											$client->send($msg);
-											$data = $client->recv();
-											$length = strpos($data, "#");
-											$json_length = stripos($data, '{"code":');
-											
-											if ($length === false) {
-												throw new GouuseRpcException($host.$this->host_pre.'v3/rpc not found:' . $data);
-											} else {
-												$i = 0;
-												while (1) {
-													$i++;
-													$tmp = $client->recv();
-													if (empty($tmp)) {
-														break;
-													}
-													$data = $data . $tmp;
-												}
-											}
-											$client->close(true);
-										}
+				if(!extension_loaded('swoole')) {
+					//没有安装Swoole扩展
+					$fp = fsockopen($host, 80, $errno, $errstr, 30);
+					if (!$fp) {
+						exit("connect failed. Error: {$client->errCode}\n");
+					}
+					fwrite($fp, $msg);
+					$data = fgets($fp, 1024);
+					$length = strpos($data, "#");
+					$json_length = stripos($data, '{"code":');
+					
+					if ($length === false) {
+						throw new GouuseRpcException($host.'v3/rpc not found:' . $data);
+					} else {
+						while (!feof($fp)) {
+							$data = $data . fgets($fp, 1024);
+						}
+					}
+					fclose($fp);
+				} else {
+					$client = new \swoole_client(SWOOLE_SOCK_TCP);
+					if (!$client->connect($host, 80, -1))
+					{
+						exit("connect failed. Error: {$client->errCode}\n");
+					}
+					$client->set(array(
+							'open_eof_check' => true,
+							'package_eof' => "\r\n\r\n",
+					));
+					
+					$client->send($msg);
+					$data = $client->recv();
+					$length = strpos($data, "#");
+					$json_length = stripos($data, '{"code":');
+					
+					if ($length === false) {
+						throw new GouuseRpcException($host.$this->host_pre.'v3/rpc not found:' . $data);
+					} else {
+						$i = 0;
+						while (1) {
+							$i++;
+							$tmp = $client->recv();
+							if (empty($tmp)) {
+								break;
+							}
+							$data = $data . $tmp;
+						}
+					}
+					$client->close(true);
+				}
 										
-										if ($json_length > 0 && $json_length < $length) {
-											$data = json_decode(substr($data, $json_length), true);
-										} else {
-											$data = substr($data, $length + 1);
-											try {
-												$data = msgpack_unpack($data);
-											} catch (\ErrorException $e) {
-												throw new GouuseRpcException($e->getMessage());
-											}
-										}
-										
-										$log_data = [
-												'uri' => $this->rpc_folder . '->' . $class.'->'.$method.'()',
-												'member_id' => $userdata['GOUUSE_XX_V3_MEMBER_INFO']['member_id'] ?? 0,
-												'company_id' => $userdata['GOUUSE_XX_V3_MEMBER_INFO']['company_id'] ?? 0,
-												'param' => $args,
-												'response' => $data,
-												'async' => 1
-										];
-										$this->LogLib->info('', $log_data, true);
-										
-										if (is_array($data) && isset($data['code']) && isset($data['exception'])) {
-											//异常
-											throw new GouuseRpcException($data['exception']);
-										}
-										return $data;
+				if ($json_length > 0 && $json_length < $length) {
+					$data = json_decode(substr($data, $json_length), true);
+				} else {
+					$data = substr($data, $length + 1);
+					try {
+						$data = msgpack_unpack($data);
+					} catch (\ErrorException $e) {
+						throw new GouuseRpcException($e->getMessage());
+					}
+				}
+				
+				$log_data = [
+						'uri' => $this->rpc_folder . '->' . $class.'->'.$method.'()',
+						'member_id' => $userdata['GOUUSE_XX_V3_MEMBER_INFO']['member_id'] ?? 0,
+						'company_id' => $userdata['GOUUSE_XX_V3_MEMBER_INFO']['company_id'] ?? 0,
+						'param' => $args,
+						'response' => $data,
+						'async' => 1
+				];
+				$this->LogLib->info('', $log_data, true);
+				
+				if (is_array($data) && isset($data['code']) && isset($data['exception'])) {
+					//异常
+					throw new GouuseRpcException($data['exception']);
+				}
+				return $data;
 	}
 	
 	/**

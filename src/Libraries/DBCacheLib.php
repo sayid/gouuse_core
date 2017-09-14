@@ -236,7 +236,7 @@ class DBCacheLib extends Lib
 					$val[] = $v['value'][0];
 					$val[] = $v['value'][1];
 				} else {
-					if (strpos($v["sign"], '.')) {
+					if (strpos($v["value"], '.')) {
 						$where_list = $where_list ? $where_list . " and "
 								. $k . $v["sign"] . $v['value'] : $k . $v["sign"] . "?";
 					} else {

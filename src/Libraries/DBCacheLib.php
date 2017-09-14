@@ -196,18 +196,25 @@ class DBCacheLib extends Lib
 			$group_sql= " group by " . $group_by;
 		}
 		list ($where_sql, $val) = $this->parseWhere($where);
+		if ($group_by) {
+			$sql = 'select count(*) as total from (select count(*) from ' . implode(',', $tables) . ' where '
+								. $where_sql
+								. $group_sql
+								. ")u";
+		} else {
+			$sql = 'select count(*) as total from ' . implode(',', $tables) . ' where '
+					. $where_sql
+					. $group_sql
+					. " limit 1";
+		}
+		$result = DB::select($sql, $val);
+		$out_put_data= $result[0]["total"] ?? 0;
 		
-		$sql = 'select count(*) as total from ' . implode(',', $tables) . ' where '
-				. $where_sql
-				. $group_sql
-				. " limit 1";
-				$result = DB::select($sql, $val);
-				$out_put_data= $result[0]["total"] ?? 0;
-				
-				if ($cache_time > 0) {
-					$this->CacheLib->saveWithKey($group_cache_key, $cache_key, $out_put_data, $cache_time);
-				}
-				return $out_put_data;
+		if ($cache_time > 0) {
+			$this->CacheLib->saveWithKey($group_cache_key, $cache_key, $out_put_data, $cache_time);
+		}
+
+		return $out_put_data;
 	}
 	
 	private function parseWhere($where)

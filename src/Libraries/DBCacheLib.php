@@ -235,16 +235,15 @@ class DBCacheLib extends Lib
 					$where_list = $where_list ? $where_list . " and ". $str : $str;
 					$val[] = $v['value'][0];
 					$val[] = $v['value'][1];
-				} elseif ($v["sign"] == "more" && count($v['value']>1)) {
-					foreach ($v['value'] as $k_more => $v_more) {
-						$where_list = $where_list ? $where_list . " and "
-								. $k . $v_more["sign"] . "?" : $k . $v_more["sign"] . "?";
-								$val[] = $v_more['value'];
-					}
 				} else {
-					$where_list = $where_list ? $where_list . " and "
-							. $k . $v["sign"] . "?" : $k . $v["sign"] . "?";
-							$val[] = $v['value'];
+					if (strpos($v["sign"], '.')) {
+						$where_list = $where_list ? $where_list . " and "
+								. $k . $v["sign"] . $v['value'] : $k . $v["sign"] . "?";
+					} else {
+						$where_list = $where_list ? $where_list . " and "
+								. $k . $v["sign"] . "?" : $k . $v["sign"] . "?";
+						$val[] = $v['value'];
+					}
 				}
 			}
 		}

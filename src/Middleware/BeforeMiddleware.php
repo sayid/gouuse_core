@@ -3,6 +3,7 @@ namespace GouuseCore\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\App;
+use GouuseCore\Helpers\OptionHelper;
 
 /**
  * 前置中间件
@@ -62,6 +63,22 @@ class BeforeMiddleware
 			App::bindIf($class_load, null, true);
 			$obj = App::make($class_load);
 			$data = call_user_func_array(array($obj, $method), $args);
+			if (isset($data['code']) && $data['code']>0 && empty($data['msg'])) {
+					$code = $data['code'];
+					$lang = $request->input('app_lang') ? : 'zh_cn';
+					$lang = $lang ? $lang : 'zh_cn';
+					$error_code = OptionHelper::getOption('error_code','options',$lang);
+					$msg = isset($error_code[$code]) ? $error_code[$code] : '未知错误';
+					if(isset($data['data'])){
+						foreach ($data['data'] as $key => $value) {
+							if (is_string($value)) {
+								$msg=str_replace("{\$".$key."}", $value, $msg);
+							}
+						}
+					}
+					$data['code'] = intval($code);
+					$data['msg'] = $msg;
+			}
 			return response('#'.msgpack_pack($data));
 		}
 		// 执行动作

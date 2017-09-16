@@ -233,7 +233,7 @@ class BaseRpc
 					$json_length = stripos($data, '{"code":');
 					
 					if ($length === false) {
-						throw new GouuseRpcException($host.'v3/rpc not found:' . $data);
+						throw new GouuseRpcException($host.$this->host_pre.'v3/rpc not found:' . $data);
 					} else {
 						while (!feof($fp)) {
 							$data = $data . fgets($fp, 1024);

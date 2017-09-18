@@ -251,37 +251,30 @@ class BaseRpc
 							'package_eof' => "\r\n\r\n",
 					));
 					
-					$client->send($msg);
-					$data = $client->recv();
-					$length = strpos($data, "#");
-					$json_length = stripos($data, '{"code":');
-					
-					if ($length === false) {
-						throw new GouuseRpcException($host.$this->host_pre.'v3/rpc not found:' . $data);
-					} else {
-						$i = 0;
-						while (1) {
-							$i++;
-							$tmp = $client->recv();
-							if (empty($tmp)) {
-								break;
-							}
-							$data = $data . $tmp;
-						}
-					}
-					$client->close(true);
+					 $client->send($msg);
+		            $data = $client->recv(10240);
+		            $data = substr($data, strpos($data, "\r\n\r\n")+4);
+
+		            while (1) {
+		                $tmp = $client->recv(10240);
+		                if (empty($tmp)) {
+		                    break;
+		                }
+		                $data = $data . $tmp;
+		            }
+		            $client->close(true);
 				}
-										
-				if ($json_length > 0 && $json_length < $length) {
-					$data = json_decode(substr($data, $json_length), true);
-				} else {
-					$data = substr($data, $length + 1);
-					try {
-						$data = msgpack_unpack($data);
-					} catch (\ErrorException $e) {
-						throw new GouuseRpcException($e->getMessage());
-					}
+				if (substr($data, 0, 1) != "#") {
+            		throw new GouuseRpcException($data);
+        		}			
+				
+				$data = substr($data, $length + 1);
+				try {
+					$data = msgpack_unpack($data);
+				} catch (\ErrorException $e) {
+					throw new GouuseRpcException($e->getMessage());
 				}
+				
 				
 				$log_data = [
 						'uri' => $this->rpc_folder . '->' . $class.'->'.$method.'()',

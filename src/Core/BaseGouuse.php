@@ -34,13 +34,12 @@ class BaseGouuse
 				return GOUUSE_COMPANY_INFO;
 			}
 		}
-		
-		if (substr($class, strlen($class) - 3)=='Lib') {
-			if (class_exists("GouuseCore\Libraries\\".$class)) {
-				$class_load = "GouuseCore\Libraries\\".$class;
+		if (substr($class, strlen($class) - 3)=='Lib') {		
+			if (class_exists("App\Libraries\\".$class)) {
+				$class_load = "App\Libraries\\".$class;
 				$class = strtolower($class);
 			} else {
-				$class_load = "App\Libraries\\".$class;
+				$class_load = "GouuseCore\Libraries\\".$class;
 				$class = strtolower($class);
 			}
 			

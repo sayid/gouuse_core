@@ -251,7 +251,7 @@ class BaseRpc
 							'package_eof' => "\r\n\r\n",
 					));
 					
-					 $client->send($msg);
+					$client->send($msg);
 		            $data = $client->recv(10240);
 		            $data = substr($data, strpos($data, "\r\n\r\n")+4);
 

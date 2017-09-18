@@ -268,7 +268,7 @@ class BaseRpc
             		throw new GouuseRpcException($data);
         		}			
 				
-				$data = substr($data, $length + 1);
+				$data = substr($data, 1);
 				try {
 					$data = msgpack_unpack($data);
 				} catch (\ErrorException $e) {

@@ -1,5 +1,5 @@
 <?php
-namespace GouuseCore\Rpcs\MessageCenter;
+namespace GouuseCore\Rpcs\EmailCenter;
 
 use GouuseCore\Rpcs\BaseRpc;
 

@@ -254,7 +254,9 @@ class BaseRpc
 					$client->send($msg);
 		            $data = $client->recv(10240);
 		            $data = substr($data, strpos($data, "\r\n\r\n")+4);
-
+                    if (substr($data, 0, 1) != "#") {
+                        throw new GouuseRpcException($data);
+                    }
 		            while (1) {
 		                $tmp = $client->recv(10240);
 		                if (empty($tmp)) {

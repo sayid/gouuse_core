@@ -32,6 +32,7 @@ class BeforeMiddleware
 			$data = file_get_contents('php://input');
 			$data = msgpack_unpack($data);
 			$sign = $data['sign'] ?? '';
+			$request_data = $data;
 			unset($data['sign']);
 			ksort($data);
 			$check_sign = md5(http_build_query($data).env('AES_KEY'));
@@ -79,6 +80,24 @@ class BeforeMiddleware
 					$data['code'] = intval($code);
 					$data['msg'] = $msg;
 			}
+            $member_info = $request->user();
+
+            $log_data = array();
+            $log_data['param'] = $request_data;//提交参数
+            $log_data['result'] = $data;//返回数据
+            $log_data['uri'] = $request->path();
+            $log_data['user_agent'] = $request->header('user_agent');
+            $log_data['member_id'] = $member_info['member_id'] ?? 0;//用户id
+            $log_data['company_id'] = $member_info['company_id'] ?? 0;//公司id
+            $log_data['sql_count'] = $GLOBALS ['sql_count'] ?? 0;
+            $log_data['rpc_count'] = $GLOBALS ['rpc_count'] ?? 0;
+            $log_data['memory_use'] = sprintf("%3.2f",memory_get_usage()/1024/1024)."M";
+            $class_load = 'GouuseCore\Libraries\LogLib';
+            App::bindIf($class_load, null, true);
+            $this->LogLib = App::make($class_load);
+
+            $this->LogLib->setDriver('access');
+            $this->LogLib->info('', $log_data, true);
 			return response('#'.msgpack_pack($data));
 		}
 		// 执行动作

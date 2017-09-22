@@ -17,7 +17,7 @@ class Rpc extends BaseRpc
 	protected $service_id = 1005;
 	
 	//私有host，各个服务可以自己定义不一样的host地址
-	private $_private_host = '';
+	protected $_private_host = '';
 	
 	public function __construct()
 	{

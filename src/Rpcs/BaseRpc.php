@@ -228,16 +228,18 @@ class BaseRpc
 						exit("connect failed. Error: {$client->errCode}\n");
 					}
 					fwrite($fp, $msg);
-					$data = fgets($fp, 1024);
-					$length = strpos($data, "#");
-					$json_length = stripos($data, '{"code":');
-					
-					if ($length === false) {
+                    $data = '';
+					$mark_start = false;
+                    while (!feof($fp)) {
+                        $data = $data . fgets($fp, 1024);
+                        if ($mark_start == false && strpos($data, "\r\n\r\n")) {
+                            $mark_start = true;
+                            $data = substr($data, strpos($data, "\r\n\r\n")+4);
+                        }
+                    }
+
+					if (empty($data)) {
 						throw new GouuseRpcException($host.$this->host_pre.'v3/rpc not found:' . $data);
-					} else {
-						while (!feof($fp)) {
-							$data = $data . fgets($fp, 1024);
-						}
 					}
 					fclose($fp);
 				} else {

@@ -231,7 +231,7 @@ class BaseRpc
                     $data = '';
 					$mark_start = false;
                     while (!feof($fp)) {
-                        $data = $data . fgets($fp, 1024);
+                        $data = $data . fread($fp, 1024);
                         if ($mark_start == false && strpos($data, "\r\n\r\n")) {
                             $mark_start = true;
                             $data = substr($data, strpos($data, "\r\n\r\n")+4);

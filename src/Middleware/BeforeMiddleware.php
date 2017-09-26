@@ -72,7 +72,7 @@ class BeforeMiddleware
 					$msg = isset($error_code[$code]) ? $error_code[$code] : '未知错误';
 					if(isset($data['data'])){
 						foreach ($data['data'] as $key => $value) {
-							if (is_string($value)) {
+                            if ($value && !is_object($value) && !is_array($value)) {
 								$msg=str_replace("{\$".$key."}", $value, $msg);
 							}
 						}

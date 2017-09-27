@@ -146,6 +146,26 @@ class ElasticsearchLib extends Lib
         }
         return $this->client->search($params);
     }
+
+    /**
+     * 修改数据
+     * @param $index
+     * @param $id
+     * @param $data
+     * @return array
+     */
+    public function update($index, $id, $data)
+    {
+        $params = [
+            'index' => $index,
+            'type' => $this->type,
+            'id' => $id,
+            'body' => [
+                'doc' => $data
+            ]
+        ];
+        return $this->client->update($params);
+    }
     
     /**
      * $params = [

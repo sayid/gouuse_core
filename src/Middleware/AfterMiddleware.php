@@ -17,7 +17,6 @@ class AfterMiddleware
 		if (is_string($content)) {
 			$data = json_decode($content, true);
 		}*/
-		$request->user();
 		if (isset($data) && is_array($data)) {
 			if (isset($data['code'])) {
 				if (env('APP_DEBUG') == true) {

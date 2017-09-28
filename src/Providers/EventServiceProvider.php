@@ -37,7 +37,11 @@ class EventServiceProvider extends ServiceProvider {
 							$GLOBALS['sql_count'] = isset($GLOBALS['sql_count']) ? $GLOBALS['sql_count'] + 1 : 1;
 						}
 						$sql = str_replace("?", "'%s'", $event->sql);
-						$log = vsprintf($sql, $event->bindings);
+						if (!empty($event->bindings)) {
+						    $log = vsprintf($sql, $event->bindings);
+						} else {
+						    $log = $sql;
+						}
 						$log = 'execute tiem:' . $event->time . 'ms;' . $log;
 						if (strpos($log, 'select')!==false) {
 							$sql1 = "explain ".$sql;

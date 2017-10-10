@@ -31,7 +31,7 @@ class LogLib extends Lib
             $this->kafka->setLogLevel(LOG_DEBUG);
             $this->kafka->addBrokers("192.168.5.214:9092");
 
-            $this->kafka_topic =   $this->kafka->newTopic("service-dev");;
+            $this->kafka_topic =   $this->kafka->newTopic(env('LOG_KAFKA_TOPIC', "service-dev"));;
         }
 	}
 	

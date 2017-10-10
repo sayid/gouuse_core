@@ -2,6 +2,8 @@
 namespace GouuseCore\Rpcs\UserCenter\Models;
 
 use GouuseCore\Rpcs\UserCenter\Rpc;
+use GouuseCore\Helpers\OptionHelper;
+use GouuseCore\Helpers\StringHelper;
 
 /**
  * 用户中心SDK

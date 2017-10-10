@@ -3,6 +3,7 @@ namespace GouuseCore\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use GouuseCore\Libraries\CodeLib;
 
 class Authenticate
 {

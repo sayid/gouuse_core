@@ -24,7 +24,7 @@ class AreaDataModel extends Rpc
         $cache_data= $this->obj->CacheLib->get($cache_key);
         if (empty($cache_data)) {
             $cache_data = $this->do('AreaDataModel', 'getSelectAll', []);
-            $this->obj->CacheLib->save($cache_key, $cache_data, 3600);
+            $this->obj->CacheLib->set($cache_key, $cache_data, 3600);
         }
         return $cache_data;
     }

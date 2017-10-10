@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\App;
 class RpcHelper
 {
 	
-	public static function load($service_name, $class)
+	public static function load($service_name, $class = 'Rpc')
 	{
 		if (substr($class, strlen($class) - 3)=='Lib') {
 			$class_load = '\GouuseCore\Rpcs\\'.$service_name.'\Libraries\\'.$class;

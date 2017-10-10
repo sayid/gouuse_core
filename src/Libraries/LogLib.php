@@ -15,11 +15,24 @@ class LogLib extends Lib
 	private $file_drivers = [];
 	
 	private $file_driver;
-	
+
+	private $kafka;
+
+	private $kafka_topic;
+
+
 	public function __construct()
 	{
 		parent::__construct();
 		$this->setDriver('log');
+
+		if (extension_loaded('rdkafka')) {
+            $this->kafka = new \RdKafka\Producer();
+            $this->kafka->setLogLevel(LOG_DEBUG);
+            $this->kafka->addBrokers("192.168.5.214:9092");
+
+            $this->kafka_topic =   $this->kafka->newTopic("service-dev");;
+        }
 	}
 	
 	/**
@@ -51,6 +64,10 @@ class LogLib extends Lib
 			$log_data['startTime'] = TIME_START;//开始时间
 			$log_data['endTime'] = $this->logMicrotimeFloat();//结束时间
 		}
+        if ($this->kafka_topic) {
+            $this->kafka_topic->produce(RD_KAFKA_PARTITION_UA, 0, $log_data);
+        }
+
 		$this->file_driver->info($msg, $log_data);
 	}
 	
@@ -65,6 +82,9 @@ class LogLib extends Lib
 			$log_data['startTime'] = TIME_START;//开始时间
 			$log_data['endTime'] = $this->logMicrotimeFloat();//结束时间
 		}
+        if ($this->kafka_topic) {
+            $this->kafka_topic->produce(RD_KAFKA_PARTITION_UA, 0, $log_data);
+        }
 		$this->file_driver->debug($msg, $log_data);
 	}
 	
@@ -79,6 +99,9 @@ class LogLib extends Lib
 			$log_data['startTime'] = TIME_START;//开始时间
 			$log_data['endTime'] = $this->logMicrotimeFloat();//结束时间
 		}
+        if ($this->kafka_topic) {
+            $this->kafka_topic->produce(RD_KAFKA_PARTITION_UA, 0, $log_data);
+        }
 		$this->file_driver->error($msg, $log_data);
 	}
 	
@@ -93,6 +116,9 @@ class LogLib extends Lib
 			$log_data['startTime'] = TIME_START;//开始时间
 			$log_data['endTime'] = $this->logMicrotimeFloat();//结束时间
 		}
+        if ($this->kafka_topic) {
+            $this->kafka_topic->produce(RD_KAFKA_PARTITION_UA, 0, $log_data);
+        }
 		$this->file_driver->warning($msg, $log_data);
 	}
 		

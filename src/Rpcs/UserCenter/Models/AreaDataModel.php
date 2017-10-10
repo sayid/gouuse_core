@@ -37,7 +37,7 @@ class AreaDataModel extends Rpc
     {
         $cache_data = $this->getAll();
         foreach ($cache_data as $row) {
-            if ($row['province_id'] == $row['province_id'] && $row['area_id'] == 0 && $row['city_id'] == 0) {
+            if ($row['province_id'] == $province_id && $row['area_id'] == 0 && $row['city_id'] == 0) {
                 return $row['name'];
             }
         }

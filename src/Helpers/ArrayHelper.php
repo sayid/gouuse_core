@@ -7,6 +7,10 @@ class ArrayHelper
     {
         if (is_array($keys) == false) {
             $keys = explode(",", $keys);
+            // 兼容换行之后的逗号分隔
+            foreach ($keys as $k => $v) {
+                $keys[$k] = trim($v);
+            }
         }
         $sign = $signname == "keep" ? false : true;
         foreach ($data as $index => $indexdata) {

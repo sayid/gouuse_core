@@ -23,4 +23,9 @@ class CodeLib
 	
 	const NOT_INSTALLED_APP_ID = "1008000003";//没有安装该应用
 	const APP_INFO_NOT_EXIST = 1008000018;//应用信息不存在
+
+    const AUTH_COMPANY_DELETE = 1005304017;//已删除
+    const AUTH_COMPANY_STOP = 1005304018;//已停用
+    const AUTH_COMPANY_REVIEW = 1005304019;//审核中
+    const AUTH_COMPANY_OVERDUE = 1005304020;//已过期
 }

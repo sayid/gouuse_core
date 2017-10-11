@@ -53,7 +53,7 @@ class FormHelper
     public static function formPost($request, $array, $is_filter = true){
         $new_array=array();
         foreach($array as $key=>$value){
-            $post = $request[$value];
+            $post = $request[$value] ?? '';
             $$value = is_array($post) ? $post : trim($post);
             if($is_filter){
                 if($$value !== ''){

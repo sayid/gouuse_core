@@ -179,9 +179,10 @@ class ExcelLib extends Lib
 		$activeSheet = $spreadsheet->setActiveSheetIndex(0);
 		foreach ($data as $page_index => $page_info) {
 			$sheet_name = $page_info['sheet_name'] ?? 'sheet' . 'Sheet'.$page_index;
-			if ($page_index > 0) {
-				$activeSheet= clone $spreadsheet->getActiveSheet();
-			}
+            if ($page_index) {
+                $spreadsheet->createSheet();
+            }
+            $activeSheet = $spreadsheet->setActiveSheetIndex($page_index);
 			$header_key = [];
 			$header = $page_info['header'] ?? [];
 			$page_data = $page_info['data'] ?? [];
@@ -263,7 +264,7 @@ class ExcelLib extends Lib
 			}
 			if ($page_index > 0) {
 				$activeSheet->setTitle($sheet_name);
-				$spreadsheet->addSheet($activeSheet);
+				//$spreadsheet->addSheet($activeSheet);
 			} else {
 				$spreadsheet->getActiveSheet()->setTitle($sheet_name);
 			}

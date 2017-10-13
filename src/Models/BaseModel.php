@@ -455,7 +455,7 @@ abstract class BaseModel extends BaseGouuse
         }
         $sql_group = '';
         if ($group_by) {
-        	$sql_group = " group by " . $sql_group;
+        	$sql_group = " group by " . $group_by;
         }
         $sql = "select " . $sql_distinct ." ".$need_field . " from " . $table . $sql_where . $sql_order . $sql_limit . $sql_group;
         $rows = DB::select($sql, $val);

@@ -95,33 +95,6 @@ class AuthServiceProvider extends ServiceProvider
                     } else {
                         return $check_result['data']['member_info'];
                     }
-                } elseif(env('SERVICE_ID') == 1010) {   //运营中心
-                    $app = RpcHelper::load('UserCenter', 'Rpc');
-                    $result = $app->do('AccountLib', 'check', [$token]);
-
-                    if (isset($result['code']) && $result['code']==0) {
-                        //超管判断
-                        if (empty($result['data']['member_info'])) {
-                            return CodeLib::AUTH_DENY;
-                        }
-                        if (!isset($result['data']['member_info']['super_admin']) || $result['data']['member_info']['type'] != 1) {
-                            return CodeLib::AUTH_DENY;
-                        }
-
-                        $result['data']['member_info']['_gouuse_token'] = $token;
-                        $gouuse_member_info = $result['data']['member_info'];
-                        if (!defined('GOUUSE_MEMBER_INFO')) {
-                            define('GOUUSE_MEMBER_INFO', $gouuse_member_info);
-                        }
-                        $gouuse_company_info = $result['data']['company_info'] ?? [];
-                        if (!defined('GOUUSE_COMPANY_INFO')) {
-                            define('GOUUSE_COMPANY_INFO', $gouuse_company_info);
-                        }
-                        $request->gouuse_member_info = $gouuse_member_info;
-                        $request->gouuse_company_info= $gouuse_company_info;
-                        return $result['data']['member_info'];
-                    }
-                    return $result['code'];
                 } else {
 
                     $app = RpcHelper::load('UserCenter', 'Rpc');

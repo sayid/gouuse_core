@@ -42,13 +42,6 @@ class AuthServiceProvider extends ServiceProvider
         // should return either a User instance or null. You're free to obtain
         // the User instance via an API token or any other method necessary.
 
-		//维护提示
-        $app = RpcHelper::load('OperationCenter', 'Rpc');
-        $resulta = $app->do('UpgradePrompt', 'upgradeMsg', []);
-        if ($resulta['code'] != 0) {
-            return $resulta['code'];
-        }
-		
         $this->app['auth']->viaRequest('api', function ($request) {
 
             if (!defined('NEED_AUTH_CHECK')) {

@@ -4,6 +4,7 @@ namespace GouuseCore\Middleware;
 use Closure;
 use Illuminate\Support\Facades\App;
 use GouuseCore\Helpers\OptionHelper;
+use GouuseCore\Helpers\RpcHelper;
 
 /**
  * 前置中间件
@@ -128,6 +129,13 @@ class BeforeMiddleware
 					$request->request->set($key, $value);
 				}
 			}
+		}
+		
+		//维护提示
+		$app = RpcHelper::load('OperationCenter', 'Rpc');
+		$result = $app->do('UpgradePrompt', 'upgradeMsg', []);
+		if ($resulta['code'] != 0) {
+		    return response('#'.msgpack_pack($result));
 		}
 		
 		return $next($request);

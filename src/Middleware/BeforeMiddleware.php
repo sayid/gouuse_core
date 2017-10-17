@@ -133,8 +133,8 @@ class BeforeMiddleware
 		
 		//维护提示
 		$app = RpcHelper::load('OperationCenter', 'Rpc');
-		$result = $app->do('UpgradePrompt', 'upgradeMsg', []);
-		if ($resulta['code'] != 0) {
+		$result = $app->do('UpgradePromptLib', 'upgradeMsg', []);
+		if ($result['code'] != 0) {
 		    return response('#'.msgpack_pack($result));
 		}
 		

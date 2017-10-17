@@ -1,5 +1,5 @@
 <?php
-namespace GouuseCore\Rpcs\FlowCenter;
+namespace GouuseCore\Rpcs\OperationCenter;
 
 use GouuseCore\Rpcs\BaseRpc;
 

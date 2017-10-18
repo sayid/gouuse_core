@@ -132,14 +132,14 @@ class BeforeMiddleware
 		}
 		
 		//维护提示
-		/* if (env('SERVICE_ID') != 1010) {  //去掉运营中心
+		if (env('SERVICE_ID') != 1010) {  //去掉运营中心
     		$app = RpcHelper::load('OperationCenter', 'Rpc');
     		$result = $app->do('UpgradePromptLib', 'upgradeMsg', []);
     		if ($result['code'] != 0) {
-    		    return response('#'.msgpack_pack($result));
+    		    return response($result);
     		}
 		
-		} */
+		}
 		
 		return $next($request);
 	}

@@ -31,7 +31,7 @@ class FrequencyLib extends Lib
     public function check($url, $key, $times = 5)
     {
     	$value = $this->CacheLib->get(md5($url.'_'.$key));
-    	$value = intval($value) + 1;
+        $value = intval($value) - 1;
     	if ($value > $times) {
     		return false;
     	}

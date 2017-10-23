@@ -132,13 +132,16 @@ class BeforeMiddleware
 		}
 		
 		//维护提示
-		if (env('SERVICE_ID') != 1010) {  //去掉运营中心
-    		$app = RpcHelper::load('OperationCenter', 'Rpc');
-    		$result = $app->do('UpgradePromptLib', 'upgradeMsg', []);
-    		if ($result['code'] != 0) {
-    		    return response($result);
+		$route_path = $request->path();
+		if ($route_path != 'auth_center/v3/super_login') {    //过滤A端登录
+		    //判断升级列表、详细、检查跟新、运营中心1010
+		    if ($route_path == 'operation_center/v3/maintain_all_log' || $route_path == 'operation_center/v3/maintain_detail' || env('SERVICE_ID') != 1010) {
+        		$app = RpcHelper::load('OperationCenter', 'Rpc');
+        		$result = $app->do('UpgradePromptLib', 'upgradeMsg', []);
+        		if ($result['code'] != 0) {
+        		    return response($result);
+        		}
     		}
-		
 		}
 		
 		return $next($request);

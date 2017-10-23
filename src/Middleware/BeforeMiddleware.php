@@ -136,8 +136,12 @@ class BeforeMiddleware
 		if ($route_path != 'auth_center/v3/super_login') {    //过滤A端登录
 		    //判断升级列表、详细、检查跟新、运营中心1010
 		    if ($route_path == 'operation_center/v3/maintain_all_log' || $route_path == 'operation_center/v3/maintain_detail' || env('SERVICE_ID') != 1010) {
+        		$log_model = new \GouuseCore\Libraries\LogLib;
+        		$ips = $log_model->getIp();
+        		$ips = explode(',', $ips);
+        		$ip = trim($ips[0]);
         		$app = RpcHelper::load('OperationCenter', 'Rpc');
-        		$result = $app->do('UpgradePromptLib', 'upgradeMsg', []);
+        		$result = $app->do('UpgradePromptLib', 'upgradeMsg', [$ip]);
         		if ($result['code'] != 0) {
         		    return response($result);
         		}

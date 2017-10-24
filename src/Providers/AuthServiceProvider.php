@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Namshi\JOSE\SimpleJWS;
 use App\Libraries\CodeLib;
 use GouuseCore\Helpers\RpcHelper;
-use GouuseCore\Libraries\AuthLib;
+use Illuminate\Support\Facades\Config;
 
 class AuthServiceProvider extends ServiceProvider
 {

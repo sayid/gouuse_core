@@ -59,9 +59,15 @@ class AuthServiceProvider extends ServiceProvider
                     if (!defined('GOUUSE_MEMBER_INFO')) {
                         define('GOUUSE_MEMBER_INFO', $member_info);
                     }
+                    if (!Config::get('GOUUSE_MEMBER_INFO')) {
+                        Config::set('GOUUSE_MEMBER_INFO', $member_info);
+                    }
                     $gouuse_company_info = json_decode(urldecode($request->input('GOUUSE_XX_V3_COMPANY_INFO')), true);
                     if (!defined('GOUUSE_COMPANY_INFO')) {
                         define('GOUUSE_COMPANY_INFO', $gouuse_company_info);
+                    }
+                    if (!Config::get('GOUUSE_COMPANY_INFO')) {
+                        Config::set('GOUUSE_COMPANY_INFO', $gouuse_company_info);
                     }
                     $request->gouuse_member_info = $member_info;
                     $request->gouuse_company_info= $gouuse_company_info;
@@ -106,12 +112,18 @@ class AuthServiceProvider extends ServiceProvider
                         if (!defined('GOUUSE_MEMBER_INFO')) {
                             define('GOUUSE_MEMBER_INFO', $gouuse_member_info);
                         }
+                        if (!Config::get('GOUUSE_MEMBER_INFO')) {
+                            Config::set('GOUUSE_MEMBER_INFO', $gouuse_member_info);
+                        }
                         $gouuse_company_info = $result['data']['company_info'] ?? [];
                         if (!defined('GOUUSE_COMPANY_INFO')) {
                             define('GOUUSE_COMPANY_INFO', $gouuse_company_info);
                         }
+                        if (!Config::get('GOUUSE_COMPANY_INFO')) {
+                            Config::set('GOUUSE_COMPANY_INFO', $gouuse_company_info);
+                        }
                         $request->gouuse_member_info = $gouuse_member_info;
-                        $request->gouuse_company_info= $gouuse_company_info;
+                        $request->gouuse_company_info = $gouuse_company_info;
                         return $result['data']['member_info'];
                     }
                     return $result['code'];

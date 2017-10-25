@@ -286,7 +286,7 @@ class BaseRpc
 						'company_id' => $userdata['GOUUSE_XX_V3_MEMBER_INFO']['company_id'] ?? 0,
 						'param' => $args,
 						'response' => $data,
-						'async' => 1
+						'async' => 0
 				];
 				$this->LogLib->info('', $log_data, true);
 				

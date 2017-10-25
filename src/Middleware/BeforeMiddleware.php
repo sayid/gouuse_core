@@ -5,6 +5,7 @@ use Closure;
 use Illuminate\Support\Facades\App;
 use GouuseCore\Helpers\OptionHelper;
 use GouuseCore\Helpers\RpcHelper;
+use Illuminate\Support\Facades\Config;
 
 /**
  * 前置中间件
@@ -56,6 +57,12 @@ class BeforeMiddleware
 			if (!defined('GOUUSE_COMPANY_INFO')) {
 				define('GOUUSE_COMPANY_INFO', $data['GOUUSE_XX_V3_COMPANY_INFO'] ?? []);
 			}
+            if (!Config::get('GOUUSE_MEMBER_INFO')) {
+                Config::set('GOUUSE_MEMBER_INFO',  $data['GOUUSE_XX_V3_MEMBER_INFO'] ?? []);
+            }
+            if (!Config::get('GOUUSE_COMPANY_INFO')) {
+                Config::set('GOUUSE_COMPANY_INFO', $data['GOUUSE_XX_V3_COMPANY_INFO'] ?? []);
+            }
 			if (substr($class, strlen($class) - 3)=='Lib') {
 				$class_load = "App\Libraries\\".$class;
 			} elseif (substr($class, strlen($class) - 5)=='Model') {

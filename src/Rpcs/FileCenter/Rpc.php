@@ -1,5 +1,5 @@
 <?php
-namespace GouuseCore\Rpcs\UserCenter;
+namespace GouuseCore\Rpcs\FileCenter;
 
 use GouuseCore\Rpcs\BaseRpc;
 

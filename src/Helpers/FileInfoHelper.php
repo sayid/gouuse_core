@@ -111,4 +111,29 @@ class FileInfoHelper
 	    }
 	    return $file_type;
 	}
+	
+	/**
+	 * 文件压缩
+	 * @param unknown $path压缩文件路径
+	 * @param unknown $zip 实例化zip
+	 * @param unknown $zip_name 文件压缩路径+名称
+	 * @return unknown
+	 */
+	public static function addFileToZip($path, $zip, $zip_name)
+	{
+	    $handler=opendir($path); //打开当前文件夹由$path指定。
+	    $zip->open($zip_name,\ZipArchive::CREATE);   //打开压缩包.zip
+	    while(($filename=readdir($handler))!==false){
+	        if($filename != "." && $filename != ".."){//文件夹文件名字为'.'和‘..’，不要对他们进行操作
+	            if(is_dir($path."/".$filename)){// 如果读取的某个对象是文件夹，则递归
+	                addFileToZip($path."/".$filename, $zip);
+	            }else{ //将文件加入zip对象
+	                //$zip->addFile($path."/".$filename);
+	                $zip->addFromString($filename, $zip_name);
+	            }
+	        }
+	    }
+	    @closedir($path);
+	    return $zip_name;
+	}
 }

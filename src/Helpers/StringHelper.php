@@ -62,20 +62,23 @@ class StringHelper
 	 * @param unknown $index
 	 * @return string
 	 */
-	public static function getAlp($index)
+	public static function getAlp($pColumnIndex = 0)
 	{
-		if ($index > 25) {
-			$times = floor($index/26) + 1;
-			
-			if ($index%26 == 0) {
-				$alp = 'A';
-			} else {
-				$alp = chr($index%26+65);
-			}
-			$str = str_repeat($alp, $times);
-		} else {
-			$str = chr($index+65);
-		}
-		return $str;
+		//  Using a lookup cache adds a slight memory overhead, but boosts speed
+	    //  caching using a static within the method is faster than a class static,
+	    //      though it's additional memory overhead
+		static $_indexCache = array();  
+    
+         if (!isset($_indexCache[$pColumnIndex])) {  
+             // Determine column string  
+             if ($pColumnIndex < 26) {  
+                 $_indexCache[$pColumnIndex] = chr(65 + $pColumnIndex);  
+             } elseif ($pColumnIndex < 702) {  
+                 $_indexCache[$pColumnIndex] = chr(64 + ($pColumnIndex / 26)) . chr(65 + $pColumnIndex % 26);  
+             } else {
+                 $_indexCache[$pColumnIndex] = chr(64 + (($pColumnIndex - 26) / 676)) . chr(65 + ((($pColumnIndex - 26) % 676) / 26)) . chr(65 + $pColumnIndex % 26);  
+             }  
+         }  
+         return $_indexCache[$pColumnIndex];
 	}
 }

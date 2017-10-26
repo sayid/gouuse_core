@@ -23,7 +23,7 @@ class ExcelLib extends Lib
 	 * @param unknown $header
 	 * @param unknown $data
 	 */
-	public function down($file_name, $header, $data, $all_styles = [])
+	public function down($file_name, $header, $data, $all_styles = [], $file_path = '')
 	{
 		$spreadsheet = new Spreadsheet();
 		$header_key = [];
@@ -159,7 +159,11 @@ class ExcelLib extends Lib
 		header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
 		header('Pragma: public'); // HTTP/1.0
 		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-		$writer->save('php://output');
+	    if (!empty($file_path)) {
+		    $writer->save($file_path);
+		} else {
+		  $writer->save('php://output');
+		}
 		
 	}
 	
@@ -172,7 +176,7 @@ class ExcelLib extends Lib
 	 * @param unknown $file_name
 	 * @param unknown $data
 	 */
-	public function downMoreSheet($file_name, $data)
+	public function downMoreSheet($file_name, $data, $file_path = '')
 	{
 		$spreadsheet = new Spreadsheet();
 		$page_index = 0;
@@ -286,8 +290,11 @@ class ExcelLib extends Lib
 		header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
 		header('Pragma: public'); // HTTP/1.0
 		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-		$writer->save('php://output');
-		exit();
+	    if (!empty($file_path)) {
+		    $writer->save($file_path);
+		} else {
+		  $writer->save('php://output');
+		}
 	}
 	
 	

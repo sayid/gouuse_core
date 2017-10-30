@@ -13,7 +13,7 @@ class Rpc extends BaseRpc
 	//服务URI前缀
 	protected $host_pre = '/transaction_center/';
 	
-	protected $service_id = 1005;
+	protected $service_id = 1012;
 	
 	public function __construct()
 	{

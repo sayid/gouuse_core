@@ -133,7 +133,6 @@ class FileInfoHelper
 	            }
 	        }
 	    }
-	    $zip->close();
 	    @closedir($path);
 	    return $zip_name;
 	}
